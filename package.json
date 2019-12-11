@@ -1,5 +1,5 @@
 {
-  "name": "aex",
+  "name": "@axe/core",
   "version": "0.1.0",
   "description": "aex",
   "license": "MIT",
@@ -34,10 +34,14 @@
     "express": "^4.17.1"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.6",
+    "@types/express-session": "^1.15.16",
     "@types/jest": "^23.3.3",
     "@types/node": "^10.17.6",
     "@types/supertest": "^2.0.8",
+    "cors": "^2.8.5",
     "coveralls": "^3.0.2",
+    "express-session": "^1.17.0",
     "jest": "^23.6.0",
     "prettier": "^1.14.3",
     "rimraf": "^2.6.2",

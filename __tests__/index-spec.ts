@@ -211,6 +211,8 @@ test("Should start http methods", async () => {
   const aex = new Aex();
   const server = await aex.start();
 
+  expect(server === aex.server).toBeTruthy();
+
   let catched = false;
 
   try {
