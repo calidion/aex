@@ -1,11 +1,11 @@
 // import * as express from "express";
-import * as session from "express-session";
+import * as session from 'express-session';
 import { Aex, IAsyncMiddleware } from '../src/index';
 
-import * as request from "supertest";
-import { promisify } from "util";
+import * as request from 'supertest';
+import { promisify } from 'util';
 
-test("Should compatible with express middlewares", done => {
+test('Should compatible with express middlewares', done => {
   const aex = new Aex();
   let oldInvoke = false;
   const oldMiddleware = (_req: any, _res: any, next: any) => {
@@ -23,8 +23,8 @@ test("Should compatible with express middlewares", done => {
   aex.use(psession as IAsyncMiddleware);
 
   const result = aex.handle({
-    method: "get",
-    url: "/",
+    method: 'get',
+    url: '/',
     // tslint:disable-next-line:object-literal-sort-keys
     handler: async (
       // tslint:disable-next-line:variable-name
@@ -33,17 +33,17 @@ test("Should compatible with express middlewares", done => {
     ) => {
       expect(oldInvoke).toBeTruthy();
       expect(req.session).toBeTruthy();
-      res.send("Hello Aex!");
-    }
+      res.send('Hello Aex!');
+    },
   });
   aex.prepare();
 
   expect(result).toBeTruthy();
 
   request(aex.app)
-    .get("/")
+    .get('/')
     .then((value: any) => {
-      expect(value.text).toBe("Hello Aex!");
+      expect(value.text).toBe('Hello Aex!');
       done();
     });
 });

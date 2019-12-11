@@ -1,11 +1,11 @@
-import { Application } from "express";
+import { Application } from 'express';
 // tslint:disable-next-line:no-duplicate-imports
-import { Request, Response } from "express";
-import methods from "./methods";
-import { createServer, Server } from "http";
+import { Request, Response } from 'express';
+import { createServer, Server } from 'http';
+import methods from './methods';
 
 // tslint:disable-next-line:no-var-requires
-const express = require("express");
+const express = require('express');
 
 export type IAsyncMiddleware = (
   req: Request,
@@ -57,7 +57,7 @@ export class Aex {
   public handle(options: IOptions): boolean {
     if (methods.indexOf(options.method) === -1) {
       throw new Error(
-        "wrong method: " + options.method + " with url: " + options.url
+        'wrong method: ' + options.method + ' with url: ' + options.url
       );
     }
     this.options.push(options);
@@ -66,17 +66,17 @@ export class Aex {
 
   public async start(
     port: number = 3000,
-    ip: string = "localhost"
+    ip: string = 'localhost'
   ): Promise<Server> {
     return new Promise((resolve, reject) => {
       const server = createServer(this._app);
 
       server.listen(port, ip);
-      server.on("error", (error: Error) => {
+      server.on('error', (error: Error) => {
         reject(error);
       });
 
-      server.on("listening", () => {
+      server.on('listening', () => {
         this._server = server;
         resolve(server);
       });
@@ -90,7 +90,7 @@ export class Aex {
       }
       this.routes[options.method][options.url] = {
         handler: options.handler,
-        middlewares: options.middlewares
+        middlewares: options.middlewares,
       };
     }
 

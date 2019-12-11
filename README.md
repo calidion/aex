@@ -6,6 +6,16 @@
 
 A very simple wrap on express to support async / await syntax.
 
+# Install
+
+```
+npm i @aex/core
+```
+or
+```
+yarn add @aex/core
+```
+
 ## A simple way to start
 
 ### Define the option
@@ -210,3 +220,27 @@ aex.use(psession as IAsyncMiddleware);
 ```
 
 > you should be caution to use such middlewares, test before using them.
+
+# A full simple example
+
+```ts
+import { Aex } from "@aex/core";
+
+const aex = new Aex();
+
+const options = {
+  method: "get",
+  url: "/",
+  handler: async (req, res) => {
+    res.send("Hello Aex!");
+  }
+};
+
+aex.handle(options);
+
+aex.prepare();
+
+const port = 3000;
+const host = "localhost";
+aex.start(port, host).then();
+```

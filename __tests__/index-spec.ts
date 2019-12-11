@@ -1,85 +1,85 @@
-import * as express from "express";
+import * as express from 'express';
 // tslint:disable-next-line:no-duplicate-imports
 
-import Aex from "../src/index";
+import Aex from '../src/index';
 
-import * as request from "supertest";
+import * as request from 'supertest';
 
-test("Should have Aex available", () => {
+test('Should have Aex available', () => {
   expect(Aex).toBeTruthy();
 });
 
-test("Should init Aex", () => {
+test('Should init Aex', () => {
   expect(new Aex()).toBeTruthy();
   const app = express();
   expect(new Aex(app)).toBeTruthy();
 });
 
-test("Should add http methods", done => {
+test('Should add http methods', done => {
   const aex = new Aex();
 
   const result = aex.handle({
-    method: "get",
-    url: "/",
+    method: 'get',
+    url: '/',
     // tslint:disable-next-line:object-literal-sort-keys
     handler: async (
       // tslint:disable-next-line:variable-name
       _req: any,
       res: any
     ) => {
-      res.send("Hello Aex!");
-    }
+      res.send('Hello Aex!');
+    },
   });
   aex.prepare();
 
   expect(result).toBeTruthy();
 
   request(aex.app)
-    .get("/")
+    .get('/')
     .then((value: any) => {
-      expect(value.text).toBe("Hello Aex!");
+      expect(value.text).toBe('Hello Aex!');
       done();
     });
 });
 
-test("Should not able to add wrong http methods", () => {
+test('Should not able to add wrong http methods', () => {
   const aex = new Aex();
 
   let catched = false;
   try {
     aex.handle({
-      method: "gett",
-      url: "/",
+      method: 'gett',
+      url: '/',
       // tslint:disable-next-line:object-literal-sort-keys
       handler: async (
         // tslint:disable-next-line:variable-name
         _req: any,
         res: any
       ) => {
-        res.send("Hello Aex!");
-      }
+        res.send('Hello Aex!');
+      },
     });
   } catch (e) {
-    expect(e.message === "wrong method: gett with url: /").toBeTruthy();
+    expect(e.message === 'wrong method: gett with url: /').toBeTruthy();
     catched = true;
   }
 
   expect(catched).toBeTruthy();
 });
 
-test("Should allow in request middlewares", done => {
+test('Should allow in request middlewares', done => {
   const aex = new Aex();
 
   aex.handle({
-    method: "get",
-    url: "/",
+    method: 'get',
+    url: '/',
     // tslint:disable-next-line:object-literal-sort-keys
     handler: async (
       // tslint:disable-next-line:variable-name
       _req: any,
       res: any
     ) => {
-      res.send("Hello Aex!");
+      res.send('Hello Aex!');
     },
     middlewares: [
       async (
@@ -87,22 +87,22 @@ test("Should allow in request middlewares", done => {
         _req: any,
         res: any
       ) => {
-        res.send("End!")!;
+        res.send('End!')!;
         return false;
-      }
-    ]
+      },
+    ],
   });
 
   aex.handle({
-    method: "get",
-    url: "/users",
+    method: 'get',
+    url: '/users',
     // tslint:disable-next-line:object-literal-sort-keys
     handler: async (
       // tslint:disable-next-line:variable-name
       _req: any,
       res: any
     ) => {
-      res.send("Hello Aex!");
+      res.send('Hello Aex!');
     },
     middlewares: [
       async (
@@ -110,35 +110,35 @@ test("Should allow in request middlewares", done => {
         _req: any,
         res: any
       ) => {
-        res.send("End!")!;
+        res.send('End!')!;
         return false;
-      }
-    ]
+      },
+    ],
   });
 
   aex.prepare();
 
   request(aex.app)
-    .get("/")
+    .get('/')
     .then((value: any) => {
-      expect(value.text).toBe("End!");
+      expect(value.text).toBe('End!');
       done();
     });
 });
 
-test("Should allow in request middlewares", done => {
+test('Should allow in request middlewares', done => {
   const aex = new Aex();
 
   aex.handle({
-    method: "get",
-    url: "/",
+    method: 'get',
+    url: '/',
     // tslint:disable-next-line:object-literal-sort-keys
     handler: async (
       // tslint:disable-next-line:variable-name
       _req: any,
       res: any
     ) => {
-      res.write(" world!");
+      res.write(' world!');
       res.end();
     },
     middlewares: [
@@ -147,21 +147,21 @@ test("Should allow in request middlewares", done => {
         _req: any,
         res: any
       ) => {
-        res.write("Hello");
-      }
-    ]
+        res.write('Hello');
+      },
+    ],
   });
   aex.prepare();
 
   request(aex.app)
-    .get("/")
+    .get('/')
     .then((value: any) => {
-      expect(value.text).toBe("Hello world!");
+      expect(value.text).toBe('Hello world!');
       done();
     });
 });
 
-test("Should allow general middlewares", done => {
+test('Should allow general middlewares', done => {
   const aex = new Aex();
 
   aex.use(
@@ -170,21 +170,21 @@ test("Should allow general middlewares", done => {
       _req: any,
       res: any
     ) => {
-      res.send("General Middlewares!")!;
+      res.send('General Middlewares!')!;
       return false;
     }
   );
 
   aex.handle({
-    method: "get",
-    url: "/",
+    method: 'get',
+    url: '/',
     // tslint:disable-next-line:object-literal-sort-keys
     handler: async (
       // tslint:disable-next-line:variable-name
       _req: any,
       res: any
     ) => {
-      res.send("Hello Aex!");
+      res.send('Hello Aex!');
     },
     middlewares: [
       async (
@@ -192,22 +192,22 @@ test("Should allow general middlewares", done => {
         _req: any,
         res: any
       ) => {
-        res.send("End!")!;
+        res.send('End!')!;
         return false;
-      }
-    ]
+      },
+    ],
   });
   aex.prepare();
 
   request(aex.app)
-    .get("/")
+    .get('/')
     .then((value: any) => {
-      expect(value.text).toBe("General Middlewares!");
+      expect(value.text).toBe('General Middlewares!');
       done();
     });
 });
 
-test("Should start http methods", async () => {
+test('Should start http methods', async () => {
   const aex = new Aex();
   const server = await aex.start();
 

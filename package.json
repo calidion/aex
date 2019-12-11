@@ -1,13 +1,13 @@
 {
-  "name": "@axe/core",
+  "name": "@aex/core",
   "version": "0.1.0",
   "description": "aex",
   "license": "MIT",
-  "repository": "",
+  "repository": "calidion/aex",
   "author": {
-    "name": "",
-    "email": "",
-    "url": ""
+    "name": "calidion",
+    "email": "calidion@gmail.com",
+    "url": "https://calidion.github.io"
   },
   "keywords": [
     ""

@@ -1,13 +1,11 @@
 language: node_js
 node_js:
-  - '13'
-  - '12'
-  - '11'
-  - '10'
-  - '9'
-  - '8'
-  - '7'
-  - '6'
+  - "13"
+  - "12"
+  - "11"
+  - "10"
+  - "9"
+  - "8"
 
 after_script:
-  - 'cat coverage/lcov.info | ./node_modules/.bin/coveralls' # sends the coverage report to coveralls
+  - "cat coverage/lcov.info | ./node_modules/.bin/coveralls" # sends the coverage report to coveralls
