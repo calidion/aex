@@ -95,9 +95,9 @@ const server = await aex.start(port, host);
 
 ## Global middlewares
 
-Global middlewares are effective allover the http request process.
+Global middlewares are effective all over the http request process.
 
-It can be added by `aex.use` function.
+They can be added by `aex.use` function.
 
 ```ts
 aex.use(async (req, res) => {
@@ -118,16 +118,16 @@ aex.use(async (req, res) => {
 });
 ```
 
-> Return `false` in middleware will cancel the whole http request processing,  
-> It is normally after a `res.end`
+> Return `false` in middlewares will cancel the whole http request processing   
+> It normally happens after a `res.end`
 
-## Handle specific middlewares
+## Handler specific middlewares
 
-Handle specific middlewares are effective only to the specific handler.
+Handler specific middlewares are effective only to the specific handler.
 
-It can be optionally added to the handle option via the optional attribute `middlewares`.
+They can be optionally added to the handler option via the optional attribute `middlewares`.
 
-the `middlewares` attribute is an array of async functions of `IAsyncMiddleware` which defined as follows:
+the `middlewares` attribute is an array of async functions of `IAsyncMiddleware` type which defined as follows:
 
 ```ts
 export type IAsyncMiddleware = (
@@ -136,7 +136,7 @@ export type IAsyncMiddleware = (
 ) => Promise<boolean | undefined | null | void>;
 ```
 
-so we can simply define handle specific middlewares as follows:
+so we can simply define handler specific middlewares as follows:
 
 ```ts
 const options = {
@@ -169,7 +169,10 @@ aex.handle(options);
 
 ## app
 
-The Application instance of express.
+The instance of express Application.
+
+Accessable through `aex.app`.
+
 
 ```ts
 const app = express();
@@ -179,7 +182,10 @@ expect(aex.app === app).toBeTruthy();
 
 ## server
 
-The node system server.
+The node system `http.Server`.
+
+Accessable through `aex.server`.
+
 
 ```ts
 const aex = new Aex();
@@ -190,13 +196,14 @@ server.close();
 
 # Inherite middlewares from expressjs
 
-For most expressjs middlewares it should work perfectly well with Aex.
+For most expressjs middlewares, they should work perfectly well with Aex.
 
-Normally it is enough you just make it promisified.
+Normally it is enough to just make them promisified.
 
 Here is an example(`express` old style middleware):
 
 ```ts
+import { promisify } from "util";
 const oldMiddleware = (_req: any, _res: any, next: any) => {
   // ...
   next();
@@ -206,7 +213,7 @@ const pOld = promisify(oldMiddleware);
 aex.use(pOld as IAsyncMiddleware);
 ```
 
-For more complicated ones, you may need to `bind` the object to avoid `this` pointer swifting.
+For more complicated ones, you may need to `bind` the invoking object to avoid `this` pointer swifting.
 
 Here is an example(`express-session` middleware)::
 
@@ -219,7 +226,8 @@ const psession = promisify(asession.bind(asession));
 aex.use(psession as IAsyncMiddleware);
 ```
 
-> you should be caution to use such middlewares, test before using them.
+> You should be cautious to use middlewares.
+> Fully testing is appreciated.
 
 # A full simple example
 
