@@ -1,40 +1,224 @@
-import * as express from 'express';
+import * as express from "express";
 // tslint:disable-next-line:no-duplicate-imports
 
-import Aex from '../src/index';
+import Aex from "../src/index";
 
-import * as request from 'supertest';
+import * as request from "supertest";
 
-
-test('Should have Aex available', () => {
+test("Should have Aex available", () => {
   expect(Aex).toBeTruthy();
 });
 
-
-test('Should init Aex', () => {
+test("Should init Aex", () => {
   expect(new Aex()).toBeTruthy();
   const app = express();
   expect(new Aex(app)).toBeTruthy();
 });
 
-
-test('Should add http methods', (done) => {
+test("Should add http methods", done => {
   const aex = new Aex();
 
-  aex.handle({
-    method: 'get',
-    url: '/',
+  const result = aex.handle({
+    method: "get",
+    url: "/",
     // tslint:disable-next-line:object-literal-sort-keys
     handler: async (
       // tslint:disable-next-line:variable-name
-      _req: any, res: any) => {
+      _req: any,
+      res: any
+    ) => {
       res.send("Hello Aex!");
     }
   });
   aex.prepare();
 
-  request(aex.app).get('/').then((value: any) => {
-    expect(value.text).toBe("Hello Aex!");
-    done();
+  expect(result).toBeTruthy();
+
+  request(aex.app)
+    .get("/")
+    .then((value: any) => {
+      expect(value.text).toBe("Hello Aex!");
+      done();
+    });
+});
+
+test("Should not able to add wrong http methods", () => {
+  const aex = new Aex();
+
+  let catched = false;
+  try {
+    aex.handle({
+      method: "gett",
+      url: "/",
+      // tslint:disable-next-line:object-literal-sort-keys
+      handler: async (
+        // tslint:disable-next-line:variable-name
+        _req: any,
+        res: any
+      ) => {
+        res.send("Hello Aex!");
+      }
+    });
+  } catch (e) {
+    expect(e.message === "wrong method: gett with url: /").toBeTruthy();
+    catched = true;
+  }
+
+  expect(catched).toBeTruthy();
+});
+
+test("Should allow in request middlewares", done => {
+  const aex = new Aex();
+
+  aex.handle({
+    method: "get",
+    url: "/",
+    // tslint:disable-next-line:object-literal-sort-keys
+    handler: async (
+      // tslint:disable-next-line:variable-name
+      _req: any,
+      res: any
+    ) => {
+      res.send("Hello Aex!");
+    },
+    middlewares: [
+      async (
+        // tslint:disable-next-line:variable-name
+        _req: any,
+        res: any
+      ) => {
+        res.send("End!")!;
+        return false;
+      }
+    ]
   });
+
+  aex.handle({
+    method: "get",
+    url: "/users",
+    // tslint:disable-next-line:object-literal-sort-keys
+    handler: async (
+      // tslint:disable-next-line:variable-name
+      _req: any,
+      res: any
+    ) => {
+      res.send("Hello Aex!");
+    },
+    middlewares: [
+      async (
+        // tslint:disable-next-line:variable-name
+        _req: any,
+        res: any
+      ) => {
+        res.send("End!")!;
+        return false;
+      }
+    ]
+  });
+
+  aex.prepare();
+
+  request(aex.app)
+    .get("/")
+    .then((value: any) => {
+      expect(value.text).toBe("End!");
+      done();
+    });
+});
+
+test("Should allow in request middlewares", done => {
+  const aex = new Aex();
+
+  aex.handle({
+    method: "get",
+    url: "/",
+    // tslint:disable-next-line:object-literal-sort-keys
+    handler: async (
+      // tslint:disable-next-line:variable-name
+      _req: any,
+      res: any
+    ) => {
+      res.write(" world!");
+      res.end();
+    },
+    middlewares: [
+      async (
+        // tslint:disable-next-line:variable-name
+        _req: any,
+        res: any
+      ) => {
+        res.write("Hello");
+      }
+    ]
+  });
+  aex.prepare();
+
+  request(aex.app)
+    .get("/")
+    .then((value: any) => {
+      expect(value.text).toBe("Hello world!");
+      done();
+    });
+});
+
+test("Should allow general middlewares", done => {
+  const aex = new Aex();
+
+  aex.use(
+    async (
+      // tslint:disable-next-line:variable-name
+      _req: any,
+      res: any
+    ) => {
+      res.send("General Middlewares!")!;
+      return false;
+    }
+  );
+
+  aex.handle({
+    method: "get",
+    url: "/",
+    // tslint:disable-next-line:object-literal-sort-keys
+    handler: async (
+      // tslint:disable-next-line:variable-name
+      _req: any,
+      res: any
+    ) => {
+      res.send("Hello Aex!");
+    },
+    middlewares: [
+      async (
+        // tslint:disable-next-line:variable-name
+        _req: any,
+        res: any
+      ) => {
+        res.send("End!")!;
+        return false;
+      }
+    ]
+  });
+  aex.prepare();
+
+  request(aex.app)
+    .get("/")
+    .then((value: any) => {
+      expect(value.text).toBe("General Middlewares!");
+      done();
+    });
+});
+
+test("Should start http methods", async () => {
+  const aex = new Aex();
+  const server = await aex.start();
+
+  let catched = false;
+
+  try {
+    await aex.start(80);
+  } catch (e) {
+    catched = true;
+  }
+  server.close();
+
+  expect(catched).toBeTruthy();
 });

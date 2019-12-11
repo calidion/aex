@@ -1,31 +1,33 @@
-import { Application } from 'express';
+import { Application } from "express";
 // tslint:disable-next-line:no-duplicate-imports
-import { Request, Response } from 'express';
-import methods from './methods';
-
+import { Request, Response } from "express";
+import methods from "./methods";
+import { createServer, Server } from "http";
 
 // tslint:disable-next-line:no-var-requires
-const express = require('express');
+const express = require("express");
 
-
-export type IAsyncMiddleware = (req: Request, res: Response) => Promise<boolean | undefined | null | void>;
+export type IAsyncMiddleware = (
+  req: Request,
+  res: Response
+) => Promise<boolean | undefined | null | void>;
 
 export type IAsyncHandler = IAsyncMiddleware;
 
 export interface IRouteItem {
-  handler: IAsyncHandler,
-  middlewares?: IAsyncMiddleware[]
+  handler: IAsyncHandler;
+  middlewares?: IAsyncMiddleware[];
 }
 
 export interface IRoute {
-  [key: string]: { [key: string]: IRouteItem }
-};
+  [key: string]: { [key: string]: IRouteItem };
+}
 
 export interface IOptions {
-  method: string,
-  url: string,
-  handler: IAsyncHandler,
-  middlewares?: IAsyncMiddleware[]
+  method: string;
+  url: string;
+  handler: IAsyncHandler;
+  middlewares?: IAsyncMiddleware[];
 }
 
 export class Aex {
@@ -43,20 +45,30 @@ export class Aex {
 
   public handle(options: IOptions): boolean {
     if (methods.indexOf(options.method) === -1) {
-      return false;
+      throw new Error(
+        "wrong method: " + options.method + " with url: " + options.url
+      );
     }
     this.options.push(options);
     return true;
   }
 
-  public async start(port: number = 3000, ip: string = "localhost") {
-    return new Promise((resolve, reject) => {
-      const server = this.app.listen(port, ip, (err) => {
-        if (err) {
-          return reject(err);
-        }
+  public async start(
+    port: number = 3000,
+    ip: string = "localhost"
+  ): Promise<Server> {
+    return await new Promise((resolve, reject) => {
+      let server = createServer(this.app);
+
+      server.listen(port, ip);
+
+      server.on("error", function(error: Error) {
+        reject(error);
+      });
+
+      server.on("listening", () => {
         resolve(server);
-      })
+      });
     });
   }
 
@@ -73,8 +85,10 @@ export class Aex {
 
     // preparse middlewares
     this.app.use((req: Request, res: Response, next: () => void) => {
-      this.processMiddleware(req, res, this.middlewares).then((leave) => {
-        if (leave) { return; }
+      this.processMiddleware(req, res, this.middlewares).then(leave => {
+        if (leave) {
+          return;
+        }
         next();
       });
     });
@@ -87,7 +101,11 @@ export class Aex {
     }
   }
 
-  protected processMiddleware(req: Request, res: Response, middlewares: IAsyncMiddleware[]): Promise<boolean> {
+  protected processMiddleware(
+    req: Request,
+    res: Response,
+    middlewares: IAsyncMiddleware[]
+  ): Promise<boolean> {
     return (async () => {
       for (const middleware of middlewares) {
         const leave = await middleware(req, res);
@@ -102,18 +120,15 @@ export class Aex {
 
   protected bind(method: string, url: string, handler: IRouteItem) {
     const od = Object.getOwnPropertyDescriptor(this.app, method);
-    if (!od) {
-      throw new Error('wrong method: ' + method + " with url: " + url);
-    }
-
-
-    const func = od.value;
-
+    const func = od!.value;
     func.bind(this.app)(url, (req: Request, res: Response) => {
-      console.log("inside route");
       (async () => {
         if (handler.middlewares && handler.middlewares.length) {
-          const leave = await this.processMiddleware(req, res, handler.middlewares);
+          const leave = await this.processMiddleware(
+            req,
+            res,
+            handler.middlewares
+          );
           if (leave) {
             return true;
           }
