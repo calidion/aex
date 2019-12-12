@@ -291,7 +291,7 @@ aex.use(pOld);
 > You should be cautious to use middlewares.
 > Fully testing is appreciated.
 
-# Relative ship with express
+# Relationship with express
 
 > Currently aex is using the express router.
 > It will be removed when aex router is ready.
