@@ -150,7 +150,7 @@ test('Should allow in request middlewares', done => {
       try {
         scope.outter = {};
 
-      } catch(e) {
+      } catch (e) {
         catched = true;
       }
 
@@ -159,6 +159,39 @@ test('Should allow in request middlewares', done => {
       catched = false;
       try {
         scope.inner = {};
+
+      } catch (e) {
+        catched = true;
+      }
+
+      expect(catched).toBeTruthy();
+
+      catched = false;
+      try {
+        scope.time = {};
+
+      } catch (e) {
+        catched = true;
+      }
+
+      expect(catched).toBeTruthy();
+
+
+      expect(scope.time.started).toBeTruthy();
+
+      catched = false;
+      try {
+        scope.time.started = '';
+
+      } catch (e) {
+        catched = true;
+      }
+
+      expect(catched).toBeTruthy();
+
+      catched = false;
+      try {
+        scope.time.passed = {};
 
       } catch(e) {
         catched = true;

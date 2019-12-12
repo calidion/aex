@@ -132,28 +132,37 @@ export class Aex {
     })();
   }
 
+  protected getScope(): IScope {
+    const started = new Date();
+    const outter = {};
+    const inner = {};
+    const time = {
+      get passed() {
+        return new Date().getTime() - started.getTime();
+      },
+      get started() {
+        return started;
+      }
+    };
+    return {
+      get outter() {
+        return outter;
+      },
+      get inner() {
+        return inner;
+      },
+      get time() {
+        return time;
+      },
+    };
+  }
+
   protected bind(method: string, url: string, handler: IRouteItem) {
     const od = Object.getOwnPropertyDescriptor(this.app, method);
     const func = od!.value;
     func.bind(this._app)(url, (req: Request, res: Response) => {
-      const started = new Date();
-      const outter = {};
-      const inner = {};
-      const scope: IScope = {
-        get outter() {
-          return outter;
-        },
-        get inner() {
-          return inner;
-        },
-        time: {
-          get passed() {
-            return new Date().getTime() - started.getTime();
-          },
-          started
-        },
-      };
       let middlewares = this.middlewares;
+      const scope = this.getScope();
       (async () => {
         if (handler.middlewares && handler.middlewares.length) {
           middlewares = middlewares.concat(handler.middlewares);
