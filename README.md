@@ -4,7 +4,7 @@
 
 # AEX
 
-A simple, async, scoped web server.
+A simple, async, scoped web server, with async middlewares and no more callbacks.
 
 # A simple example
 
@@ -216,11 +216,11 @@ server.close();
 
 # Scope
 
-Aex provided scope data for global and local usage.
+Aex provides scoped data for global and local usage.
 
-A scope object is passed by middlewares or handlers right after `req`, `res` as the third parameter.
+A scope object is passed by middlewares and handlers right after `req`, `res` as the third parameter.
 
-It is defined in `IAsyncMiddleware`, like the following:
+It is defined in `IAsyncMiddleware` as the following:
 
 ```ts
 async (req, res, scope) => {
@@ -229,11 +229,11 @@ async (req, res, scope) => {
 };
 ```
 
-scope has three native attributes: `time`, `outter`, `inner`.
+the `scope` variable has three native attributes: `time`, `outter`, `inner`.
 
-The `time` attribute contains the start time of the request.
+The `time` attribute contains the started time and passed time of requests.
 The `outter` attribute is to store general or global data.
-The `local` attribute is to store specific or local data.
+The `inner` attribute is to store specific or local data.
 
 ## `time`
 
@@ -251,9 +251,9 @@ scope.time.passed;
 // 2019-12-12T09:01:49.543Z
 ```
 
-## `inner` and `outter`
+## `outter` and `inner`
 
-`inner` and `outter` are objects used to store data for different purpose.
+The `outter` and `inner`variables are objects used to store data for different purposes.
 
 You can simply assign them a new attribute with data;
 
@@ -262,7 +262,7 @@ scope.inner.a = 100;
 scope.outter.a = 120;
 ```
 
-## all these buildin attribute are readonly
+## all these build-in attribute are readonly
 
 ```ts
 // scope.outter = {};  // Wrong operation!
@@ -276,7 +276,7 @@ scope.outter.a = 120;
 
 Aex provide a way for express middlewares to be able used with Aex.
 
-You need just a simple call to `toAsyncMiddleware` to generate an aync middleware.
+You need just a simple call to `toAsyncMiddleware` to generate an async middleware.
 
 ```ts
 const oldMiddleware = (_req: any, _res: any, next: any) => {
@@ -290,3 +290,8 @@ aex.use(pOld);
 
 > You should be cautious to use middlewares.
 > Fully testing is appreciated.
+
+# Relative ship with express
+
+> Currently aex is using the express router.
+> It will be removed when aex router is ready.

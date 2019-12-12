@@ -8,7 +8,11 @@ import methods from './methods';
 const express = require('express');
 
 export type ICallback = (error: Error) => void;
-export type IMiddeleWare = (req: Request, res: Response, next: ICallback) => void;
+export type IMiddeleWare = (
+  req: Request,
+  res: Response,
+  next: ICallback
+) => void;
 export type IAsyncMiddleware = (
   req: Request,
   res: Response,
@@ -19,10 +23,10 @@ export interface IScope {
   time: {
     passed: number;
     started: Date;
-  },
-  outter: object,
-  inner: object
-};
+  };
+  outter: object;
+  inner: object;
+}
 
 export type IAsyncHandler = IAsyncMiddleware;
 
@@ -142,7 +146,7 @@ export class Aex {
       },
       get started() {
         return started;
-      }
+      },
     };
     return {
       get outter() {
