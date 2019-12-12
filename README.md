@@ -262,11 +262,14 @@ scope.inner.a = 100;
 scope.outter.a = 120;
 ```
 
-but the direct assignment to `outter` and `inner` is now allowed.
+## all these buildin attribute are readonly
 
 ```ts
 // scope.outter = {};  // Wrong operation!
-// scope.outter = {};  // Wrong operation!
+// scope.inner = {};   // Wrong operation!
+// scope.time = {};    // Wrong operation!
+// scope.time.started = {};  // Wrong operation!
+// scope.time.passed = {};   // Wrong operation!
 ```
 
 # Use leagacy middlewares from expressjs
