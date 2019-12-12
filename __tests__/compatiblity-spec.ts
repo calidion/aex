@@ -1,9 +1,9 @@
 // import * as express from "express";
 import * as session from 'express-session';
-import { Aex, IAsyncMiddleware } from '../src/index';
+import { Aex } from '../src/aex';
 
 import * as request from 'supertest';
-import { promisify } from 'util';
+import { toAsyncMiddleware } from '../src/util';
 
 test('Should compatible with express middlewares', done => {
   const aex = new Aex();
@@ -13,14 +13,14 @@ test('Should compatible with express middlewares', done => {
     next();
   };
 
-  const pOld = promisify(oldMiddleware);
-  aex.use(pOld as IAsyncMiddleware);
+  const pOld = toAsyncMiddleware(oldMiddleware);
+  aex.use(pOld);
 
   const asession = session({
     secret: 'keyboard cat',
   });
-  const psession = promisify(asession);
-  aex.use(psession as IAsyncMiddleware);
+  const psession = toAsyncMiddleware(asession);
+  aex.use(psession);
 
   const result = aex.handle({
     method: 'get',
