@@ -4,9 +4,9 @@
 
 # AEX
 
-A simple, async, scopde web server.
+A simple, async, scoped web server.
 
-# A simple full example
+# A simple example
 
 ```ts
 import { Aex } from "@aex/core";
