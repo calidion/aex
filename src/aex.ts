@@ -1,61 +1,17 @@
-import { Application } from 'express';
-// tslint:disable-next-line:no-duplicate-imports
-import { Request, Response } from 'express';
-import { createServer, Server } from 'http';
-import methods from './methods';
-
-// tslint:disable-next-line:no-var-requires
-const express = require('express');
-
-export type ICallback = (error: Error) => void;
-export type IMiddeleWare = (
-  req: Request,
-  res: Response,
-  next: ICallback
-) => void;
-export type IAsyncMiddleware = (
-  req: Request,
-  res: Response,
-  scope?: object
-) => Promise<boolean | undefined | null | void>;
-
-export interface IScope {
-  time: {
-    passed: number;
-    started: Date;
-  };
-  outter: object;
-  inner: object;
-}
-
-export type IAsyncHandler = IAsyncMiddleware;
-
-export interface IRouteItem {
-  handler: IAsyncHandler;
-  middlewares?: IAsyncMiddleware[];
-}
-
-export interface IRoute {
-  [key: string]: { [key: string]: IRouteItem };
-}
-
-export interface IOptions {
-  method: string;
-  url: string;
-  handler: IAsyncHandler;
-  middlewares?: IAsyncMiddleware[];
-}
+import { createServer, IncomingMessage, METHODS, Server, ServerResponse } from 'http';
+import { match } from 'path-to-regexp';
+import NotFound from './status/404';
+import { IAsyncHandler, IAsyncMiddleware, IOptions, IRoute, IRouteItem, IScope } from './types';
 
 export class Aex {
-  // tslint:disable-next-line:variable-name
-  private _app: Application;
   // tslint:disable-next-line:variable-name
   private _server?: Server;
   private middlewares: IAsyncMiddleware[] = [];
   private options: IOptions[] = [];
   private routes: IRoute = {};
-  constructor(app?: Application) {
-    this._app = app ? app : express();
+  private statusHandlers: { [key: string]: IAsyncHandler } = {}
+  constructor() {
+    this.statusHandlers["404"] = NotFound;
   }
 
   public use(cb: IAsyncMiddleware) {
@@ -63,7 +19,7 @@ export class Aex {
   }
 
   get app() {
-    return this._app;
+    return this;
   }
 
   get server() {
@@ -71,11 +27,13 @@ export class Aex {
   }
 
   public handle(options: IOptions): boolean {
-    if (methods.indexOf(options.method) === -1) {
+    const method = options.method.toUpperCase();
+    if (METHODS.indexOf(method) === -1) {
       throw new Error(
         'wrong method: ' + options.method + ' with url: ' + options.url
       );
     }
+    options.method = options.method.toUpperCase();
     this.options.push(options);
     return true;
   }
@@ -85,7 +43,9 @@ export class Aex {
     ip: string = 'localhost'
   ): Promise<Server> {
     return new Promise((resolve, reject) => {
-      const server = createServer(this._app);
+      const server = createServer((req, res) => {
+        this.routing(req, res).then();
+      });
 
       server.listen(port, ip);
       server.on('error', (error: Error) => {
@@ -109,31 +69,22 @@ export class Aex {
         middlewares: options.middlewares,
       };
     }
-
-    // Binding routes
-    for (const method of Object.keys(this.routes)) {
-      for (const url of Object.keys(this.routes[method])) {
-        this.bind(method, url, this.routes[method][url]);
-      }
-    }
   }
 
-  protected processMiddleware(
-    req: Request,
-    res: Response,
+  protected async processMiddleware(
+    req: IncomingMessage,
+    res: ServerResponse,
     middlewares: IAsyncMiddleware[],
     scope?: object
   ): Promise<boolean> {
-    return (async () => {
-      for (const middleware of middlewares) {
-        const leave = await middleware(req, res, scope);
-        // Stop middleware execution when false is returned.
-        if (leave === false) {
-          return true;
-        }
+    for (const middleware of middlewares) {
+      const leave = await middleware(req, res, scope);
+      // Stop middleware execution when false is returned.
+      if (leave === false) {
+        return true;
       }
-      return false;
-    })();
+    }
+    return false;
   }
 
   protected getScope(): IScope {
@@ -161,29 +112,84 @@ export class Aex {
     };
   }
 
-  protected bind(method: string, url: string, handler: IRouteItem) {
-    const od = Object.getOwnPropertyDescriptor(this.app, method);
-    const func = od!.value;
-    func.bind(this._app)(url, (req: Request, res: Response) => {
-      let middlewares = this.middlewares;
-      const scope = this.getScope();
-      (async () => {
-        if (handler.middlewares && handler.middlewares.length) {
-          middlewares = middlewares.concat(handler.middlewares);
+  protected async routing(req: IncomingMessage, res: ServerResponse) {
+    const url = req.url || "/";
+    const method = req.method || "GET";
+
+    const router = this.getMatchedRouter(method, url);
+    if (!router) {
+      await NotFound(req, res);
+      return;
+    }
+    if (router.matched.params) {
+      this.enhanceRequest(req, router.matched.params);
+    }
+    this.enhanceResponse(res);
+    await this.requestHandling(req, res, router.handler)
+  }
+
+  protected getMatchedRouter(method: string, url: string) {
+    const routes = this.routes[method];
+    if (!routes) {
+      return;
+    }
+    const keys = Object.keys(routes);
+    for (const key of keys) {
+      const matcher = match(key, { decode: decodeURIComponent });
+      const matched = matcher(url);
+      if (matched) {
+        return { matched, handler: routes[key] };
+      }
+    }
+    return;
+  }
+
+
+  protected enhanceRequest(req: IncomingMessage, params: object) {
+    const od = Object.getOwnPropertyDescriptor(req, "params");
+    if (!od) {
+      Object.defineProperty(req, "params", {
+        enumerable: true,
+        get: () => {
+          return params
         }
-        const leave = await this.processMiddleware(
-          req,
-          res,
-          middlewares,
-          scope
-        );
-        if (leave) {
-          return true;
-        }
-        await handler.handler(req, res, scope);
-        return false;
-      })().then();
-    });
+      });
+    }
+  }
+
+  protected enhanceResponse(res: ServerResponse) {
+    const od = Object.getOwnPropertyDescriptor(res, "send");
+    if (!od) {
+      Object.defineProperty(res, "send", {
+        enumerable: false,
+        value: (message: string) => {
+          res.write(message);
+          res.end();
+        },
+      });
+    }
+  }
+
+  protected async requestHandling(req: IncomingMessage, res: ServerResponse, handler: IRouteItem) {
+    let middlewares = this.middlewares;
+    const scope = this.getScope();
+    if (handler.middlewares && handler.middlewares.length) {
+      middlewares = middlewares.concat(handler.middlewares);
+    }
+    if (middlewares.length) {
+      const leave = await this.processMiddleware(
+        req,
+        res,
+        middlewares,
+        scope
+      );
+      if (leave) {
+        return true;
+      }
+    }
+
+    await handler.handler(req, res, scope);
+    return false;
   }
 }
 export default Aex;
