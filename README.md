@@ -54,18 +54,6 @@ yarn add @aex/core
 const aex = new Aex();
 ```
 
-or
-
-```ts
-// with express app pre-created;
-import * as express from "express";
-const app = express();
-const aex = new Aex(app);
-// aex.app === app
-```
-
-> you can get express app any time by using `aex.app` attribute
-
 ## 2. Setup the option for handler
 
 ```ts
@@ -272,11 +260,11 @@ scope.outter.a = 120;
 // scope.time.passed = {};   // Wrong operation!
 ```
 
-# Use leagacy middlewares from expressjs
+# Use middlewares from expressjs
 
-Aex provide a way for express middlewares to be able used with Aex.
+Aex provide a way for express middlewares to be tranlated into Aex middlewares.
 
-You need just a simple call to `toAsyncMiddleware` to generate an async middleware.
+You need just a simple call to `toAsyncMiddleware` to generate Aex's async middleware.
 
 ```ts
 const oldMiddleware = (_req: any, _res: any, next: any) => {
@@ -291,7 +279,3 @@ aex.use(pOld);
 > You should be cautious to use middlewares.
 > Fully testing is appreciated.
 
-# Relationship with express
-
-> Currently aex is using the express router.
-> It will be removed when aex router is ready.
