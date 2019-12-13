@@ -5,8 +5,8 @@ export type Request = IncomingMessage;
 export type Response = ServerResponse;
 
 export type IMiddeleWare = (
-  req: Request,
-  res: Response,
+  req: Request | any,
+  res: Response | any,
   next: ICallback
 ) => void;
 export type IAsyncMiddleware = (

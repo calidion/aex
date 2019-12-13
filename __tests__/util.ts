@@ -51,8 +51,9 @@ export async function responseText(aex: Aex, message: string) {
 }
 
 export async function responseStatus(aex: Aex, url: string, status: number) {
-  const server = await aex.start(12345);
-  const res = await request("http://localhost:12345" + url);
+  const port = 10000 + Math.floor(Math.random() * 1000);
+  const server = await aex.start(port);
+  const res = await request("http://localhost:" + port + url);
   expect(res.statusCode === status).toBeTruthy();
   server.close();
 }
