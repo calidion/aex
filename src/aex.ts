@@ -1,7 +1,20 @@
-import { createServer, IncomingMessage, METHODS, Server, ServerResponse } from 'http';
-import { match } from 'path-to-regexp';
-import NotFound from './status/404';
-import { IAsyncHandler, IAsyncMiddleware, IOptions, IRoute, IRouteItem, IScope } from './types';
+import {
+  createServer,
+  IncomingMessage,
+  METHODS,
+  Server,
+  ServerResponse
+} from "http";
+import { match } from "path-to-regexp";
+import NotFound from "./status/404";
+import {
+  IAsyncHandler,
+  IAsyncMiddleware,
+  IOptions,
+  IRoute,
+  IRouteItem,
+  IScope
+} from "./types";
 
 export class Aex {
   // tslint:disable-next-line:variable-name
@@ -9,17 +22,13 @@ export class Aex {
   private middlewares: IAsyncMiddleware[] = [];
   private options: IOptions[] = [];
   private routes: IRoute = {};
-  private statusHandlers: { [key: string]: IAsyncHandler } = {}
+  private statusHandlers: { [key: string]: IAsyncHandler } = {};
   constructor() {
     this.statusHandlers["404"] = NotFound;
   }
 
   public use(cb: IAsyncMiddleware) {
     this.middlewares.push(cb);
-  }
-
-  get app() {
-    return this;
   }
 
   get server() {
@@ -30,7 +39,7 @@ export class Aex {
     const method = options.method.toUpperCase();
     if (METHODS.indexOf(method) === -1) {
       throw new Error(
-        'wrong method: ' + options.method + ' with url: ' + options.url
+        "wrong method: " + options.method + " with url: " + options.url
       );
     }
     options.method = options.method.toUpperCase();
@@ -40,7 +49,7 @@ export class Aex {
 
   public async start(
     port: number = 3000,
-    ip: string = 'localhost'
+    ip: string = "localhost"
   ): Promise<Server> {
     return new Promise((resolve, reject) => {
       const server = createServer((req, res) => {
@@ -48,11 +57,11 @@ export class Aex {
       });
 
       server.listen(port, ip);
-      server.on('error', (error: Error) => {
+      server.on("error", (error: Error) => {
         reject(error);
       });
 
-      server.on('listening', () => {
+      server.on("listening", () => {
         this._server = server;
         resolve(server);
       });
@@ -66,7 +75,7 @@ export class Aex {
       }
       this.routes[options.method][options.url] = {
         handler: options.handler,
-        middlewares: options.middlewares,
+        middlewares: options.middlewares
       };
     }
   }
@@ -97,7 +106,7 @@ export class Aex {
       },
       get started() {
         return started;
-      },
+      }
     };
     return {
       get outter() {
@@ -108,24 +117,24 @@ export class Aex {
       },
       get time() {
         return time;
-      },
+      }
     };
   }
 
   protected async routing(req: IncomingMessage, res: ServerResponse) {
-    const url = req.url || "/";
-    const method = req.method || "GET";
+    const url = req.url;
+    const method = req.method;
 
-    const router = this.getMatchedRouter(method, url);
+    const router = this.getMatchedRouter(method as string, url as string);
     if (!router) {
       await NotFound(req, res);
       return;
     }
-    if (router.matched.params) {
+    if (Object.keys(router.matched.params).length) {
       this.enhanceRequest(req, router.matched.params);
     }
     this.enhanceResponse(res);
-    await this.requestHandling(req, res, router.handler)
+    await this.requestHandling(req, res, router.handler);
   }
 
   protected getMatchedRouter(method: string, url: string) {
@@ -144,45 +153,37 @@ export class Aex {
     return;
   }
 
-
   protected enhanceRequest(req: IncomingMessage, params: object) {
-    const od = Object.getOwnPropertyDescriptor(req, "params");
-    if (!od) {
-      Object.defineProperty(req, "params", {
-        enumerable: true,
-        get: () => {
-          return params
-        }
-      });
-    }
+    Object.defineProperty(req, "params", {
+      enumerable: true,
+      get: () => {
+        return params;
+      }
+    });
   }
 
   protected enhanceResponse(res: ServerResponse) {
-    const od = Object.getOwnPropertyDescriptor(res, "send");
-    if (!od) {
-      Object.defineProperty(res, "send", {
-        enumerable: false,
-        value: (message: string) => {
-          res.write(message);
-          res.end();
-        },
-      });
-    }
+    Object.defineProperty(res, "send", {
+      enumerable: false,
+      value: (message: string) => {
+        res.write(message);
+        res.end();
+      }
+    });
   }
 
-  protected async requestHandling(req: IncomingMessage, res: ServerResponse, handler: IRouteItem) {
+  protected async requestHandling(
+    req: IncomingMessage,
+    res: ServerResponse,
+    handler: IRouteItem
+  ) {
     let middlewares = this.middlewares;
     const scope = this.getScope();
     if (handler.middlewares && handler.middlewares.length) {
       middlewares = middlewares.concat(handler.middlewares);
     }
     if (middlewares.length) {
-      const leave = await this.processMiddleware(
-        req,
-        res,
-        middlewares,
-        scope
-      );
+      const leave = await this.processMiddleware(req, res, middlewares, scope);
       if (leave) {
         return true;
       }
