@@ -1,6 +1,6 @@
 {
   "name": "@aex/core",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "aex",
   "license": "MIT",
   "repository": "calidion/aex",
@@ -30,6 +30,7 @@
     "watch:test": "jest --watch"
   },
   "dependencies": {
+    "@types/node": "^12.12.17",
     "path-to-regexp": "^6.1.0"
   },
   "devDependencies": {
@@ -37,7 +38,6 @@
     "@types/debug": "^4.1.5",
     "@types/express-session": "^1.15.16",
     "@types/jest": "^23.3.3",
-    "@types/node": "^10.17.6",
     "@types/supertest": "^2.0.8",
     "cors": "^2.8.5",
     "coveralls": "^3.0.2",
