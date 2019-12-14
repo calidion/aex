@@ -177,18 +177,6 @@ aex.handle(options);
 
 # Accessable members
 
-## app
-
-The instance of express Application.
-
-Accessable through `aex.app`.
-
-```ts
-const app = express();
-const aex = new Aex(app);
-expect(aex.app === app).toBeTruthy();
-```
-
 ## server
 
 The node system `http.Server`.
