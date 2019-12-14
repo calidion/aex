@@ -250,7 +250,7 @@ scope.outer.a = 120;
 
 # Use middlewares from expressjs
 
-Aex provide a way for express middlewares to be tranlated into Aex middlewares.
+Aex provide a way for express middlewares to be translated into Aex middlewares.
 
 You need just a simple call to `toAsyncMiddleware` to generate Aex's async middleware.
 
@@ -264,6 +264,6 @@ const pOld = toAsyncMiddleware(oldMiddleware);
 aex.use(pOld);
 ```
 
-> You should be cautious to use middlewares.
-> Fully testing is appreciated.
+> You should be cautious to use express middlewares.
+> Full testing is appreciated.
 
