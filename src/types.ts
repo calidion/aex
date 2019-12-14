@@ -38,6 +38,6 @@ export interface IScope {
     passed: number;
     started: Date;
   };
-  outter: object;
+  outer: object;
   inner: object;
 }

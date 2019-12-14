@@ -205,10 +205,10 @@ async (req, res, scope) => {
 };
 ```
 
-the `scope` variable has three native attributes: `time`, `outter`, `inner`.
+the `scope` variable has three native attributes: `time`, `outer`, `inner`.
 
 The `time` attribute contains the started time and passed time of requests.
-The `outter` attribute is to store general or global data.
+The `outer` attribute is to store general or global data.
 The `inner` attribute is to store specific or local data.
 
 ## `time`
@@ -227,21 +227,21 @@ scope.time.passed;
 // 2019-12-12T09:01:49.543Z
 ```
 
-## `outter` and `inner`
+## `outer` and `inner`
 
-The `outter` and `inner`variables are objects used to store data for different purposes.
+The `outer` and `inner`variables are objects used to store data for different purposes.
 
 You can simply assign them a new attribute with data;
 
 ```ts
 scope.inner.a = 100;
-scope.outter.a = 120;
+scope.outer.a = 120;
 ```
 
 ## all these build-in attribute are readonly
 
 ```ts
-// scope.outter = {};  // Wrong operation!
+// scope.outer = {};  // Wrong operation!
 // scope.inner = {};   // Wrong operation!
 // scope.time = {};    // Wrong operation!
 // scope.time.started = {};  // Wrong operation!

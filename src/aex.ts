@@ -98,7 +98,7 @@ export class Aex {
 
   protected getScope(): IScope {
     const started = new Date();
-    const outter = {};
+    const outer = {};
     const inner = {};
     const time = {
       get passed() {
@@ -109,8 +109,8 @@ export class Aex {
       }
     };
     return {
-      get outter() {
-        return outter;
+      get outer() {
+        return outer;
       },
       get inner() {
         return inner;

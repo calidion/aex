@@ -125,15 +125,15 @@ test("Should allow in request middlewares", async () => {
       scope: any
     ) => {
       res.write(" world!");
-      expect(scope.outter).toBeTruthy();
+      expect(scope.outer).toBeTruthy();
       expect(scope.inner).toBeTruthy();
       scope.inner.a = 100;
-      scope.outter.a = 120;
+      scope.outer.a = 120;
       expect(scope.inner.a === 100).toBeTruthy();
-      expect(scope.outter.a === 120).toBeTruthy();
+      expect(scope.outer.a === 120).toBeTruthy();
       let catched = false;
       try {
-        scope.outter = {};
+        scope.outer = {};
       } catch (e) {
         catched = true;
       }
