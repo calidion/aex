@@ -11,7 +11,7 @@ It is an example:
 1. To show that callbacks are not needed with promise/async/await.
 2. To use middlewares in a linear way instead of stacked way which is insecure.
    > For the stacked middleware model will carry response back to the top most so called middleware pushed, where every middleware can access to the body returned.
-3. To pass some vairiables through middlewares and the final handler.
+3. To pass some vairiables through middlewares and to the final handler.
 
 # A simple example
 
