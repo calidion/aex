@@ -33,11 +33,13 @@ export interface IOptions {
   middlewares?: IAsyncMiddleware[];
 }
 
+export interface IElapsedTime {
+  passed: number;
+  started: Date;
+}
+
 export interface IScope {
-  time: {
-    passed: number;
-    started: Date;
-  };
+  time: IElapsedTime;
   outer: object;
   inner: object;
 }

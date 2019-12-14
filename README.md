@@ -28,7 +28,7 @@ const options = {
     console.log(scope.time.stated);
     // processing time passed
     console.log(scope.time.passed);
-    res.send("Hello Aex!");
+    res.end("Hello Aex!");
   }
 };
 
@@ -68,7 +68,7 @@ const options = {
   method: "get",
   url: "/",
   handler: async (req, res, scope) => {
-    res.send("Hello world!");
+    res.end("Hello world!");
   }
 };
 
@@ -160,7 +160,7 @@ const options = {
   method: "get",
   url: "/",
   handler: async (req, res, scope) => {
-    res.send("Hello world!");
+    res.end("Hello world!");
   },
   middlewares: [
     async (req, res, scope) => {

@@ -6,6 +6,7 @@ import {
   ServerResponse
 } from "http";
 import { match } from "path-to-regexp";
+import { Scope } from "./scope";
 import NotFound from "./status/404";
 import {
   IAsyncHandler,
@@ -96,51 +97,38 @@ export class Aex {
     return false;
   }
 
-  protected getScope(): IScope {
-    const started = new Date();
-    const outer = {};
-    const inner = {};
-    const time = {
-      get passed() {
-        return new Date().getTime() - started.getTime();
-      },
-      get started() {
-        return started;
-      }
-    };
-    return {
-      get outer() {
-        return outer;
-      },
-      get inner() {
-        return inner;
-      },
-      get time() {
-        return time;
-      }
-    };
-  }
-
   protected async routing(req: IncomingMessage, res: ServerResponse) {
     const url = req.url;
     const method = req.method;
+    const scope = new Scope();
+
+    const middlewares = this.middlewares;
+    if (middlewares && middlewares.length) {
+      const leave = await this.processMiddleware(req, res, middlewares, scope);
+      if (leave) {
+        return;
+      }
+    }
 
     const router = this.getMatchedRouter(method as string, url as string);
     if (!router) {
       await NotFound(req, res);
       return;
     }
-    if (Object.keys(router.matched.params).length) {
+    if (router.matched && Object.keys(router.matched.params).length) {
       this.enhanceRequest(req, router.matched.params);
     }
-    this.enhanceResponse(res);
-    await this.requestHandling(req, res, router.handler);
+    await this.requestHandling(req, res, router.handler, scope);
   }
 
   protected getMatchedRouter(method: string, url: string) {
     const routes = this.routes[method];
     if (!routes) {
       return;
+    }
+    const handler = routes[url];
+    if (handler) {
+      return { handler };
     }
     const keys = Object.keys(routes);
     for (const key of keys) {
@@ -162,28 +150,19 @@ export class Aex {
     });
   }
 
-  protected enhanceResponse(res: ServerResponse) {
-    Object.defineProperty(res, "send", {
-      enumerable: false,
-      value: (message: string) => {
-        res.write(message);
-        res.end();
-      }
-    });
-  }
-
   protected async requestHandling(
     req: IncomingMessage,
     res: ServerResponse,
-    handler: IRouteItem
+    handler: IRouteItem,
+    scope: IScope
   ) {
-    let middlewares = this.middlewares;
-    const scope = this.getScope();
     if (handler.middlewares && handler.middlewares.length) {
-      middlewares = middlewares.concat(handler.middlewares);
-    }
-    if (middlewares.length) {
-      const leave = await this.processMiddleware(req, res, middlewares, scope);
+      const leave = await this.processMiddleware(
+        req,
+        res,
+        handler.middlewares,
+        scope
+      );
       if (leave) {
         return true;
       }
