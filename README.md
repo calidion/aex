@@ -16,18 +16,18 @@ It is an example:
 # A simple example
 
 ```ts
-import { Aex,Router } from "@aex/core";
+import { Aex, Router } from "@aex/core";
 
 const aex = new Aex();
 const router = new Router(aex);
 
 router.get("/", async (req, res, scope) => {
-    // request processing time started
-    console.log(scope.time.stated);
-    // processing time passed
-    console.log(scope.time.passed);
-    res.end("Hello Aex!");
-  });
+  // request processing time started
+  console.log(scope.time.stated);
+  // processing time passed
+  console.log(scope.time.passed);
+  res.end("Hello Aex!");
+});
 
 aex.use(router.toMiddleware());
 
@@ -66,12 +66,12 @@ const router = new Router();
 
 ```ts
 router.get("/", async (req, res, scope) => {
-    // request processing time started
-    console.log(scope.time.stated);
-    // processing time passed
-    console.log(scope.time.passed);
-    res.end("Hello Aex!");
-  });
+  // request processing time started
+  console.log(scope.time.stated);
+  // processing time passed
+  console.log(scope.time.passed);
+  res.end("Hello Aex!");
+});
 ```
 
 ## 3. Use router as an middleware
@@ -88,31 +88,6 @@ const host = "localhost";
 const server = await aex.start(port, host);
 // server === aex.server
 ```
-
-### The Option for handler
-
-The option is a composition of a `method`, a `url`, a `handler` and `middlewares`.
-
-where:
-
-the `method` is the http method,
-
-the `url` is an express supported url,
-
-the `handler` is an async function `IAsyncHandler` which defined as follows:
-
-```ts
-export type IAsyncMiddleware = (
-  req: Request,
-  res: Response,
-  scope?: object
-) => Promise<boolean | undefined | null | void>;
-export type IAsyncHandler = IAsyncMiddleware;
-```
-
-the `middlewares` is an array of async functions which are executed in order. The async function is of the same format to the handler but called `IAsyncMiddleware` for distinguish only.
-
-> middlewares can return `false` to stop further execution
 
 # Middlewares
 
@@ -155,13 +130,12 @@ the `middlewares` attribute is an array of async functions of `IAsyncMiddleware`
 so we can simply define handler specific middlewares as follows:
 
 ```ts
-const options = {
-  method: "get",
-  url: "/",
-  handler: async (req, res, scope) => {
+router.get(
+  "/",
+  async (req, res, scope) => {
     res.end("Hello world!");
   },
-  middlewares: [
+  [
     async (req, res, scope) => {
       // process 1
       // return false
@@ -176,9 +150,7 @@ const options = {
       // return false
     }
   ]
-};
-
-router.handle(options);
+);
 ```
 
 # Accessable members
