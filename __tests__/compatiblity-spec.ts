@@ -17,14 +17,14 @@ test("Should compatible with express middlewares", async () => {
   aex.use(pOld);
 
   const asession = session({
-    secret: "keyboard cat",
+    secret: "keyboard cat"
   });
   const psession = toAsyncMiddleware(asession);
   aex.use(psession);
 
-  const router = new Router(aex);
+  const router = new Router();
 
-  const result = router.handle({
+  router.handle({
     method: "get",
     url: "/",
     // tslint:disable-next-line:object-literal-sort-keys
@@ -36,11 +36,10 @@ test("Should compatible with express middlewares", async () => {
       expect(oldInvoke).toBeTruthy();
       expect(req.session).toBeTruthy();
       res.end("Hello Aex!");
-    },
+    }
   });
-  router.prepare();
 
-  expect(result).toBeTruthy();
+  aex.use(router.toMiddleware());
 
   await responseText(aex, "Hello Aex!");
 });

@@ -3,7 +3,7 @@
 
 import Aex from "../src/core";
 import { Router } from "../src/router";
-import { responseText, responseStatus } from "./util";
+import { responseStatus, responseText } from "./util";
 
 test("Should have Aex available", () => {
   expect(Aex).toBeTruthy();
@@ -16,9 +16,9 @@ test("Should init Aex", () => {
 test("Should add http methods", async () => {
   const aex = new Aex();
 
-  const router = new Router(aex);
+  const router = new Router();
 
-  const result = router.handle({
+  router.handle({
     method: "get",
     url: "/",
     // tslint:disable-next-line:object-literal-sort-keys
@@ -30,16 +30,13 @@ test("Should add http methods", async () => {
       res.end("Hello Aex!");
     },
   });
-  router.prepare();
+  aex.use(router.toMiddleware())
 
-  expect(result).toBeTruthy();
   await responseText(aex, "Hello Aex!");
 });
 
 test("Should not able to add wrong http methods", () => {
-  const aex = new Aex();
-  const router = new Router(aex);
-
+  const router = new Router();
   let catched = false;
   try {
     router.handle({
@@ -54,6 +51,7 @@ test("Should not able to add wrong http methods", () => {
         res.end("Hello Aex!");
       },
     });
+
   } catch (e) {
     expect(e.message === "wrong method: gett with url: /").toBeTruthy();
     catched = true;
@@ -64,7 +62,7 @@ test("Should not able to add wrong http methods", () => {
 
 test("Should allow in request middlewares", async () => {
   const aex = new Aex();
-  const router = new Router(aex);
+  const router = new Router();
 
   router.handle({
     method: "get",
@@ -112,13 +110,13 @@ test("Should allow in request middlewares", async () => {
     ],
   });
 
-  router.prepare();
+  aex.use(router.toMiddleware())
   await responseText(aex, "End!");
 });
 
 test("Should allow in request middlewares", async () => {
   const aex = new Aex();
-  const router = new Router(aex);
+  const router = new Router();
 
   router.handle({
     method: "get",
@@ -197,14 +195,14 @@ test("Should allow in request middlewares", async () => {
       },
     ],
   });
-  router.prepare();
+  aex.use(router.toMiddleware())
 
   await responseText(aex, "Hello world!");
 });
 
 test("Should allow general middlewares", async () => {
   const aex = new Aex();
-  const router = new Router(aex);
+  const router = new Router();
 
   aex.use(
     async (
@@ -239,7 +237,8 @@ test("Should allow general middlewares", async () => {
       },
     ],
   });
-  router.prepare();
+  aex.use(router.toMiddleware())
+
   await responseText(aex, "General Middlewares!");
 });
 
@@ -263,9 +262,9 @@ test("Should start http methods", async () => {
 
 test("Should add http methods", async () => {
   const aex = new Aex();
-  const router = new Router(aex);
+  const router = new Router();
 
-  const result = router.handle({
+  router.handle({
     method: "get",
     url: "/",
     // tslint:disable-next-line:object-literal-sort-keys
@@ -277,10 +276,8 @@ test("Should add http methods", async () => {
       res.end("Hello Aex!");
     },
   });
-  router.prepare();
 
-  expect(result).toBeTruthy();
-
+  aex.use(router.toMiddleware())
   await responseText(aex, "Hello Aex!");
 });
 

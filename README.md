@@ -21,21 +21,15 @@ import { Aex,Router } from "@aex/core";
 const aex = new Aex();
 const router = new Router(aex);
 
-const options = {
-  method: "get",
-  url: "/",
-  handler: async (req, res, scope) => {
+router.get("/", async (req, res, scope) => {
     // request processing time started
     console.log(scope.time.stated);
     // processing time passed
     console.log(scope.time.passed);
     res.end("Hello Aex!");
-  }
-};
+  });
 
-router.handle(options);
-
-router.prepare();
+aex.use(router.toMiddleware());
 
 const port = 3000;
 const host = "localhost";
@@ -65,27 +59,25 @@ const aex = new Aex();
 ## 2. Create a Router
 
 ```ts
-const router = new Router(aex);
+const router = new Router();
 ```
 
 ## 2. Setup the option for handler
 
 ```ts
-const options = {
-  method: "get",
-  url: "/",
-  handler: async (req, res, scope) => {
-    res.end("Hello world!");
-  }
-};
-
-aex.handle(options);
+router.get("/", async (req, res, scope) => {
+    // request processing time started
+    console.log(scope.time.stated);
+    // processing time passed
+    console.log(scope.time.passed);
+    res.end("Hello Aex!");
+  });
 ```
 
-## 3. Prepare the server
+## 3. Use router as an middleware
 
 ```ts
-aex.prepare();
+aex.use(router.toMiddleware());
 ```
 
 ## 4. Start the server
