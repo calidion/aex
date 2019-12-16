@@ -1,4 +1,5 @@
-import { IncomingMessage, ServerResponse } from 'http';
+import { IncomingMessage, ServerResponse } from "http";
+import { Scope } from "./scope";
 
 export type ICallback = (error: Error) => void;
 export type Request = IncomingMessage;
@@ -12,7 +13,7 @@ export type IMiddeleWare = (
 export type IAsyncMiddleware = (
   req: Request,
   res: Response,
-  scope?: object
+  scope?: Scope
 ) => Promise<boolean | undefined | null | void>;
 
 export type IAsyncHandler = IAsyncMiddleware;
@@ -31,15 +32,4 @@ export interface IOptions {
   url: string;
   handler: IAsyncHandler;
   middlewares?: IAsyncMiddleware[];
-}
-
-export interface IElapsedTime {
-  passed: number;
-  started: Date;
-}
-
-export interface IScope {
-  time: IElapsedTime;
-  outer: object;
-  inner: object;
 }

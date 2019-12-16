@@ -4,6 +4,9 @@ export class Timer {
   constructor() {
     this._started = new Date();
   }
+  public reset() {
+    this._started = new Date();
+  }
   get started() {
     return this._started;
   }

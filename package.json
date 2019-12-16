@@ -1,6 +1,6 @@
 {
   "name": "@aex/core",
-  "version": "0.3.4",
+  "version": "0.3.6",
   "description": "aex",
   "license": "MIT",
   "repository": "calidion/aex",
@@ -19,7 +19,7 @@
   "types": "lib/index",
   "scripts": {
     "clean": "rimraf lib && rimraf coverage",
-    "format": "prettier --write \"{src,__tests__}/**/*.ts\" --single-quote --trailing-comma es5",
+    "format": "prettier --write \"{src,__tests__}/**/*.ts\" --trailing-comma es5",
     "lint": "tslint --force --format verbose \"src/**/*.ts\"",
     "prepublishOnly": "npm run build",
     "prebuild": "npm run clean && npm run format && npm run lint && echo Using TypeScript && tsc --version",
@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "@types/node": "^12.12.17",
+    "immutable": "^4.0.0-rc.12",
     "path-to-regexp": "^6.1.0"
   },
   "devDependencies": {

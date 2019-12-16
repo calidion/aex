@@ -1,10 +1,11 @@
-import * as session from 'express-session';
-import { Aex } from '../src/aex';
+import * as session from "express-session";
+import { Aex } from "../src/core";
 
-import { toAsyncMiddleware } from '../src/util';
-import { responseText } from './util';
+import { Router } from "../src/router";
+import { toAsyncMiddleware } from "../src/util";
+import { responseText } from "./util";
 
-test('Should compatible with express middlewares', async () => {
+test("Should compatible with express middlewares", async () => {
   const aex = new Aex();
   let oldInvoke = false;
   const oldMiddleware = (_req: any, _res: any, next: any) => {
@@ -16,14 +17,16 @@ test('Should compatible with express middlewares', async () => {
   aex.use(pOld);
 
   const asession = session({
-    secret: 'keyboard cat',
+    secret: "keyboard cat",
   });
   const psession = toAsyncMiddleware(asession);
   aex.use(psession);
 
-  const result = aex.handle({
-    method: 'get',
-    url: '/',
+  const router = new Router(aex);
+
+  const result = router.handle({
+    method: "get",
+    url: "/",
     // tslint:disable-next-line:object-literal-sort-keys
     handler: async (
       // tslint:disable-next-line:variable-name
@@ -32,12 +35,12 @@ test('Should compatible with express middlewares', async () => {
     ) => {
       expect(oldInvoke).toBeTruthy();
       expect(req.session).toBeTruthy();
-      res.end('Hello Aex!');
+      res.end("Hello Aex!");
     },
   });
-  aex.prepare();
+  router.prepare();
 
   expect(result).toBeTruthy();
 
-  await responseText(aex, 'Hello Aex!');
+  await responseText(aex, "Hello Aex!");
 });

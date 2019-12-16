@@ -1,4 +1,4 @@
-import { IncomingMessage, ServerResponse } from 'http';
+import { IncomingMessage, ServerResponse } from "http";
 
 // tslint:disable-next-line:variable-name
 export async function NotFound(_req: IncomingMessage, res: ServerResponse) {

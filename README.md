@@ -16,9 +16,10 @@ It is an example:
 # A simple example
 
 ```ts
-import { Aex } from "@aex/core";
+import { Aex,Router } from "@aex/core";
 
 const aex = new Aex();
+const router = new Router(aex);
 
 const options = {
   method: "get",
@@ -32,9 +33,9 @@ const options = {
   }
 };
 
-aex.handle(options);
+router.handle(options);
 
-aex.prepare();
+router.prepare();
 
 const port = 3000;
 const host = "localhost";
@@ -59,6 +60,12 @@ yarn add @aex/core
 
 ```ts
 const aex = new Aex();
+```
+
+## 2. Create a Router
+
+```ts
+const router = new Router(aex);
 ```
 
 ## 2. Setup the option for handler
@@ -179,7 +186,7 @@ const options = {
   ]
 };
 
-aex.handle(options);
+router.handle(options);
 ```
 
 # Accessable members
