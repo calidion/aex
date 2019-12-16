@@ -45,10 +45,7 @@ export class Aex {
 
     const middlewares = this.middlewares;
     if (middlewares && middlewares.length) {
-      const leave = await processMiddleware(req, res, middlewares, scope);
-      if (leave) {
-        return;
-      }
+      await processMiddleware(req, res, middlewares, scope);
     } else {
       await NotFound(req, res);
     }
