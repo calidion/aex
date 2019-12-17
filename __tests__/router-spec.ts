@@ -16,7 +16,7 @@ test("Should parse params", async () => {
     handler: async (req: any, res: any) => {
       expect(req.params).toBeTruthy();
       res.end("Hello Aex!");
-    }
+    },
   });
   aex.use(router.toMiddleware());
 
@@ -34,7 +34,7 @@ test("Should return 404 when no route found!", async () => {
     handler: async (req: any, res: any) => {
       expect(req.params).toBeTruthy();
       res.end("Hello Aex!");
-    }
+    },
   });
 
   aex.use(router.toMiddleware());

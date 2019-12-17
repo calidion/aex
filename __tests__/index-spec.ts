@@ -30,7 +30,7 @@ test("Should add http methods", async () => {
       res.end("Hello Aex!");
     },
   });
-  aex.use(router.toMiddleware())
+  aex.use(router.toMiddleware());
 
   await responseText(aex, "Hello Aex!");
 });
@@ -51,7 +51,6 @@ test("Should not able to add wrong http methods", () => {
         res.end("Hello Aex!");
       },
     });
-
   } catch (e) {
     expect(e.message === "wrong method: gett with url: /").toBeTruthy();
     catched = true;
@@ -110,7 +109,7 @@ test("Should allow in request middlewares", async () => {
     ],
   });
 
-  aex.use(router.toMiddleware())
+  aex.use(router.toMiddleware());
   await responseText(aex, "End!");
 });
 
@@ -195,7 +194,7 @@ test("Should allow in request middlewares", async () => {
       },
     ],
   });
-  aex.use(router.toMiddleware())
+  aex.use(router.toMiddleware());
 
   await responseText(aex, "Hello world!");
 });
@@ -237,7 +236,7 @@ test("Should allow general middlewares", async () => {
       },
     ],
   });
-  aex.use(router.toMiddleware())
+  aex.use(router.toMiddleware());
 
   await responseText(aex, "General Middlewares!");
 });
@@ -277,7 +276,7 @@ test("Should add http methods", async () => {
     },
   });
 
-  aex.use(router.toMiddleware())
+  aex.use(router.toMiddleware());
   await responseText(aex, "Hello Aex!");
 });
 

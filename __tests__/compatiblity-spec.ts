@@ -17,7 +17,7 @@ test("Should compatible with express middlewares", async () => {
   aex.use(pOld);
 
   const asession = session({
-    secret: "keyboard cat"
+    secret: "keyboard cat",
   });
   const psession = toAsyncMiddleware(asession);
   aex.use(psession);
@@ -36,7 +36,7 @@ test("Should compatible with express middlewares", async () => {
       expect(oldInvoke).toBeTruthy();
       expect(req.session).toBeTruthy();
       res.end("Hello Aex!");
-    }
+    },
   });
 
   aex.use(router.toMiddleware());

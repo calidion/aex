@@ -2,19 +2,24 @@ import { IncomingMessage, METHODS, ServerResponse } from "http";
 import { match } from "path-to-regexp";
 import { Scope } from "./scope";
 import NotFound from "./status/404";
-import { IAsyncHandler, IOptions, IRoute, IRouteItem, IAsyncMiddleware } from "./types";
+import {
+  IAsyncHandler,
+  IAsyncMiddleware,
+  IOptions,
+  IRoute,
+  IRouteItem,
+} from "./types";
 import { processMiddleware } from "./util";
 
-
 interface IBuildIns {
-  options: IOptions[],
-  routes: IRoute
+  options: IOptions[];
+  routes: IRoute;
 }
 
 export class Router {
-  private buildins:IBuildIns = {
+  private buildins: IBuildIns = {
     options: [],
-    routes: {}
+    routes: {},
   };
   [x: string]: any;
 
@@ -22,7 +27,11 @@ export class Router {
     for (const method of METHODS) {
       Object.defineProperty(this, method.toLowerCase(), {
         enumerable: true,
-        value: (url: string, handler: IAsyncHandler, middlewares? : IAsyncMiddleware[]) => {
+        value: (
+          url: string,
+          handler: IAsyncHandler,
+          middlewares?: IAsyncMiddleware[]
+        ) => {
           const options: IOptions = {
             handler,
             method,
@@ -30,7 +39,7 @@ export class Router {
             url,
           };
           this.handle(options);
-        }
+        },
       });
     }
   }
@@ -53,7 +62,7 @@ export class Router {
       }
       this.buildins.routes[options.method][options.url] = {
         handler: options.handler,
-        middlewares: options.middlewares
+        middlewares: options.middlewares,
       };
     }
   }
@@ -105,7 +114,7 @@ export class Router {
       enumerable: true,
       get: () => {
         return params;
-      }
+      },
     });
   }
 
