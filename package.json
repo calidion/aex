@@ -31,7 +31,6 @@
   },
   "dependencies": {
     "@types/node": "^12.12.17",
-    "immutable": "^4.0.0-rc.12",
     "path-to-regexp": "^6.1.0"
   },
   "devDependencies": {
