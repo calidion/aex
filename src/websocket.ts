@@ -14,6 +14,7 @@ export class WebSocketServer extends EventEmitter {
 
   public static ENTER = "enter";
   public static LEAVE = "leave";
+  public static ERROR = "error";
   public static CLOSE = "close";
   public static UPGRADE = "upgrade";
   public static CONNECTION = "connection";
@@ -45,7 +46,7 @@ export class WebSocketServer extends EventEmitter {
         message.scope = scope;
         this.emit(message.event, message.data);
       } catch (e) {
-        this.emit("error", { message: "JSON format error!", raw: String(data) });
+        this.emit(WebSocketServer.ERROR, { message: "JSON format error!", raw: String(data) });
       }
     });
   }
