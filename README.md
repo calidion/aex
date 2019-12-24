@@ -89,6 +89,74 @@ const server = await aex.start(port, host);
 // server === aex.server
 ```
 
+# Websocket support
+
+## Simple
+
+1. Create a `WebSocketServer` instance
+
+```ts
+const ws = new WebSocketServer();
+```
+
+2. Attach a net.Server
+
+```ts
+const aex = new Aex();
+const server = await aex.start();
+ws.attach(server);
+```
+
+3. Listen on `WebSocketServer` System events
+
+```ts
+ws.on(WebSocketServer.ENTER, () => {
+  // process/here
+});
+ws.on(WebSocketServer.LEAVE, () => {
+  // process/here
+});
+ws.on(WebSocketServer.MESSAGE, () => {
+  // process/here
+});
+ws.on(WebSocketServer.ERROR, () => {
+  // process/here
+});
+```
+
+4. New browser/client WebSocket object
+
+```ts
+const wsc: WebSocket = new WebSocket("ws://localhost:3000/path");
+wsc.on("open", function open() {
+  wsc.send("");
+});
+```
+
+5. Listen on user-customized events
+
+```ts
+ws.on("new-message", () => {
+  // process/here
+});
+```
+
+6. Sending ws message in browser/client
+
+```ts
+const wsc: WebSocket = new WebSocket("ws://localhost:3000/path");
+wsc.on("open", function open() {
+  wsc.send(
+    JSON.stringify({
+      event: "new-message",
+      data: {
+        message: "Hello world!"
+      }
+    })
+  );
+});
+```
+
 # Middlewares
 
 ## Global middlewares
