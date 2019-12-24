@@ -1,4 +1,5 @@
 import { IncomingMessage, ServerResponse } from "http";
+import { Socket } from "net";
 import { Scope } from "./scope";
 
 export type ICallback = (error: Error) => void;
@@ -10,11 +11,19 @@ export type IMiddeleWare = (
   res: Response | any,
   next: ICallback
 ) => void;
+
 export type IAsyncMiddleware = (
   req: Request,
   res: Response,
   scope?: Scope
 ) => Promise<boolean | undefined | null | void>;
+
+export type IAsyncWebSocketMiddleware = (
+  req: Request,
+  socket: Socket,
+  scope?: Scope
+) => Promise<boolean | undefined | null | void>;
+
 
 export type IAsyncHandler = IAsyncMiddleware;
 
