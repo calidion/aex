@@ -54,7 +54,7 @@ test("Should return use http methods directly", async () => {
   const aex = new Aex();
   const router = new Router();
 
-  router.get("/user/:name", async (req: any, res: any) => {
+  router.get(["/user/:name", "/user/:id"], async (req: any, res: any) => {
     expect(req.params).toBeTruthy();
     res.end("Hello Aex!");
   });
