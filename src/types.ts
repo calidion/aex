@@ -38,7 +38,7 @@ export interface IRoute {
 
 export interface IOptions {
   method: string;
-  url: string;
+  url: string | string[];
   handler: IAsyncHandler;
   middlewares?: IAsyncMiddleware[];
 }

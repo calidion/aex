@@ -21,7 +21,17 @@ import { Aex, Router } from "@aex/core";
 const aex = new Aex();
 const router = new Router(aex);
 
+// Simple string route
 router.get("/", async (req, res, scope) => {
+  // request processing time started
+  console.log(scope.time.stated);
+  // processing time passed
+  console.log(scope.time.passed);
+  res.end("Hello Aex!");
+});
+
+// Route Array
+router.get(["/user/home", "/user/profile"], async (req, res, scope) => {
   // request processing time started
   console.log(scope.time.stated);
   // processing time passed
