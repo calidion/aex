@@ -1,7 +1,8 @@
 import { IncomingMessage, ServerResponse } from "http";
+import { Socket } from "net";
 import { promisify } from "util";
 import { Scope } from "./scope";
-import { IAsyncMiddleware, IMiddeleWare } from "./types";
+import { IAsyncMiddleware, IAsyncWebSocketMiddleware, IMiddeleWare } from './types';
 
 export function toAsyncMiddleware(cb: IMiddeleWare): IAsyncMiddleware {
   return async (req: IncomingMessage, res: ServerResponse) => {
@@ -18,6 +19,22 @@ export async function processMiddleware(
 ): Promise<boolean> {
   for (const middleware of middlewares) {
     const leave = await middleware(req, res, scope);
+    // Stop middleware execution when false is returned.
+    if (leave === false) {
+      return true;
+    }
+  }
+  return false;
+}
+
+export async function processWebSocketMiddleware(
+  middlewares: IAsyncWebSocketMiddleware[],
+  req: IncomingMessage,
+  socket: Socket,
+  scope?: Scope
+): Promise<boolean> {
+  for (const middleware of middlewares) {
+    const leave = await middleware(req, socket, scope);
     // Stop middleware execution when false is returned.
     if (leave === false) {
       return true;

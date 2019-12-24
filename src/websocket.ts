@@ -1,11 +1,13 @@
-// import * as debug from "debug";
+import * as debug from "debug";
 import { EventEmitter } from "events";
 import { IncomingMessage, Server } from 'http';
+import { Socket } from "net";
 import * as WebSocket from "ws";
 import { Scope } from './scope';
-// import { IAsyncWebSocketMiddleware } from './types';
+import { IAsyncWebSocketMiddleware } from './types';
+import { processWebSocketMiddleware } from "./util";
 
-// const print = debug("aex:websocket");
+const print = debug("aex:websocket");
 
 
 
@@ -20,10 +22,9 @@ export class WebSocketServer extends EventEmitter {
   public static CONNECTION = "connection";
   public static MESSAGE = "message";
 
-  // private static connections: { [key: string]: WebSocket };
   private server?: WebSocket.Server;
 
-  // private middlewares: IAsyncWebSocketMiddleware[] = [];
+  private middlewares: IAsyncWebSocketMiddleware[] = [];
   private scope = new Scope();
 
   constructor() {
@@ -31,9 +32,9 @@ export class WebSocketServer extends EventEmitter {
   }
 
 
-  // public use(cb: IAsyncWebSocketMiddleware) {
-  //   this.middlewares.push(cb);
-  // }
+  public use(cb: IAsyncWebSocketMiddleware) {
+    this.middlewares.push(cb);
+  }
 
   public close() {
     this.server?.close();
@@ -46,6 +47,7 @@ export class WebSocketServer extends EventEmitter {
         message.scope = scope;
         this.emit(message.event, message.data);
       } catch (e) {
+        print(e);
         this.emit(WebSocketServer.ERROR, { message: "JSON format error!", raw: String(data) });
       }
     });
@@ -61,10 +63,6 @@ export class WebSocketServer extends EventEmitter {
     });
   }
 
-  // public onUpgrade(ws, req, head) {
-
-  // }
-
   public attach(server: Server) {
     const wss = new WebSocket.Server({ server });
     this.server = wss;
@@ -76,20 +74,17 @@ export class WebSocketServer extends EventEmitter {
       this.onLeave(ws, req, head);
     });
 
-    // server.on('upgrade', (req, socket, head) => {
-    //   // this.routing(req, socket, head).then();
-    // });
+    server.on('upgrade', (req, socket) => {
+      this.routing(req, socket).then();
+    });
   }
 
-  // protected async routing(req: IncomingMessage, ws: WebSocket, head: any) {
-  //   const scope: Scope = Object.create(this.scope);
-  //   scope.time.reset();
-
-  //   const middlewares = this.middlewares;
-  //   if (middlewares && middlewares.length) {
-  //     await processMiddleware(req, res, middlewares, scope);
-  //   } else {
-  //     await NotFound(req, res);
-  //   }
-  // }
+  protected async routing(req: IncomingMessage, ws: Socket) {
+    const scope: Scope = Object.create(this.scope);
+    scope.time.reset();
+    const middlewares = this.middlewares;
+    if (middlewares.length) {
+      await processWebSocketMiddleware(middlewares, req, ws, scope);
+    }
+  }
 }
