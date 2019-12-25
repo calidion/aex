@@ -18,13 +18,6 @@ export type IAsyncMiddleware = (
   scope?: Scope
 ) => Promise<boolean | undefined | null | void>;
 
-export type IAsyncWebSocketMiddleware = (
-  req: Request,
-  socket: Socket,
-  scope?: Scope
-) => Promise<boolean | undefined | null | void>;
-
-
 export type IAsyncHandler = IAsyncMiddleware;
 
 export interface IRouteItem {
@@ -41,4 +34,17 @@ export interface IOptions {
   url: string | string[];
   handler: IAsyncHandler;
   middlewares?: IAsyncMiddleware[];
+}
+
+// Websocket
+export type IWebSocketAsyncMiddleware = (
+  req: Request,
+  socket: Socket,
+  scope?: Scope
+) => Promise<boolean | undefined | null | void>;
+
+
+export interface IWebSocketOptions {
+  url: string | string[];
+  middlewares?: IWebSocketAsyncMiddleware[];
 }
