@@ -106,18 +106,12 @@ const server = await aex.start(port, host);
 1. Create a `WebSocketServer` instance
 
 ```ts
-const ws = new WebSocketServer();
-```
-
-2. Attach a net.Server
-
-```ts
 const aex = new Aex();
 const server = await aex.start();
-ws.attach(server);
+const ws = new WebSocketServer(server);
 ```
 
-3. Listen on `WebSocketServer` System events
+2. Listen on `WebSocketServer` System events
 
 ```ts
 ws.on(WebSocketServer.ENTER, () => {
@@ -134,7 +128,7 @@ ws.on(WebSocketServer.ERROR, () => {
 });
 ```
 
-4. New browser/client WebSocket object
+3. New browser/client WebSocket object
 
 ```ts
 const wsc: WebSocket = new WebSocket("ws://localhost:3000/path");
@@ -143,7 +137,7 @@ wsc.on("open", function open() {
 });
 ```
 
-5. Listen on user-customized events
+4. Listen on user-customized events
 
 ```ts
 ws.on("new-message", () => {
@@ -151,7 +145,7 @@ ws.on("new-message", () => {
 });
 ```
 
-6. Sending ws message in browser/client
+5. Sending ws message in browser/client
 
 ```ts
 const wsc: WebSocket = new WebSocket("ws://localhost:3000/path");

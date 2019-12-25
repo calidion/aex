@@ -23,8 +23,23 @@ export class WebSocketServer extends EventEmitter {
   private middlewares: IWebSocketAsyncMiddleware[] = [];
   private scope = new Scope();
 
-  constructor() {
+  constructor(server: Server) {
     super();
+    this.server = new WebSocket.Server({ server });
+    this.server.on(
+      WebSocketServer.CONNECTION,
+      async (ws: WebSocket, req: IncomingMessage, head: any) => {
+        const scope: Scope = Object.create(this.scope);
+        scope.time.reset();
+        this.onEnter(ws, req, head);
+        this.onMessage(ws, scope);
+        this.onLeave(ws, req, head);
+      }
+    );
+
+    server.on("upgrade", (req, socket) => {
+      this.routing(req, socket).then();
+    });
   }
 
   public use(cb: IWebSocketAsyncMiddleware) {
@@ -58,25 +73,6 @@ export class WebSocketServer extends EventEmitter {
   public onLeave(ws: WebSocket, req: IncomingMessage, head: any) {
     ws.on(WebSocketServer.CLOSE, () => {
       this.emit(WebSocketServer.ENTER, ws, req, head);
-    });
-  }
-
-  public attach(server: Server) {
-    const wss = new WebSocket.Server({ server });
-    this.server = wss;
-    wss.on(
-      WebSocketServer.CONNECTION,
-      async (ws: WebSocket, req: IncomingMessage, head: any) => {
-        const scope: Scope = Object.create(this.scope);
-        scope.time.reset();
-        this.onEnter(ws, req, head);
-        this.onMessage(ws, scope);
-        this.onLeave(ws, req, head);
-      }
-    );
-
-    server.on("upgrade", (req, socket) => {
-      this.routing(req, socket).then();
     });
   }
 

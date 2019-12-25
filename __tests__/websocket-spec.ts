@@ -5,8 +5,7 @@ import { WebSocketServer } from "../src/websocket/server";
 test("Should support websocket", done => {
   const aex = new Aex();
   aex.start().then(server => {
-    const ws = new WebSocketServer();
-    ws.attach(server);
+    const ws = new WebSocketServer(server);
 
     ws.on(WebSocketServer.ENTER, () => {
       ws.close();
@@ -24,8 +23,7 @@ test("Should support websocket", done => {
 test("Should send websocket json", done => {
   const aex = new Aex();
   aex.start().then(server => {
-    const ws = new WebSocketServer();
-    ws.attach(server);
+    const ws = new WebSocketServer(server);
 
     ws.on("new", (data: any) => {
       data.name = "I";
@@ -50,11 +48,9 @@ test("Should send websocket json", done => {
 
 test("Should error on wrong json", done => {
   const aex = new Aex();
-  const ws1 = new WebSocketServer();
-  ws1.close();
+
   aex.start().then(server => {
-    const ws = new WebSocketServer();
-    ws.attach(server);
+    const ws = new WebSocketServer(server);
 
     ws.on("error", (data: any) => {
       data.raw = "Hello";
