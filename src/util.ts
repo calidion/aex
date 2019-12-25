@@ -2,7 +2,7 @@ import { IncomingMessage, ServerResponse } from "http";
 import { Socket } from "net";
 import { promisify } from "util";
 import { Scope } from "./scope";
-import { IAsyncMiddleware, IAsyncWebSocketMiddleware, IMiddeleWare } from './types';
+import { IAsyncMiddleware, IMiddeleWare, IWebSocketAsyncMiddleware } from './types';
 
 export function toAsyncMiddleware(cb: IMiddeleWare): IAsyncMiddleware {
   return async (req: IncomingMessage, res: ServerResponse) => {
@@ -28,7 +28,7 @@ export async function processMiddleware(
 }
 
 export async function processWebSocketMiddleware(
-  middlewares: IAsyncWebSocketMiddleware[],
+  middlewares: IWebSocketAsyncMiddleware[],
   req: IncomingMessage,
   socket: Socket,
   scope?: Scope
