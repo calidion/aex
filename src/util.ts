@@ -1,6 +1,6 @@
 import { IncomingMessage, ServerResponse } from "http";
-import { Socket } from "net";
 import { promisify } from "util";
+import * as WebSocket from "ws";
 import { Scope } from "./scope";
 import { IAsyncMiddleware, IMiddeleWare, IWebSocketAsyncMiddleware } from './types';
 
@@ -30,7 +30,7 @@ export async function processMiddleware(
 export async function processWebSocketMiddleware(
   middlewares: IWebSocketAsyncMiddleware[],
   req: IncomingMessage,
-  socket: Socket,
+  socket: WebSocket,
   scope?: Scope
 ): Promise<boolean> {
   for (const middleware of middlewares) {

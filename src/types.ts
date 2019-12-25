@@ -1,5 +1,5 @@
 import { IncomingMessage, ServerResponse } from "http";
-import { Socket } from "net";
+import * as WebSocket from "ws";
 import { Scope } from "./scope";
 
 export type ICallback = (error: Error) => void;
@@ -39,7 +39,7 @@ export interface IOptions {
 // Websocket
 export type IWebSocketAsyncMiddleware = (
   req: Request,
-  socket: Socket,
+  socket: WebSocket,
   scope?: Scope
 ) => Promise<boolean | undefined | null | void>;
 

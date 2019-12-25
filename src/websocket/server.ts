@@ -1,7 +1,6 @@
 import * as debug from "debug";
 import { EventEmitter } from "events";
 import { IncomingMessage, Server } from "http";
-import { Socket } from "net";
 import * as WebSocket from "ws";
 import { Scope } from "../scope";
 import { IWebSocketAsyncMiddleware } from "../types";
@@ -18,10 +17,12 @@ export class WebSocketServer extends EventEmitter {
   public static CONNECTION = "connection";
   public static MESSAGE = "message";
 
-  private server?: WebSocket.Server;
+  private server: WebSocket.Server;
 
   private middlewares: IWebSocketAsyncMiddleware[] = [];
   private scope = new Scope();
+
+
 
   constructor(server: Server) {
     super();
@@ -31,15 +32,17 @@ export class WebSocketServer extends EventEmitter {
       async (ws: WebSocket, req: IncomingMessage, head: any) => {
         const scope: Scope = Object.create(this.scope);
         scope.time.reset();
+        const middlewares = this.middlewares;
+        if (middlewares.length) {
+          if (await processWebSocketMiddleware(middlewares, req, ws, scope) === false) {
+            return;
+          }
+        }
         this.onEnter(ws, req, head);
         this.onMessage(ws, scope);
         this.onLeave(ws, req, head);
       }
     );
-
-    server.on("upgrade", (req, socket) => {
-      this.routing(req, socket).then();
-    });
   }
 
   public use(cb: IWebSocketAsyncMiddleware) {
@@ -47,7 +50,7 @@ export class WebSocketServer extends EventEmitter {
   }
 
   public close() {
-    this.server?.close();
+    this.server.close();
   }
 
   public onMessage(ws: WebSocket, scope: Scope) {
@@ -74,14 +77,5 @@ export class WebSocketServer extends EventEmitter {
     ws.on(WebSocketServer.CLOSE, () => {
       this.emit(WebSocketServer.ENTER, ws, req, head);
     });
-  }
-
-  protected async routing(req: IncomingMessage, ws: Socket) {
-    const scope: Scope = Object.create(this.scope);
-    scope.time.reset();
-    const middlewares = this.middlewares;
-    if (middlewares.length) {
-      await processWebSocketMiddleware(middlewares, req, ws, scope);
-    }
   }
 }
