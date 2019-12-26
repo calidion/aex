@@ -39,9 +39,9 @@ test("Should receive websocket json", done => {
       wsc.send(
         JSON.stringify({
           data: {
-            name: "I"
+            name: "I",
           },
-          event: "new"
+          event: "new",
         })
       );
     });
@@ -66,7 +66,7 @@ test("Should send websocket json", done => {
           expect(message.event).toBe("on");
           expect(message.data.a).toBe(100);
           expect(Object.keys(message.data).length === 1).toBeTruthy();
-        } catch(e) {
+        } catch (e) {
           catched = true;
         }
         expect(catched === false).toBeTruthy();

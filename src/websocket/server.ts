@@ -1,10 +1,10 @@
 import { EventEmitter } from "events";
 import { IncomingMessage, Server } from "http";
 import * as WebSocket from "ws";
-import { Scope } from '../scope';
+import { Scope } from "../scope";
 import { IWebSocketAsyncMiddleware } from "../types";
 import { processWebSocketMiddleware } from "../util";
-import { MessageHandler } from './handler';
+import { MessageHandler } from "./handler";
 
 export class WebSocketServer extends EventEmitter {
   public static ENTER = "enter";

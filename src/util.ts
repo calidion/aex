@@ -2,7 +2,11 @@ import { IncomingMessage, ServerResponse } from "http";
 import { promisify } from "util";
 import * as WebSocket from "ws";
 import { Scope } from "./scope";
-import { IAsyncMiddleware, IMiddeleWare, IWebSocketAsyncMiddleware } from './types';
+import {
+  IAsyncMiddleware,
+  IMiddeleWare,
+  IWebSocketAsyncMiddleware,
+} from "./types";
 
 export function toAsyncMiddleware(cb: IMiddeleWare): IAsyncMiddleware {
   return async (req: IncomingMessage, res: ServerResponse) => {

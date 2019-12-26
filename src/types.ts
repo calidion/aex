@@ -43,7 +43,6 @@ export type IWebSocketAsyncMiddleware = (
   scope?: Scope
 ) => Promise<boolean | undefined | null | void>;
 
-
 export interface IWebSocketOptions {
   url: string | string[];
   middlewares?: IWebSocketAsyncMiddleware[];

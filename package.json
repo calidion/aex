@@ -32,7 +32,8 @@
   "dependencies": {
     "@types/node": "^12.12.17",
     "@types/ws": "^6.0.4",
-    "path-to-regexp": "^6.1.0"
+    "path-to-regexp": "^6.1.0",
+    "ws": "^7.2.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.6",

@@ -7,7 +7,7 @@ import {
   IAsyncMiddleware,
   IOptions,
   IRoute,
-  IRouteItem
+  IRouteItem,
 } from "./types";
 import { processMiddleware } from "./util";
 
@@ -19,7 +19,7 @@ interface IBuildIns {
 export class Router {
   private buildins: IBuildIns = {
     options: [],
-    routes: {}
+    routes: {},
   };
   [x: string]: any;
 
@@ -36,10 +36,10 @@ export class Router {
             handler,
             method,
             middlewares,
-            url
+            url,
           };
           this.handle(options);
-        }
+        },
       });
     }
   }
@@ -63,14 +63,14 @@ export class Router {
       if (typeof options.url === "string") {
         this.buildins.routes[options.method][options.url] = {
           handler: options.handler,
-          middlewares: options.middlewares
+          middlewares: options.middlewares,
         };
       }
       if (options.url instanceof Array) {
         for (const url of options.url) {
           this.buildins.routes[options.method][url] = {
             handler: options.handler,
-            middlewares: options.middlewares
+            middlewares: options.middlewares,
           };
         }
       }
@@ -124,7 +124,7 @@ export class Router {
       enumerable: true,
       get: () => {
         return params;
-      }
+      },
     });
   }
 

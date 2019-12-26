@@ -21,7 +21,7 @@ export class MessageHandler extends EventEmitter {
     ws.send(
       JSON.stringify({
         data,
-        event
+        event,
       })
     );
   }
@@ -35,7 +35,7 @@ export class MessageHandler extends EventEmitter {
       } catch (e) {
         this.emit(MessageHandler.ERROR, {
           message: "JSON format error!",
-          raw: String(data)
+          raw: String(data),
         });
       }
     });
