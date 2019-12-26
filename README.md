@@ -111,24 +111,33 @@ const server = await aex.start();
 const ws = new WebSocketServer(server);
 ```
 
-2. Listen on `WebSocketServer` System events
+2. Get handler for one websocket connection
 
 ```ts
-ws.on(WebSocketServer.ENTER, () => {
-  // process/here
-});
-ws.on(WebSocketServer.LEAVE, () => {
-  // process/here
-});
-ws.on(WebSocketServer.MESSAGE, () => {
-  // process/here
-});
-ws.on(WebSocketServer.ERROR, () => {
+ws.on(WebSocketServer.ENTER, handler => {
   // process/here
 });
 ```
 
-3. New browser/client WebSocket object
+3. Listen on user-customized events
+
+```ts
+ws.on(WebSocketServer.ENTER, handler => {
+  handler.on("event-name", data => {
+    // data.message = "Hello world!"
+  });
+});
+```
+
+4. Send message to browser / client
+
+```ts
+ws.on(WebSocketServer.ENTER, handler => {
+  handler.send("event-name", { key: "value" });
+});
+```
+
+5. New browser/client WebSocket object
 
 ```ts
 const wsc: WebSocket = new WebSocket("ws://localhost:3000/path");
@@ -137,7 +146,7 @@ wsc.on("open", function open() {
 });
 ```
 
-4. Listen on user-customized events
+6. Listen on user-customized events
 
 ```ts
 ws.on("new-message", () => {
@@ -145,14 +154,14 @@ ws.on("new-message", () => {
 });
 ```
 
-5. Sending ws message in browser/client
+7. Sending ws message in browser/client
 
 ```ts
 const wsc: WebSocket = new WebSocket("ws://localhost:3000/path");
 wsc.on("open", function open() {
   wsc.send(
     JSON.stringify({
-      event: "new-message",
+      event: "event-name",
       data: {
         message: "Hello world!"
       }
@@ -161,13 +170,13 @@ wsc.on("open", function open() {
 });
 ```
 
-6. Use websocket middlewares
+8. Use websocket middlewares
 
 ```ts
 ws.use(async (req, ws, scope) => {
   // return false
 });
-```
+````
 
 # Middlewares
 

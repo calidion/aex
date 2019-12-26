@@ -20,12 +20,12 @@ test("Should support websocket", done => {
   });
 });
 
-test("Should send websocket json", done => {
+test("Should receive websocket json", done => {
   const aex = new Aex();
   aex.start().then(server => {
     const ws = new WebSocketServer(server);
 
-    ws.on(WebSocketServer.ENTER, (handler) => {
+    ws.on(WebSocketServer.ENTER, handler => {
       handler.on("new", (data: any) => {
         data.name = "I";
         ws.close();
@@ -48,13 +48,43 @@ test("Should send websocket json", done => {
   });
 });
 
+test("Should send websocket json", done => {
+  const aex = new Aex();
+  aex.start().then(server => {
+    const ws = new WebSocketServer(server);
+
+    ws.on(WebSocketServer.ENTER, handler => {
+      handler.send("on", { a: 100 });
+    });
+
+    const wsc: WebSocket = new WebSocket("ws://localhost:3000/path");
+    wsc.on("open", function open() {
+      wsc.on("message", json => {
+        let catched = false;
+        try {
+          const message = JSON.parse(String(json));
+          expect(message.event).toBe("on");
+          expect(message.data.a).toBe(100);
+          expect(Object.keys(message.data).length === 1).toBeTruthy();
+        } catch(e) {
+          catched = true;
+        }
+        expect(catched === false).toBeTruthy();
+        ws.close();
+        server.close();
+        done();
+      });
+    });
+  });
+});
+
 test("Should error on wrong json", done => {
   const aex = new Aex();
 
   aex.start().then(server => {
     const ws = new WebSocketServer(server);
 
-    ws.on(WebSocketServer.ENTER, (handler) => {
+    ws.on(WebSocketServer.ENTER, handler => {
       handler.on("error", (data: any) => {
         data.raw = "Hello";
         ws.close();
@@ -80,10 +110,7 @@ test("Should use middleware", done => {
       return true;
     });
 
-    ws.on(WebSocketServer.ENTER, (handler) => {
-      expect(handler.scope).toBeTruthy();
-      expect(handler.scope.outer.req).toBeTruthy();
-      expect(handler.scope.outer.ws).toBeTruthy();
+    ws.on(WebSocketServer.ENTER, handler => {
       handler.on("error", (data: any) => {
         data.raw = "Hello";
         ws.close();
@@ -109,7 +136,7 @@ test("Should use middleware false", done => {
       return false;
     });
 
-    ws.on(WebSocketServer.ENTER, (handler) => {
+    ws.on(WebSocketServer.ENTER, handler => {
       handler.on("error", (data: any) => {
         data.raw = "Hello";
         ws.close();
@@ -117,11 +144,10 @@ test("Should use middleware false", done => {
       });
     });
 
-
     setTimeout(() => {
       ws.close();
       server.close();
-      done();   
+      done();
     }, 1000);
 
     const wsc: WebSocket = new WebSocket("ws://localhost:3000/path");

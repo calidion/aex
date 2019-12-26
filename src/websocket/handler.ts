@@ -1,6 +1,6 @@
-import { EventEmitter } from 'events';
-import * as WebSocket from 'ws';
-import { Scope } from '../scope';
+import { EventEmitter } from "events";
+import * as WebSocket from "ws";
+import { Scope } from "../scope";
 
 export class MessageHandler extends EventEmitter {
   public static MESSAGE = "message";
@@ -13,23 +13,21 @@ export class MessageHandler extends EventEmitter {
   constructor(scope: Scope) {
     super();
     this._scope = scope;
-    this.onMessage(scope);
+    this.onMessage();
   }
 
-  get scope() {
-    return this._scope;
+  public send(event: string, data: object) {
+    const ws: WebSocket = this._scope.outer.ws as WebSocket;
+    ws.send(
+      JSON.stringify({
+        data,
+        event
+      })
+    );
   }
 
-  // public send(event: string, data: object) {
-  //   const ws: WebSocket = this.scope.outer.ws as WebSocket;
-  //   ws.send({
-  //     data,
-  //     event,
-  //   });
-  // }
-
-  public onMessage(scope: Scope) {
-    const ws: WebSocket = scope.outer.ws as WebSocket;
+  private onMessage() {
+    const ws: WebSocket = this._scope.outer.ws as WebSocket;
     ws.on(MessageHandler.MESSAGE, (data: Buffer) => {
       try {
         const message = JSON.parse(String(data));
