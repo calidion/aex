@@ -25,14 +25,16 @@ test("Should send websocket json", done => {
   aex.start().then(server => {
     const ws = new WebSocketServer(server);
 
-    ws.on("new", (data: any) => {
-      data.name = "I";
-      ws.close();
-      server.close();
-      done();
+    ws.on(WebSocketServer.ENTER, (handler) => {
+      handler.on("new", (data: any) => {
+        data.name = "I";
+        ws.close();
+        server.close();
+        done();
+      });
     });
-    const wsc: WebSocket = new WebSocket("ws://localhost:3000/path");
 
+    const wsc: WebSocket = new WebSocket("ws://localhost:3000/path");
     wsc.on("open", function open() {
       wsc.send(
         JSON.stringify({
@@ -52,11 +54,13 @@ test("Should error on wrong json", done => {
   aex.start().then(server => {
     const ws = new WebSocketServer(server);
 
-    ws.on("error", (data: any) => {
-      data.raw = "Hello";
-      ws.close();
-      server.close();
-      done();
+    ws.on(WebSocketServer.ENTER, (handler) => {
+      handler.on("error", (data: any) => {
+        data.raw = "Hello";
+        ws.close();
+        server.close();
+        done();
+      });
     });
     const wsc: WebSocket = new WebSocket("ws://localhost:3000/path");
 
