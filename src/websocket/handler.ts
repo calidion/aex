@@ -5,12 +5,19 @@ import { Scope } from '../scope';
 export class MessageHandler extends EventEmitter {
   public static MESSAGE = "message";
   public static ERROR = "error";
+  public static LEAVE = "leave";
+  public static CLOSE = "close";
 
-  // private scope: Scope;
+  // tslint:disable-next-line:variable-name
+  private _scope: Scope;
   constructor(scope: Scope) {
     super();
-    // this.scope = scope;
+    this._scope = scope;
     this.onMessage(scope);
+  }
+
+  get scope() {
+    return this._scope;
   }
 
   // public send(event: string, data: object) {
@@ -33,6 +40,10 @@ export class MessageHandler extends EventEmitter {
           raw: String(data)
         });
       }
+    });
+
+    ws.on(MessageHandler.CLOSE, () => {
+      this.emit(MessageHandler.LEAVE);
     });
   }
 }

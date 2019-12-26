@@ -101,7 +101,7 @@ const server = await aex.start(port, host);
 
 # Websocket support
 
-## Simple
+## Simple example
 
 1. Create a `WebSocketServer` instance
 
@@ -158,6 +158,14 @@ wsc.on("open", function open() {
       }
     })
   );
+});
+```
+
+6. Use websocket middlewares
+
+```ts
+ws.use(async (req, ws, scope) => {
+  // return false
 });
 ```
 
@@ -224,6 +232,26 @@ router.get(
   ]
 );
 ```
+
+## Websocket middlewares
+
+Websocket middlewares are of the same to the above middlewares except that the parameters are of different.
+
+```ts
+type IWebSocketAsyncMiddleware = (
+  req: Request,
+  socket: WebSocket,
+  scope?: Scope
+) => Promise<boolean | undefined | null | void>;
+```
+
+The Websocket Middlewares are defined as `IWebSocketAsyncMiddleware`, they pass three parameters:
+
+1. the http request
+2. the websocket object
+3. the scope object
+
+THe middlewares can stop websocket from further execution by return `false`
 
 # Accessable members
 
