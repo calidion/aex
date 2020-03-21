@@ -176,7 +176,7 @@ wsc.on("open", function open() {
 ws.use(async (req, ws, scope) => {
   // return false
 });
-````
+```
 
 # Middlewares
 
@@ -353,3 +353,20 @@ aex.use(pOld);
 
 > You should be cautious to use express middlewares.
 > Full testing is appreciated.
+
+# Decorators
+
+Aex provides the `@http` decorator to ease the way http requests being handled by classes. It is very simple and intuitive.
+
+```ts
+class User {
+  @http("get", ["/profile", "/home"])
+  profile(req, res, scope) {}
+
+  @http(["get", "post"], "/user/login")
+  login(req, res, scope) {}
+
+  @http("post", "/user/logout")
+  logout(req, res, scope) {}
+}
+```

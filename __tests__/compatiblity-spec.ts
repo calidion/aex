@@ -3,7 +3,7 @@ import { Aex } from "../src/core";
 
 import { Router } from "../src/router";
 import { toAsyncMiddleware } from "../src/util";
-import { responseText } from "./util";
+import { GetText } from "../src/util/request";
 
 test("Should compatible with express middlewares", async () => {
   const aex = new Aex();
@@ -17,7 +17,7 @@ test("Should compatible with express middlewares", async () => {
   aex.use(pOld);
 
   const asession = session({
-    secret: "keyboard cat",
+    secret: "keyboard cat"
   });
   const psession = toAsyncMiddleware(asession);
   aex.use(psession);
@@ -36,10 +36,10 @@ test("Should compatible with express middlewares", async () => {
       expect(oldInvoke).toBeTruthy();
       expect(req.session).toBeTruthy();
       res.end("Hello Aex!");
-    },
+    }
   });
 
   aex.use(router.toMiddleware());
 
-  await responseText(aex, "Hello Aex!");
+  await GetText(aex, "Hello Aex!");
 });
