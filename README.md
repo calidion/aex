@@ -358,7 +358,13 @@ aex.use(pOld);
 
 Aex provides the `@http` decorator to ease the way http requests being handled by classes. It is very simple and intuitive.
 
+## Define a class with it's methods decorated by `@http`
+
+The member methods are of `IAsyncMiddleware` type as well.
+
 ```ts
+import { http } from "@aex/core";
+
 class User {
   @http("get", ["/profile", "/home"])
   profile(req, res, scope) {}
@@ -369,4 +375,29 @@ class User {
   @http("post", "/user/logout")
   logout(req, res, scope) {}
 }
+```
+
+## Get router from One
+
+```ts
+import { One } from "@aex/core";
+const router = One.instance();
+```
+
+## New the class (Optional)
+
+You normally need to create an instance of you class for data accessing.
+
+```ts
+const user = new User();
+// do some initialization
+```
+
+## start Aex server
+
+```ts
+import { Aex } from "@aex/core";
+const aex = new Aex();
+aex.use(router.toMiddleware());
+aex.start();
 ```

@@ -49,10 +49,6 @@ test("Should decorate methods with single http method name", async () => {
   const router = One.instance();
   aex.use(router.toMiddleware());
 
-  const exam = new Exam();
-
-  expect(exam).toBeTruthy();
-
   await GetText(aex, "Hello Aex!", "/user/aoaoa");
 });
 
@@ -60,10 +56,6 @@ test("Should decorate methods with array", async () => {
   const aex = new Aex();
   const router = One.instance();
   aex.use(router.toMiddleware());
-
-  const exam = new Exam();
-
-  expect(exam).toBeTruthy();
 
   await GetText(aex, "User Login!", "/user/login");
 });
@@ -73,10 +65,6 @@ test("Should decorate methods with array", async () => {
   const router = One.instance();
   aex.use(router.toMiddleware());
 
-  const exam = new Exam();
-
-  expect(exam).toBeTruthy();
-
   await PostText(aex, {}, "User Login!", "/user/login", "localhost", "POST");
 });
 
@@ -84,10 +72,6 @@ test("Should decorate methods with array", async () => {
   const aex = new Aex();
   const router = One.instance();
   aex.use(router.toMiddleware());
-
-  const exam = new Exam();
-
-  expect(exam).toBeTruthy();
 
   await PostText(aex, {}, "User Login!", "/user/login", "localhost");
 });
@@ -97,10 +81,6 @@ test("Should decorate methods with array", async () => {
   const router = One.instance();
   aex.use(router.toMiddleware());
 
-  const exam = new Exam();
-
-  expect(exam).toBeTruthy();
-
   await PostText(aex, {}, "User Login!", "/user/login");
 });
 
@@ -109,10 +89,6 @@ test("Should decorate methods with array", async () => {
   const router = One.instance();
   aex.use(router.toMiddleware());
 
-  const exam = new Exam();
-
-  expect(exam).toBeTruthy();
-
   await PostText(aex, {}, "User Home!");
 });
 
@@ -120,10 +96,6 @@ test("Should decorate methods with all methods", async () => {
   const aex = new Aex();
   const router = One.instance();
   aex.use(router.toMiddleware());
-
-  const exam = new Exam();
-
-  expect(exam).toBeTruthy();
 
   await GetText(aex, "User All!", "/user/all");
 });
