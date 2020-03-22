@@ -1,6 +1,6 @@
 {
   "name": "@aex/core",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "aex",
   "license": "MIT",
   "repository": "calidion/aex",
@@ -32,6 +32,7 @@
   "dependencies": {
     "@types/node": "^12.12.17",
     "@types/ws": "^6.0.4",
+    "body-parser": "^1.19.0",
     "path-to-regexp": "^6.1.0",
     "ws": "^7.2.1"
   },

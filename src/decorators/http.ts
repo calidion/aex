@@ -2,6 +2,12 @@ import * as assert from "assert";
 import { METHODS } from "http";
 import { One } from "./one";
 
+/**
+ *
+ * @param name http method or array
+ * @param url route name or array
+ */
+
 export function http(name: string | string[], url: string | string[]) {
   const router = One.instance();
   // tslint:disable-next-line: only-arrow-functions

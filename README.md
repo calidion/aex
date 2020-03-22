@@ -356,9 +356,14 @@ aex.use(pOld);
 
 # Decorators
 
+1. @http
+2. @body
+
+## @http
+
 Aex provides the `@http` decorator to ease the way http requests being handled by classes. It is very simple and intuitive.
 
-## Define a class with it's methods decorated by `@http`
+### Define a class with it's methods decorated by `@http`
 
 The member methods are of `IAsyncMiddleware` type as well.
 
@@ -377,14 +382,14 @@ class User {
 }
 ```
 
-## Get router from One
+### Get router from One
 
 ```ts
 import { One } from "@aex/core";
 const router = One.instance();
 ```
 
-## New the class (Optional)
+### New the class (optional)
 
 You normally need to create an instance of you class for data accessing.
 
@@ -393,7 +398,7 @@ const user = new User();
 // do some initialization
 ```
 
-## start Aex server
+### Start Aex server
 
 ```ts
 import { Aex } from "@aex/core";
@@ -401,3 +406,31 @@ const aex = new Aex();
 aex.use(router.toMiddleware());
 aex.start();
 ```
+
+## @body
+
+Decorator @body provides a simple way to process data with body parser.
+
+@body accept body parser package's function and its options, and they are optional.
+
+```ts
+@body("urlencoded", { extended: false })
+```
+
+and should succeed to @http decorator.
+
+```ts
+import { http } from "@aex/core";
+
+class User {
+  @http("post", "/user/login")
+  @body("urlencoded", { extended: false })
+  login(req, res, scope) {}
+
+  @http("post", "/user/logout")
+  @body()
+  login(req, res, scope) {}
+}
+```
+
+You may look up npm package `body-parser` for detailed usage.
