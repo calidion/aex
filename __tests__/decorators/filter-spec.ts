@@ -8,7 +8,7 @@ import { http } from "../../src/decorators/http";
 import { One } from "../../src/decorators/one";
 import { query } from "../../src/decorators/query";
 
-import { GetText, PostText } from "../../src/util/request";
+import { GetText, PostText, GetStatus } from "../../src/util/request";
 
 class User {
   @http("post", "/user/login")
@@ -90,7 +90,7 @@ test("Should filter query && params", async () => {
   await GetText(aex, "User Id!", "/profile/111?page=20");
 });
 
-test("should", async done => {
+test("should", async () => {
   const aex = new Aex();
   const router = One.instance();
   aex.use(router.toMiddleware());
@@ -99,13 +99,7 @@ test("should", async done => {
 
   expect(user).toBeTruthy();
 
-  setTimeout(() => {
-    aex.server?.close();
-
-    done();
-  }, 1000);
-
-  await GetText(aex, "User Id!", "/profile/ddd?page=aaa");
+  await GetStatus(aex, "/profile/ddd?page=aaa", 500);
 });
 
 test("should", async done => {
@@ -122,5 +116,5 @@ test("should", async done => {
     done();
   }, 1000);
 
-  await GetText(aex, "User Id!", "/profile/ddd");
+  await GetStatus(aex, "/profile/ddd", 500);
 });

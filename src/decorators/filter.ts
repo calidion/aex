@@ -1,4 +1,5 @@
 import * as validator from "node-form-validator";
+import InternalServerError from "../status/500";
 
 export interface IFilterOptions {
   params?: any;
@@ -52,7 +53,8 @@ export function filter(options: IFilterOptions) {
             break;
         }
         if (!passed) {
-          return false;
+          InternalServerError(args[1]);
+          return;
         }
 
         scope.extracted[key] = extracted;
