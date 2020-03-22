@@ -47,7 +47,7 @@ export class Aex {
     if (middlewares && middlewares.length) {
       await processMiddleware(req, res, middlewares, scope);
     } else {
-      await NotFound(req, res);
+      await NotFound(res);
     }
   }
 }

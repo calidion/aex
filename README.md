@@ -356,8 +356,10 @@ aex.use(pOld);
 
 # Decorators
 
-1. @http
-2. @body
+1. @http    define your http handler.
+2. @body    define your way to parse your body.
+3. @query   enable `req.query`.
+4. @filter  fiter and validate data from request, takes `body`, `params` and `query` types only.
 
 ## @http
 
@@ -434,3 +436,76 @@ class User {
 ```
 
 You may look up npm package `body-parser` for detailed usage.
+
+## @query
+
+Decorator @query will parse query for you. After @query you will have `req.query` to use.
+
+```ts
+  @http("get", "/profile/:id")
+  @query()
+  public async id(req: any, res: any, _scope: any) {
+    // get /profile/111?page=20
+    req.query.page
+    // 20
+  }
+```
+
+## @filter
+
+Decorator @filter will filter `body`, `params` and `query` data for you.
+
+Reference [node-form-validator](!https://github.com/calidion/node-form-validator) for detailed usage.
+
+```ts
+class User {
+
+  @http("post", "/user/login")
+  @body()
+  @filter({
+    body: {
+      username: {
+        type: "string",
+        required: true,
+        minLength: 4,
+        maxLength: 20
+      },
+      password: {
+        type: "string",
+        required: true,
+        minLength: 4,
+        maxLength: 64
+      }
+    }
+  })
+  public async login(req: any, res: any, _scope: any) {
+    // req.body.username
+    // req.body.password
+
+  }
+
+  @http("get", "/profile/:id")
+  @body()
+  @query()
+  @filter({
+    query: {
+      page: {
+        type: "numeric",
+        required: true
+      }
+    },
+    params: {
+      id: {
+        type: "numeric",
+        required: true
+      }
+    }
+  })
+  public async id(req: any, res: any, _scope: any) {
+    // req.params.id
+    // req.query.page
+  }
+}
+```
+
+

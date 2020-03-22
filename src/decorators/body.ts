@@ -1,7 +1,7 @@
 import * as bodyParser from "body-parser";
 import { IncomingMessage, ServerResponse } from "http";
-import { toAsyncMiddleware } from "../util";
 import { Scope } from "../scope";
+import { toAsyncMiddleware } from "../util";
 
 /**
  *
@@ -15,20 +15,23 @@ export function body(
   const bodyTypes = ["urlencoded", "raw", "text", "json"];
 
   if (bodyTypes.indexOf(type) === -1) {
+    // tslint:disable-next-line: only-arrow-functions
     return function() {};
   }
   const parser: any = bodyParser;
   const cb = parser[type](options);
   const asyncCB = toAsyncMiddleware(cb);
+  // tslint:disable-next-line: only-arrow-functions
   return function(target: any, _propertyKey: any, descriptor: any) {
     const origin = descriptor.value;
 
     descriptor.value = async function(...args: any[]) {
+      console.log("body");
       await asyncCB.apply(
         asyncCB,
         args as [IncomingMessage, ServerResponse, (Scope | undefined)?]
       );
-      origin.apply(target, args);
+      await origin.apply(target, args);
     };
     return descriptor;
   };

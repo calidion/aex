@@ -85,12 +85,13 @@ export class Router {
   }
 
   public async run(req: IncomingMessage, res: ServerResponse, scope?: Scope) {
-    const url = req.url;
+    let url = req.url as string;
+    url = url.split("?")[0];
     const method = req.method;
 
     const router = this.getMatchedRouter(method as string, url as string);
     if (!router) {
-      await NotFound(req, res);
+      await NotFound(res);
       return;
     }
     if (router.matched && Object.keys(router.matched.params).length) {

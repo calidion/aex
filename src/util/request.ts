@@ -29,11 +29,13 @@ function POST(options: any, body: any): Promise<IncomingMessage> {
     // This module is being mocked in __mocks__/request.js
 
     const postData = qs.stringify(body);
+    // console.log(postData);
     options.headers = {
       "Content-Type": "application/x-www-form-urlencoded",
       // tslint:disable-next-line: object-literal-sort-keys
       "Content-Length": Buffer.byteLength(postData)
     };
+    options.body = postData;
     const req = request(options, (response: IncomingMessage) => {
       const data: any[] = [];
       response.on("data", chunk => data.push(chunk));

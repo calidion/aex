@@ -16,10 +16,12 @@ export function http(name: string | string[], url: string | string[]) {
     _propertyKey: string,
     descriptor: PropertyDescriptor
   ) {
+    console.log("http");
+
     const func = descriptor.value;
 
-    function invoke(...args: any[]) {
-      func.apply(target, args);
+    async function invoke(...args: any[]) {
+      return func.apply(target, args);
     }
 
     function addUrl(method: string) {

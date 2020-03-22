@@ -62,3 +62,20 @@ test("Should return use http methods directly", async () => {
 
   await GetText(aex, "Hello Aex!", "/user/aoaoa");
 });
+
+test("Should Request no route", async (done) => {
+  const aex = new Aex();
+  const router = new Router();
+
+  router.get(["/user/:name", "/user/:id"], async (req: any, res: any) => {
+    expect(req.params).toBeTruthy();
+    res.end("Hello Aex!");
+  });
+  aex.use(router.toMiddleware());
+
+
+  setTimeout(() => {
+    done();
+  }, 1000)
+  await GetStatus(aex, "", 404);
+});

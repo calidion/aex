@@ -1,13 +1,13 @@
 import { ServerResponse } from "http";
 
 // tslint:disable-next-line:variable-name
-export async function NotFound(res: ServerResponse) {
-  res.statusCode = 404;
+export async function InternalServerError(res: ServerResponse) {
+  res.statusCode = 500;
 
   const html = `
 <html>
 <body>
-<h1>Not Found!</h1>
+<h1>Internal Server Error!</h1>
 </body>
 </html>
 `;
@@ -15,4 +15,4 @@ export async function NotFound(res: ServerResponse) {
   res.end();
 }
 
-export default NotFound;
+export default InternalServerError;
