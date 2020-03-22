@@ -19,7 +19,6 @@ export function filter(options: IFilterOptions) {
     let extracted: any;
 
     function validate(data: any, rules: any) {
-      console.log(data, rules);
       const error = validator.validate(data, rules);
       if (!error) {
         return false;
@@ -40,7 +39,6 @@ export function filter(options: IFilterOptions) {
       const scope = args[2];
       scope.extracted = {};
       let passed;
-      console.log("filter");
       for (const key of Object.keys(options)) {
         switch (key) {
           case "params":

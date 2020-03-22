@@ -16,8 +16,6 @@ export function http(name: string | string[], url: string | string[]) {
     _propertyKey: string,
     descriptor: PropertyDescriptor
   ) {
-    console.log("http");
-
     const func = descriptor.value;
 
     async function invoke(...args: any[]) {

@@ -25,8 +25,8 @@ export function body(
   return function(target: any, _propertyKey: any, descriptor: any) {
     const origin = descriptor.value;
 
+    // tslint:disable-next-line: only-arrow-functions
     descriptor.value = async function(...args: any[]) {
-      console.log("body");
       await asyncCB.apply(
         asyncCB,
         args as [IncomingMessage, ServerResponse, (Scope | undefined)?]

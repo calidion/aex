@@ -90,7 +90,7 @@ test("Should filter query && params", async () => {
   await GetText(aex, "User Id!", "/profile/111?page=20");
 });
 
-test("should", async (done) => {
+test("should", async done => {
   const aex = new Aex();
   const router = One.instance();
   aex.use(router.toMiddleware());
@@ -100,24 +100,27 @@ test("should", async (done) => {
   expect(user).toBeTruthy();
 
   setTimeout(() => {
+    aex.server?.close();
+
     done();
-  }, 1000)
-
-  await GetText(aex, "User Id!", "/profile/ddd");
-});
-
-test("should", async (done) => {
-  const aex = new Aex();
-  const router = One.instance();
-  aex.use(router.toMiddleware());
-
-  const user = new User();
-
-  expect(user).toBeTruthy();
-
-  setTimeout(() => {
-    done();
-  }, 1000)
+  }, 1000);
 
   await GetText(aex, "User Id!", "/profile/ddd?page=aaa");
+});
+
+test("should", async done => {
+  const aex = new Aex();
+  const router = One.instance();
+  aex.use(router.toMiddleware());
+
+  const user = new User();
+
+  expect(user).toBeTruthy();
+
+  setTimeout(() => {
+    aex.server?.close();
+    done();
+  }, 1000);
+
+  await GetText(aex, "User Id!", "/profile/ddd");
 });
