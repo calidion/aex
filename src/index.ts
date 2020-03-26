@@ -4,6 +4,7 @@ export * from "./router";
 export * from "./decorators/http";
 export * from "./decorators/one";
 export * from "./decorators/filter";
+export * from "./decorators/inject";
 export * from "./decorators/body";
 export * from "./decorators/query";
 export * from "./util/request";

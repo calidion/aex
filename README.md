@@ -360,6 +360,7 @@ aex.use(pOld);
 2. @body    define your way to parse your body.
 3. @query   enable `req.query`.
 4. @filter  fiter and validate data from request, takes `body`, `params` and `query` types only.
+5. @inject inject any middleware you want to
 
 ## @http
 
@@ -504,6 +505,29 @@ class User {
   public async id(req: any, res: any, _scope: any) {
     // req.params.id
     // req.query.page
+  }
+}
+```
+
+## @inject
+
+Inject any middleware you want to inject. 
+
+```ts
+class User {
+  @http("post", "/user/login")
+  @body()
+  @inject(async (req, res, scope) => {
+      req.session = {
+        user: {
+          name: "ok"
+        }
+      };
+  })
+  public async login(req: any, res: any, scope: any) {
+    // req.session.user.name
+    // ok
+    ...
   }
 }
 ```

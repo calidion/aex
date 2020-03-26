@@ -13,6 +13,7 @@ export function http(name: string | string[], url: string | string[]) {
   // tslint:disable-next-line: only-arrow-functions
   return function(
     target: any,
+    // tslint:disable-next-line: variable-name
     _propertyKey: string,
     descriptor: PropertyDescriptor
   ) {
