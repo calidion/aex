@@ -16,34 +16,20 @@ It is an example:
 # A simple example
 
 ```ts
-import { Aex, Router } from "@aex/core";
+import { Aex, Router, http } from "@aex/core";
+
+class Hello {
+  @http("*", "*")
+  public all(_req: any, res: any, _scope: any) {
+    res.end("Hello Aex!");
+  }
+}
 
 const aex = new Aex();
-const router = new Router(aex);
-
-// Simple string route
-router.get("/", async (req, res, scope) => {
-  // request processing time started
-  console.log(scope.time.stated);
-  // processing time passed
-  console.log(scope.time.passed);
-  res.end("Hello Aex!");
-});
-
-// Route Array
-router.get(["/user/home", "/user/profile"], async (req, res, scope) => {
-  // request processing time started
-  console.log(scope.time.stated);
-  // processing time passed
-  console.log(scope.time.passed);
-  res.end("Hello Aex!");
-});
-
-aex.use(router.toMiddleware());
-
-const port = 3000;
-const host = "localhost";
-aex.start(port, host).then();
+aex
+  .prepare()
+  .start(8080)
+  .then();
 ```
 
 # Install
@@ -356,10 +342,10 @@ aex.use(pOld);
 
 # Decorators
 
-1. @http    define your http handler.
-2. @body    define your way to parse your body.
-3. @query   enable `req.query`.
-4. @filter  fiter and validate data from request, takes `body`, `params` and `query` types only.
+1. @http define your http handler.
+2. @body define your way to parse your body.
+3. @query enable `req.query`.
+4. @filter fiter and validate data from request, takes `body`, `params` and `query` types only.
 5. @inject inject any middleware you want to
 
 ## @http
@@ -460,7 +446,6 @@ Reference [node-form-validator](!https://github.com/calidion/node-form-validator
 
 ```ts
 class User {
-
   @http("post", "/user/login")
   @body()
   @filter({
@@ -482,7 +467,6 @@ class User {
   public async login(req: any, res: any, _scope: any) {
     // req.body.username
     // req.body.password
-
   }
 
   @http("get", "/profile/:id")
@@ -511,7 +495,7 @@ class User {
 
 ## @inject
 
-Inject any middleware you want to inject. 
+Inject any middleware when necessary. But you should be careful with middlewares' order.
 
 ```ts
 class User {
@@ -531,5 +515,3 @@ class User {
   }
 }
 ```
-
-

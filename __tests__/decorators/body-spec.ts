@@ -2,9 +2,8 @@
 // tslint:disable-next-line:no-duplicate-imports
 
 import Aex from "../../src/core";
-import { http } from "../../src/decorators/http";
 import { body } from "../../src/decorators/body";
-import { One } from "../../src/decorators/one";
+import { http } from "../../src/decorators/http";
 
 import { PostText } from "../../src/util/request";
 
@@ -26,12 +25,18 @@ class User {
 
 test("Should decorate methods with array", async () => {
   const aex = new Aex();
-  const router = One.instance();
-  aex.use(router.toMiddleware());
-
   const user = new User();
 
   expect(user).toBeTruthy();
 
-  await PostText(aex, {username: "aaa", password: "sososo"}, "User All!", "/user/login", "localhost", "POST");
+  aex.prepare();
+
+  await PostText(
+    aex,
+    { username: "aaa", password: "sososo" },
+    "User All!",
+    "/user/login",
+    "localhost",
+    "POST"
+  );
 });

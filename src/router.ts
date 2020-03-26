@@ -111,6 +111,9 @@ export class Router {
     }
     const keys = Object.keys(routes);
     for (const key of keys) {
+      if (key === "*") {
+        return { matched: { params: {} }, handler: routes["*"] };
+      }
       const matcher = match(key, { decode: decodeURIComponent });
       const matched = matcher(url);
       if (matched) {

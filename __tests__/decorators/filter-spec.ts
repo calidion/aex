@@ -5,10 +5,9 @@ import Aex from "../../src/core";
 import { body } from "../../src/decorators/body";
 import { filter } from "../../src/decorators/filter";
 import { http } from "../../src/decorators/http";
-import { One } from "../../src/decorators/one";
 import { query } from "../../src/decorators/query";
 
-import { GetText, PostText, GetStatus } from "../../src/util/request";
+import { GetStatus, GetText, PostText } from "../../src/util/request";
 
 class User {
   @http("post", "/user/login")
@@ -19,15 +18,15 @@ class User {
         type: "string",
         required: true,
         minLength: 4,
-        maxLength: 20
+        maxLength: 20,
       },
       password: {
         type: "string",
         required: true,
         minLength: 4,
-        maxLength: 64
-      }
-    }
+        maxLength: 64,
+      },
+    },
   })
   public async login(req: any, res: any, _scope: any) {
     expect(req.body.username === "aaaa");
@@ -42,15 +41,15 @@ class User {
     query: {
       page: {
         type: "numeric",
-        required: true
-      }
+        required: true,
+      },
     },
     params: {
       id: {
         type: "numeric",
-        required: true
-      }
-    }
+        required: true,
+      },
+    },
   })
   public async id(req: any, res: any, _scope: any) {
     expect(req.params.id === 111);
@@ -59,15 +58,14 @@ class User {
   }
 }
 
+beforeAll(() => {
+  const user = new User();
+  expect(user).toBeTruthy();
+});
+
 test("Should decorate methods with array", async () => {
   const aex = new Aex();
-  const router = One.instance();
-  aex.use(router.toMiddleware());
-
-  const user = new User();
-
-  expect(user).toBeTruthy();
-
+  aex.prepare();
   await PostText(
     aex,
     { username: "aaaa", password: "sosodddso" },
@@ -80,37 +78,19 @@ test("Should decorate methods with array", async () => {
 
 test("Should filter query && params", async () => {
   const aex = new Aex();
-  const router = One.instance();
-  aex.use(router.toMiddleware());
-
-  const user = new User();
-
-  expect(user).toBeTruthy();
-
+  aex.prepare();
   await GetText(aex, "User Id!", "/profile/111?page=20");
 });
 
 test("should", async () => {
   const aex = new Aex();
-  const router = One.instance();
-  aex.use(router.toMiddleware());
-
-  const user = new User();
-
-  expect(user).toBeTruthy();
-
+  aex.prepare();
   await GetStatus(aex, "/profile/ddd?page=aaa", 500);
 });
 
 test("should", async done => {
   const aex = new Aex();
-  const router = One.instance();
-  aex.use(router.toMiddleware());
-
-  const user = new User();
-
-  expect(user).toBeTruthy();
-
+  aex.prepare();
   setTimeout(() => {
     aex.server?.close();
     done();

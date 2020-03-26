@@ -1,1 +1,1 @@
-declare module 'node-form-validator';
+declare module "node-form-validator";
