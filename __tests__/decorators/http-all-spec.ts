@@ -22,7 +22,14 @@ test("Should get all methods and urls", async () => {
   expect(exam).toBeTruthy();
   await GetText(aex, "Hello Aex!", "/");
   await PostText(aex, {}, "Hello Aex!", "/abcd");
-  const res = await PostText(aex, {}, "Hello Aex!", "/aaaa", "localhost", "OPTIONS");
+  const res = await PostText(
+    aex,
+    {},
+    "Hello Aex!",
+    "/aaaa",
+    "localhost",
+    "OPTIONS"
+  );
   expect(res instanceof IncomingMessage).toBeTruthy();
 });
 

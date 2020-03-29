@@ -75,5 +75,4 @@ test("Should Request no route", async () => {
   aex.use(router.toMiddleware());
   const res = await GetStatus(aex, "", 404);
   expect(res instanceof IncomingMessage).toBeTruthy();
-
 });
