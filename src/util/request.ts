@@ -70,6 +70,7 @@ export async function GetText(
 
   expect(od!.value).toBe(message);
   server.close();
+  return res;
 }
 
 export async function PostText(
@@ -94,6 +95,7 @@ export async function PostText(
 
   expect(od!.value).toBe(message);
   server.close();
+  return res;
 }
 
 export async function GetStatus(
@@ -107,4 +109,5 @@ export async function GetStatus(
   const res = await GET("http://" + domain + ":" + port + url);
   expect(res.statusCode === status).toBeTruthy();
   server.close();
+  return res;
 }

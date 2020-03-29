@@ -4,6 +4,7 @@
 import Aex from "../src/core";
 import { Router } from "../src/router";
 import { GetStatus, GetText } from "../src/util/request";
+import { IncomingMessage } from "http";
 
 test("Should parse params", async () => {
   const aex = new Aex();
@@ -72,5 +73,7 @@ test("Should Request no route", async () => {
     res.end("Hello Aex!");
   });
   aex.use(router.toMiddleware());
-  await GetStatus(aex, "", 404);
+  const res = await GetStatus(aex, "", 404);
+  expect(res instanceof IncomingMessage).toBeTruthy();
+
 });

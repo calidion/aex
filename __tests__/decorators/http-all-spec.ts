@@ -4,6 +4,7 @@
 import Aex from "../../src/core";
 import { http } from "../../src/decorators/http";
 
+import { IncomingMessage } from "http";
 import { GetText, PostText } from "../../src/util/request";
 
 class Hello {
@@ -21,14 +22,16 @@ test("Should get all methods and urls", async () => {
   expect(exam).toBeTruthy();
   await GetText(aex, "Hello Aex!", "/");
   await PostText(aex, {}, "Hello Aex!", "/abcd");
-  await PostText(aex, {}, "Hello Aex!", "/aaaa", "localhost", "OPTIONS");
+  const res = await PostText(aex, {}, "Hello Aex!", "/aaaa", "localhost", "OPTIONS");
+  expect(res instanceof IncomingMessage).toBeTruthy();
 });
 
 test("Should start with prepare", async () => {
   const aex = new Aex();
   const server = await aex.start(10000, "localhost", true);
   server.close();
-  await GetText(aex, "Hello Aex!", "/");
+  const res = await GetText(aex, "Hello Aex!", "/");
+  expect(res instanceof IncomingMessage).toBeTruthy();
 });
 
 test("Should start with prepare", async () => {
