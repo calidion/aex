@@ -63,6 +63,18 @@ test("Should decorate methods with array", async () => {
 test("Should decorate methods with array", async () => {
   const aex = new Aex();
   aex.prepare();
+  await GetText(aex, "User Login!", "/user/login", "localhost");
+});
+
+test("Should decorate methods with array", async () => {
+  const aex = new Aex();
+  aex.prepare();
+  await GetText(aex, "User Login!", "/user/login", "localhost", {headers: {"Set-Cookie": "aa=a100"}});
+});
+
+test("Should decorate methods with array", async () => {
+  const aex = new Aex();
+  aex.prepare();
   await PostText(aex, {}, "User Login!", "/user/login", "localhost", "POST");
 });
 

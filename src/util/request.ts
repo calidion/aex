@@ -2,12 +2,12 @@ import { get, IncomingMessage, request } from "http";
 import * as qs from "querystring";
 import Aex from "../core";
 
-function GET(url: string): Promise<IncomingMessage> {
+function GET(url: string, options: any): Promise<IncomingMessage> {
   return new Promise(resolve => {
     // This is an example of an http request, for example to fetch
     // user data from an API.
     // This module is being mocked in __mocks__/request.js
-    get(url, (response: IncomingMessage) => {
+    get(url, options, (response: IncomingMessage) => {
       const data: any[] = [];
       response.on("data", chunk => data.push(chunk));
       response.on("end", () => {
@@ -59,13 +59,14 @@ export async function GetText(
   aex: Aex,
   message: string,
   path: string = "",
-  domain: string = "localhost"
+  domain: string = "localhost",
+  options: any = {}
 ) {
   const port = 10000 + Math.floor(Math.random() * 1000);
 
   const server = await aex.start(port);
   const url = "http://" + domain + ":" + port + path;
-  const res = await GET(url);
+  const res = await GET(url, options);
   const od = Object.getOwnPropertyDescriptor(res, "text");
 
   expect(od!.value).toBe(message);
@@ -102,11 +103,12 @@ export async function GetStatus(
   aex: Aex,
   url: string,
   status: number,
-  domain: string = "localhost"
+  domain: string = "localhost",
+  options: any = {}
 ) {
   const port = 10000 + Math.floor(Math.random() * 1000);
   const server = await aex.start(port);
-  const res = await GET("http://" + domain + ":" + port + url);
+  const res = await GET("http://" + domain + ":" + port + url, options);
   expect(res.statusCode === status).toBeTruthy();
   server.close();
   return res;
