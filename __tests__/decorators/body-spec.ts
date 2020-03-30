@@ -5,7 +5,7 @@ import Aex from "../../src/core";
 import { body } from "../../src/decorators/body";
 import { http } from "../../src/decorators/http";
 
-import { PostText } from "../../src/util/request";
+import { PostText, initRandomPort } from "../../src/util/request";
 
 class User {
   @http("post", "/user/login")
@@ -23,20 +23,30 @@ class User {
   }
 }
 
-test("Should decorate methods with array", async () => {
-  const aex = new Aex();
+const aex = new Aex();
+aex.prepare();
+
+let port: number = 0;
+
+beforeAll(async () => {
+  port = await initRandomPort(aex);
   const user = new User();
-
   expect(user).toBeTruthy();
+});
 
-  aex.prepare();
+
+test("Should decorate methods with array", async () => {
 
   await PostText(
-    aex,
+    port,
     { username: "aaa", password: "sososo" },
     "User All!",
     "/user/login",
     "localhost",
     "POST"
   );
+});
+
+afterAll(async () => {
+  aex.server?.close();
 });

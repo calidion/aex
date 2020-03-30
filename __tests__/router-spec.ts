@@ -3,7 +3,7 @@
 
 import Aex from "../src/core";
 import { Router } from "../src/router";
-import { GetStatus, GetText } from "../src/util/request";
+import { GetTextWithAex, GetStatusWithAex } from "../src/util/request";
 import { IncomingMessage } from "http";
 
 test("Should parse params", async () => {
@@ -21,7 +21,7 @@ test("Should parse params", async () => {
   });
   aex.use(router.toMiddleware());
 
-  await GetText(aex, "Hello Aex!", "/user/aoaoa");
+  await GetTextWithAex(aex, "Hello Aex!", "/user/aoaoa");
 });
 
 test("Should return 404 when no route found!", async () => {
@@ -40,7 +40,7 @@ test("Should return 404 when no route found!", async () => {
 
   aex.use(router.toMiddleware());
 
-  await GetStatus(aex, "/user/aoaoa", 404);
+  await GetStatusWithAex(aex, "/user/aoaoa", 404);
 });
 
 test("Should return 404 when no route found!", async () => {
@@ -48,7 +48,7 @@ test("Should return 404 when no route found!", async () => {
   const router = new Router();
   aex.use(router.toMiddleware());
 
-  await GetStatus(aex, "/user/aoaoa", 404);
+  await GetStatusWithAex(aex, "/user/aoaoa", 404);
 });
 
 test("Should return use http methods directly", async () => {
@@ -61,7 +61,7 @@ test("Should return use http methods directly", async () => {
   });
   aex.use(router.toMiddleware());
 
-  await GetText(aex, "Hello Aex!", "/user/aoaoa");
+  await GetTextWithAex(aex, "Hello Aex!", "/user/aoaoa");
 });
 
 test("Should Request no route", async () => {
@@ -73,6 +73,6 @@ test("Should Request no route", async () => {
     res.end("Hello Aex!");
   });
   aex.use(router.toMiddleware());
-  const res = await GetStatus(aex, "", 404);
+  const res = await GetStatusWithAex(aex, "", 404);
   expect(res instanceof IncomingMessage).toBeTruthy();
 });

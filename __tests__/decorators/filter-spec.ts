@@ -7,7 +7,7 @@ import { filter } from "../../src/decorators/filter";
 import { http } from "../../src/decorators/http";
 import { query } from "../../src/decorators/query";
 
-import { GetStatus, GetText, PostText } from "../../src/util/request";
+import { GetStatus, GetText, PostText, initRandomPort } from "../../src/util/request";
 
 class User {
   @http("post", "/user/login")
@@ -58,16 +58,21 @@ class User {
   }
 }
 
-beforeAll(() => {
+
+const aex = new Aex();
+aex.prepare();
+
+let port: number = 0;
+
+beforeAll(async () => {
+  port = await initRandomPort(aex);
   const user = new User();
   expect(user).toBeTruthy();
 });
 
 test("Should decorate methods with array", async () => {
-  const aex = new Aex();
-  aex.prepare();
   await PostText(
-    aex,
+    port,
     { username: "aaaa", password: "sosodddso" },
     "User All!",
     "/user/login",
@@ -77,24 +82,21 @@ test("Should decorate methods with array", async () => {
 });
 
 test("Should filter query && params", async () => {
-  const aex = new Aex();
-  aex.prepare();
-  await GetText(aex, "User Id!", "/profile/111?page=20");
+  await GetText(port, "User Id!", "/profile/111?page=20");
 });
 
 test("should", async () => {
-  const aex = new Aex();
-  aex.prepare();
-  await GetStatus(aex, "/profile/ddd?page=aaa", 500);
+  await GetStatus(port, "/profile/ddd?page=aaa", 500);
 });
 
 test("should", async done => {
-  const aex = new Aex();
-  aex.prepare();
   setTimeout(() => {
-    aex.server?.close();
     done();
   }, 1000);
 
-  await GetStatus(aex, "/profile/ddd", 500);
+  await GetStatus(port, "/profile/ddd", 500);
+});
+
+afterAll(async () => {
+  aex.server?.close();
 });

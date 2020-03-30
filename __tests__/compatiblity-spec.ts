@@ -3,7 +3,7 @@ import { Aex } from "../src/core";
 
 import { Router } from "../src/router";
 import { toAsyncMiddleware } from "../src/util";
-import { GetText } from "../src/util/request";
+import { GetTextWithAex } from "../src/util/request";
 
 test("Should compatible with express middlewares", async () => {
   const aex = new Aex();
@@ -41,5 +41,6 @@ test("Should compatible with express middlewares", async () => {
 
   aex.use(router.toMiddleware());
 
-  await GetText(aex, "Hello Aex!");
+
+  await GetTextWithAex(aex, "Hello Aex!", "");
 });

@@ -55,41 +55,49 @@ function POST(options: any, body: any): Promise<IncomingMessage> {
   });
 }
 
-export async function GetText(
+export async function GetTextWithAex(
   aex: Aex,
   message: string,
   path: string = "",
   domain: string = "localhost",
   options: any = {}
 ) {
-  const port = 10000 + Math.floor(Math.random() * 1000);
 
-  const server = await aex.start(port);
+  const port = await initRandomPort(aex);
+  const res = await GetText(port, message, path, domain, options);
+  aex.server!.close();
+  return res;
+}
+
+export async function GetText(
+  port: number,
+  message: string,
+  path: string,
+  domain: string = "localhost",
+  options: any = {}
+) {
   Object.assign(options, {
     hostname: domain,
     port,
     // tslint:disable-next-line: object-literal-sort-keys
     path,
-    method: "GET"
+    method: "GET",
   });
   const res = await GET(options);
   const od = Object.getOwnPropertyDescriptor(res, "text");
 
   expect(od!.value).toBe(message);
-  server.close();
   return res;
 }
 
 export async function PostText(
-  aex: Aex,
+  port: number,
   body: any,
   message: string,
   url: string = "",
   domain: string = "localhost",
   method: string = "POST"
 ) {
-  const port = 10000 + Math.floor(Math.random() * 1000);
-  const server = await aex.start(port);
   const options = {
     hostname: domain,
     port,
@@ -101,29 +109,45 @@ export async function PostText(
   const od = Object.getOwnPropertyDescriptor(res, "text");
 
   expect(od!.value).toBe(message);
-  server.close();
   return res;
 }
 
+
 export async function GetStatus(
+  port: number,
+  url: string,
+  status: number,
+  domain: string = "localhost",
+  options: any = {}
+) {
+  Object.assign(options, {
+    hostname: domain,
+    port,
+    // tslint:disable-next-line: object-literal-sort-keys
+    path: url,
+    method: "GET",
+  });
+  const res = await GET(options);
+  expect(res.statusCode === status).toBeTruthy();
+  return res;
+}
+
+export async function GetStatusWithAex(
   aex: Aex,
   url: string,
   status: number,
   domain: string = "localhost",
   options: any = {}
 ) {
-  const port = 10000 + Math.floor(Math.random() * 1000);
-  const server = await aex.start(port);
 
-  Object.assign(options, {
-    hostname: domain,
-    port,
-    // tslint:disable-next-line: object-literal-sort-keys
-    path: url,
-    method: "GET"
-  });
-  const res = await GET(options);
-  expect(res.statusCode === status).toBeTruthy();
-  server.close();
+  const port = await initRandomPort(aex);
+  const res = await GetStatus(port, url, status, domain, options);
+  aex.server!.close();
   return res;
+}
+
+export async function initRandomPort(aex: Aex) {
+  const port = 10000 + Math.floor(Math.random() * 1000);
+  await aex.start(port);
+  return port;
 }

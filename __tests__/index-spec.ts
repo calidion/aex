@@ -3,7 +3,7 @@
 
 import Aex from "../src/core";
 import { Router } from "../src/router";
-import { GetStatus, GetText } from "../src/util/request";
+import { GetStatusWithAex, GetTextWithAex } from "../src/util/request";
 
 test("Should have Aex available", () => {
   expect(Aex).toBeTruthy();
@@ -32,7 +32,7 @@ test("Should add http methods", async () => {
   });
   aex.use(router.toMiddleware());
 
-  await GetText(aex, "Hello Aex!");
+  await GetTextWithAex(aex, "Hello Aex!");
 });
 
 test("Should not able to add wrong http methods", () => {
@@ -110,7 +110,7 @@ test("Should allow in request middlewares", async () => {
   });
 
   aex.use(router.toMiddleware());
-  await GetText(aex, "End!");
+  await GetTextWithAex(aex, "End!");
 });
 
 test("Should allow in request middlewares", async () => {
@@ -196,7 +196,7 @@ test("Should allow in request middlewares", async () => {
   });
   aex.use(router.toMiddleware());
 
-  await GetText(aex, "Hello world!");
+  await GetTextWithAex(aex, "Hello world!");
 });
 
 test("Should allow general middlewares", async () => {
@@ -238,7 +238,7 @@ test("Should allow general middlewares", async () => {
   });
   aex.use(router.toMiddleware());
 
-  await GetText(aex, "General Middlewares!");
+  await GetTextWithAex(aex, "General Middlewares!");
 });
 
 test("Should start http methods", async () => {
@@ -278,10 +278,10 @@ test("Should add http methods", async () => {
   });
 
   aex.use(router.toMiddleware());
-  await GetText(aex, "Hello Aex!");
+  await GetTextWithAex(aex, "Hello Aex!");
 });
 
 test("Should return 404 when no route found!", async () => {
   const aex = new Aex();
-  await GetStatus(aex, "/user/aoaoa", 404);
+  await GetStatusWithAex(aex, "/user/aoaoa", 404);
 });

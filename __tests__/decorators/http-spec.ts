@@ -4,7 +4,7 @@
 import Aex from "../../src/core";
 import { http } from "../../src/decorators/http";
 
-import { GetText, PostText } from "../../src/util/request";
+import { GetText, PostText, initRandomPort } from "../../src/util/request";
 
 class Exam {
   @http("", "/notstring/:name")
@@ -43,67 +43,60 @@ class Exam {
   }
 }
 
-beforeAll(() => {
+const aex = new Aex();
+aex.prepare();
+
+let port: number = 0;
+
+beforeAll(async () => {
+  port = await initRandomPort(aex);
   const exam = new Exam();
   expect(exam).toBeTruthy();
 });
 
 test("Should decorate methods with single http method name", async () => {
-  const aex = new Aex();
-  aex.prepare();
-  await GetText(aex, "Hello Aex!", "/user/aoaoa");
+  await GetText(port, "Hello Aex!", "/user/aoaoa");
 });
 
 test("Should decorate methods with array", async () => {
-  const aex = new Aex();
-  aex.prepare();
-  await GetText(aex, "User Login!", "/user/login");
+  await GetText(port, "User Login!", "/user/login");
 });
 
 test("Should decorate methods with array", async () => {
-  const aex = new Aex();
-  aex.prepare();
-  await GetText(aex, "User Login!", "/user/login", "localhost");
+  await GetText(port, "User Login!", "/user/login", "localhost");
 });
 
 test("Should decorate methods with array", async () => {
-  const aex = new Aex();
-  aex.prepare();
-  await GetText(aex, "User Login!", "/user/login", "localhost", {headers: {"Set-Cookie": "aa=a100"}});
+  await GetText(port, "User Login!", "/user/login", "localhost", {
+    headers: { "Set-Cookie": "aa=a100" },
+  });
 });
 
 test("Should decorate methods with array", async () => {
-  const aex = new Aex();
-  aex.prepare();
-  await PostText(aex, {}, "User Login!", "/user/login", "localhost", "POST");
+  await PostText(port, {}, "User Login!", "/user/login", "localhost", "POST");
 });
 
 test("Should decorate methods with array", async () => {
-  const aex = new Aex();
-  aex.prepare();
-  await PostText(aex, {}, "User Login!", "/user/login", "localhost");
+  await PostText(port, {}, "User Login!", "/user/login", "localhost");
 });
 
 test("Should decorate methods with array", async () => {
-  const aex = new Aex();
-  aex.prepare();
-  await PostText(aex, {}, "User Login!", "/user/login");
+  await PostText(port, {}, "User Login!", "/user/login");
 });
 
 test("Should decorate methods with array", async () => {
-  const aex = new Aex();
-  aex.prepare();
-  await PostText(aex, {}, "User Home!");
+  await PostText(port, {}, "User Home!");
 });
 
 test("Should decorate methods with all methods", async () => {
-  const aex = new Aex();
-  aex.prepare();
-  await GetText(aex, "User All!", "/user/all");
+  await GetText(port, "User All!", "/user/all");
 });
 
 test("Should decorate methods with all methods", async () => {
-  const aex = new Aex();
-  aex.prepare();
-  await GetText(aex, "", "/user/null");
+  await GetText(port, "", "/user/null");
+});
+
+
+afterAll(async () => {
+  aex.server?.close();
 });
