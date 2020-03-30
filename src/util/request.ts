@@ -2,12 +2,12 @@ import { get, IncomingMessage, request } from "http";
 import * as qs from "querystring";
 import Aex from "../core";
 
-function GET(url: string, options: any): Promise<IncomingMessage> {
+function GET(options: any): Promise<IncomingMessage> {
   return new Promise(resolve => {
     // This is an example of an http request, for example to fetch
     // user data from an API.
     // This module is being mocked in __mocks__/request.js
-    get(url, options, (response: IncomingMessage) => {
+    get(options, (response: IncomingMessage) => {
       const data: any[] = [];
       response.on("data", chunk => data.push(chunk));
       response.on("end", () => {
@@ -65,8 +65,14 @@ export async function GetText(
   const port = 10000 + Math.floor(Math.random() * 1000);
 
   const server = await aex.start(port);
-  const url = "http://" + domain + ":" + port + path;
-  const res = await GET(url, options);
+  Object.assign(options, {
+    hostname: domain,
+    port,
+    // tslint:disable-next-line: object-literal-sort-keys
+    path,
+    method: "GET"
+  });
+  const res = await GET(options);
   const od = Object.getOwnPropertyDescriptor(res, "text");
 
   expect(od!.value).toBe(message);
@@ -108,7 +114,15 @@ export async function GetStatus(
 ) {
   const port = 10000 + Math.floor(Math.random() * 1000);
   const server = await aex.start(port);
-  const res = await GET("http://" + domain + ":" + port + url, options);
+
+  Object.assign(options, {
+    hostname: domain,
+    port,
+    // tslint:disable-next-line: object-literal-sort-keys
+    path: url,
+    method: "GET"
+  });
+  const res = await GET(options);
   expect(res.statusCode === status).toBeTruthy();
   server.close();
   return res;
