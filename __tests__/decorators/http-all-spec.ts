@@ -5,7 +5,12 @@ import Aex from "../../src/core";
 import { http } from "../../src/decorators/http";
 
 import { IncomingMessage } from "http";
-import { GetText, PostText, initRandomPort, GetTextWithAex } from "../../src/util/request";
+import {
+  GetText,
+  PostText,
+  initRandomPort,
+  GetTextWithAex,
+} from "../../src/util/request";
 
 class Hello {
   public static message = "Hello Aex!";
@@ -15,7 +20,6 @@ class Hello {
   }
 }
 
-
 const aex = new Aex();
 aex.prepare();
 
@@ -24,7 +28,6 @@ let port: number = 0;
 beforeAll(async () => {
   port = await initRandomPort(aex);
 });
-
 
 test("Should get all methods and urls", async () => {
   const exam = new Hello();
@@ -56,7 +59,6 @@ test("Should start with prepare", async () => {
   const server = await aex.prepare().start(8080);
   server.close();
 });
-
 
 afterAll(async () => {
   aex.server?.close();

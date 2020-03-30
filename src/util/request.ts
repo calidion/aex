@@ -62,7 +62,6 @@ export async function GetTextWithAex(
   domain: string = "localhost",
   options: any = {}
 ) {
-
   const port = await initRandomPort(aex);
   const res = await GetText(port, message, path, domain, options);
   aex.server!.close();
@@ -112,7 +111,6 @@ export async function PostText(
   return res;
 }
 
-
 export async function GetStatus(
   port: number,
   url: string,
@@ -139,7 +137,6 @@ export async function GetStatusWithAex(
   domain: string = "localhost",
   options: any = {}
 ) {
-
   const port = await initRandomPort(aex);
   const res = await GetStatus(port, url, status, domain, options);
   aex.server!.close();

@@ -41,6 +41,5 @@ test("Should compatible with express middlewares", async () => {
 
   aex.use(router.toMiddleware());
 
-
   await GetTextWithAex(aex, "Hello Aex!", "");
 });

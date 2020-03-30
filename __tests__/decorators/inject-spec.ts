@@ -52,7 +52,6 @@ test("Should decorate methods with array", async () => {
   );
 });
 
-
 afterAll(async () => {
   aex.server?.close();
 });

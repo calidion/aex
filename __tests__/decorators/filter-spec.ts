@@ -7,7 +7,12 @@ import { filter } from "../../src/decorators/filter";
 import { http } from "../../src/decorators/http";
 import { query } from "../../src/decorators/query";
 
-import { GetStatus, GetText, PostText, initRandomPort } from "../../src/util/request";
+import {
+  GetStatus,
+  GetText,
+  PostText,
+  initRandomPort,
+} from "../../src/util/request";
 
 class User {
   @http("post", "/user/login")
@@ -57,7 +62,6 @@ class User {
     res.end("User Id!");
   }
 }
-
 
 const aex = new Aex();
 aex.prepare();

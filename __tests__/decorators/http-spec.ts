@@ -88,6 +88,19 @@ test("Should decorate methods with array", async () => {
   await PostText(port, {}, "User Home!");
 });
 
+
+test("Should decorate methods with array", async () => {
+  await GetText(port, "User Home!", "/");
+});
+
+test("Should decorate methods with array", async () => {
+  await PostText(port, {}, "User Home!", "/home");
+});
+
+test("Should decorate methods with array", async () => {
+  await GetText(port, "User Home!", "/home");
+});
+
 test("Should decorate methods with all methods", async () => {
   await GetText(port, "User All!", "/user/all");
 });
@@ -95,7 +108,6 @@ test("Should decorate methods with all methods", async () => {
 test("Should decorate methods with all methods", async () => {
   await GetText(port, "", "/user/null");
 });
-
 
 afterAll(async () => {
   aex.server?.close();

@@ -34,9 +34,7 @@ beforeAll(async () => {
   expect(user).toBeTruthy();
 });
 
-
 test("Should decorate methods with array", async () => {
-
   await PostText(
     port,
     { username: "aaa", password: "sososo" },
