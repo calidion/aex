@@ -73,6 +73,10 @@ test("Should decorate methods with array", async () => {
 });
 
 test("Should decorate methods with array", async () => {
+  await PostText(port, {}, "User Login!", "/user/login", "localhost", "POST", {headers: {aa: 1}});
+});
+
+test("Should decorate methods with array", async () => {
   await PostText(port, {}, "User Login!", "/user/login", "localhost", "POST");
 });
 

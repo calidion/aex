@@ -30,11 +30,14 @@ function POST(options: any, body: any): Promise<IncomingMessage> {
 
     const postData = qs.stringify(body);
     // console.log(postData);
-    options.headers = {
+    if (!options.headers) {
+      options.headers = {};
+    }
+    Object.assign(options.headers, {
       "Content-Type": "application/x-www-form-urlencoded",
       // tslint:disable-next-line: object-literal-sort-keys
       "Content-Length": Buffer.byteLength(postData)
-    };
+    });
     options.body = postData;
     const req = request(options, (response: IncomingMessage) => {
       const data: any[] = [];
