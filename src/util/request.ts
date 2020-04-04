@@ -14,7 +14,7 @@ function GET(options: any): Promise<IncomingMessage> {
         const value = String(data.join(""));
         Object.defineProperty(response, "text", {
           enumerable: true,
-          value
+          value,
         });
         resolve(response);
       });
@@ -36,7 +36,7 @@ function POST(options: any, body: any): Promise<IncomingMessage> {
     Object.assign(options.headers, {
       "Content-Type": "application/x-www-form-urlencoded",
       // tslint:disable-next-line: object-literal-sort-keys
-      "Content-Length": Buffer.byteLength(postData)
+      "Content-Length": Buffer.byteLength(postData),
     });
     options.body = postData;
     const req = request(options, (response: IncomingMessage) => {
@@ -46,7 +46,7 @@ function POST(options: any, body: any): Promise<IncomingMessage> {
         const value = String(data.join(""));
         Object.defineProperty(response, "text", {
           enumerable: true,
-          value
+          value,
         });
         resolve(response);
       });
@@ -83,7 +83,7 @@ export async function GetText(
     port,
     // tslint:disable-next-line: object-literal-sort-keys
     path,
-    method: "GET"
+    method: "GET",
   });
   const res = await GET(options);
   const od = Object.getOwnPropertyDescriptor(res, "text");
@@ -122,7 +122,7 @@ export async function GetStatus(
     port,
     // tslint:disable-next-line: object-literal-sort-keys
     path: url,
-    method: "GET"
+    method: "GET",
   });
   const res = await GET(options);
   expect(res.statusCode === status).toBeTruthy();
