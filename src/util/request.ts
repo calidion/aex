@@ -76,7 +76,8 @@ export async function GetText(
   message: string,
   path: string,
   domain: string = "localhost",
-  options: any = {}
+  options: any = {},
+  compare: boolean = true
 ) {
   Object.assign(options, {
     hostname: domain,
@@ -88,7 +89,9 @@ export async function GetText(
   const res = await GET(options);
   const od = Object.getOwnPropertyDescriptor(res, "text");
 
-  expect(od!.value).toBe(message);
+  if (compare) {
+    expect(od!.value).toBe(message);
+  }
   return res;
 }
 
@@ -99,14 +102,17 @@ export async function PostText(
   url: string = "",
   domain: string = "localhost",
   method: string = "POST",
-  options: any = {}
+  options: any = {},
+  compare: boolean = true
 ) {
   (options.hostname = domain), (options.port = port), (options.path = url);
   options.method = method;
   const res = await POST(options, body);
   const od = Object.getOwnPropertyDescriptor(res, "text");
 
-  expect(od!.value).toBe(message);
+  if (compare) {
+    expect(od!.value).toBe(message);
+  }
   return res;
 }
 
