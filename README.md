@@ -18,7 +18,7 @@ It is an example:
 ```ts
 import { Aex, Router, http } from "@aex/core";
 
-class Hello {
+class HelloAex {
   @http("*", "*")
   public all(_req: any, res: any, _scope: any) {
     res.end("Hello Aex!");
@@ -26,6 +26,7 @@ class Hello {
 }
 
 const aex = new Aex();
+const hello = new HelloAex();
 aex
   .prepare()
   .start(8080)
@@ -42,6 +43,187 @@ or
 
 ```sh
 yarn add @aex/core
+```
+
+# Decorators
+
+Aex is simplified by decorators, so you should be familiar with decorators to full utilize aex.
+
+Decorators will be enriched over time. Currently aex provides 5 most important decorators. They are
+`http`, `body`, `query`, `filter`, `inject`.
+
+1. @http define your http handler, the most important and fundamental decorator should be used in every request handler.
+2. @body define your way to parse your body.
+3. @query enable `req.query`.
+4. @filter fiter and validate data from request, takes `body`, `params` and `query` types only.
+5. @inject inject any middleware you want to
+
+## @http
+
+Aex provides the `@http` decorator to ease the way http requests being handled by classes. It is very simple and intuitive.
+
+### Define a class with it's methods decorated by `@http`
+
+The member methods are of `IAsyncMiddleware` type as well.
+
+```ts
+import { http } from "@aex/core";
+
+class User {
+  @http("get", ["/profile", "/home"])
+  profile(req, res, scope) {}
+
+  @http(["get", "post"], "/user/login")
+  login(req, res, scope) {}
+
+  @http("post", "/user/logout")
+  logout(req, res, scope) {}
+}
+```
+
+### Get router from One
+
+```ts
+import { One } from "@aex/core";
+const router = One.instance();
+```
+
+### New the class
+
+You need to create an instance of your class for request being processed.
+
+```ts
+const user = new User();
+// do some initialization
+```
+
+### Start Aex server
+
+```ts
+import { Aex } from "@aex/core";
+const aex = new Aex();
+aex.use(router.toMiddleware());
+aex.start();
+```
+
+## @body
+
+Decorator @body provides a simple way to process data with body parser.
+
+@body accept body parser package's function and its options, and they are optional.
+
+```ts
+@body("urlencoded", { extended: false })
+```
+
+and should succeed to @http decorator.
+
+```ts
+import { http } from "@aex/core";
+
+class User {
+  @http("post", "/user/login")
+  @body("urlencoded", { extended: false })
+  login(req, res, scope) {}
+
+  @http("post", "/user/logout")
+  @body()
+  login(req, res, scope) {}
+}
+```
+
+You may look up npm package `body-parser` for detailed usage.
+
+## @query
+
+Decorator @query will parse query for you. After @query you will have `req.query` to use.
+
+```ts
+  @http("get", "/profile/:id")
+  @query()
+  public async id(req: any, res: any, _scope: any) {
+    // get /profile/111?page=20
+    req.query.page
+    // 20
+  }
+```
+
+## @filter
+
+Decorator @filter will filter `body`, `params` and `query` data for you.
+
+Reference [node-form-validator](!https://github.com/calidion/node-form-validator) for detailed usage.
+
+```ts
+class User {
+  @http("post", "/user/login")
+  @body()
+  @filter({
+    body: {
+      username: {
+        type: "string",
+        required: true,
+        minLength: 4,
+        maxLength: 20
+      },
+      password: {
+        type: "string",
+        required: true,
+        minLength: 4,
+        maxLength: 64
+      }
+    }
+  })
+  public async login(req: any, res: any, _scope: any) {
+    // req.body.username
+    // req.body.password
+  }
+
+  @http("get", "/profile/:id")
+  @body()
+  @query()
+  @filter({
+    query: {
+      page: {
+        type: "numeric",
+        required: true
+      }
+    },
+    params: {
+      id: {
+        type: "numeric",
+        required: true
+      }
+    }
+  })
+  public async id(req: any, res: any, _scope: any) {
+    // req.params.id
+    // req.query.page
+  }
+}
+```
+
+## @inject
+
+Inject any middleware when necessary. But you should be careful with middlewares' order.
+
+```ts
+class User {
+  @http("post", "/user/login")
+  @body()
+  @inject(async (req, res, scope) => {
+      req.session = {
+        user: {
+          name: "ok"
+        }
+      };
+  })
+  public async login(req: any, res: any, scope: any) {
+    // req.session.user.name
+    // ok
+    ...
+  }
+}
 ```
 
 # Usage
@@ -339,179 +521,3 @@ aex.use(pOld);
 
 > You should be cautious to use express middlewares.
 > Full testing is appreciated.
-
-# Decorators
-
-1. @http define your http handler.
-2. @body define your way to parse your body.
-3. @query enable `req.query`.
-4. @filter fiter and validate data from request, takes `body`, `params` and `query` types only.
-5. @inject inject any middleware you want to
-
-## @http
-
-Aex provides the `@http` decorator to ease the way http requests being handled by classes. It is very simple and intuitive.
-
-### Define a class with it's methods decorated by `@http`
-
-The member methods are of `IAsyncMiddleware` type as well.
-
-```ts
-import { http } from "@aex/core";
-
-class User {
-  @http("get", ["/profile", "/home"])
-  profile(req, res, scope) {}
-
-  @http(["get", "post"], "/user/login")
-  login(req, res, scope) {}
-
-  @http("post", "/user/logout")
-  logout(req, res, scope) {}
-}
-```
-
-### Get router from One
-
-```ts
-import { One } from "@aex/core";
-const router = One.instance();
-```
-
-### New the class (optional)
-
-You normally need to create an instance of you class for data accessing.
-
-```ts
-const user = new User();
-// do some initialization
-```
-
-### Start Aex server
-
-```ts
-import { Aex } from "@aex/core";
-const aex = new Aex();
-aex.use(router.toMiddleware());
-aex.start();
-```
-
-## @body
-
-Decorator @body provides a simple way to process data with body parser.
-
-@body accept body parser package's function and its options, and they are optional.
-
-```ts
-@body("urlencoded", { extended: false })
-```
-
-and should succeed to @http decorator.
-
-```ts
-import { http } from "@aex/core";
-
-class User {
-  @http("post", "/user/login")
-  @body("urlencoded", { extended: false })
-  login(req, res, scope) {}
-
-  @http("post", "/user/logout")
-  @body()
-  login(req, res, scope) {}
-}
-```
-
-You may look up npm package `body-parser` for detailed usage.
-
-## @query
-
-Decorator @query will parse query for you. After @query you will have `req.query` to use.
-
-```ts
-  @http("get", "/profile/:id")
-  @query()
-  public async id(req: any, res: any, _scope: any) {
-    // get /profile/111?page=20
-    req.query.page
-    // 20
-  }
-```
-
-## @filter
-
-Decorator @filter will filter `body`, `params` and `query` data for you.
-
-Reference [node-form-validator](!https://github.com/calidion/node-form-validator) for detailed usage.
-
-```ts
-class User {
-  @http("post", "/user/login")
-  @body()
-  @filter({
-    body: {
-      username: {
-        type: "string",
-        required: true,
-        minLength: 4,
-        maxLength: 20
-      },
-      password: {
-        type: "string",
-        required: true,
-        minLength: 4,
-        maxLength: 64
-      }
-    }
-  })
-  public async login(req: any, res: any, _scope: any) {
-    // req.body.username
-    // req.body.password
-  }
-
-  @http("get", "/profile/:id")
-  @body()
-  @query()
-  @filter({
-    query: {
-      page: {
-        type: "numeric",
-        required: true
-      }
-    },
-    params: {
-      id: {
-        type: "numeric",
-        required: true
-      }
-    }
-  })
-  public async id(req: any, res: any, _scope: any) {
-    // req.params.id
-    // req.query.page
-  }
-}
-```
-
-## @inject
-
-Inject any middleware when necessary. But you should be careful with middlewares' order.
-
-```ts
-class User {
-  @http("post", "/user/login")
-  @body()
-  @inject(async (req, res, scope) => {
-      req.session = {
-        user: {
-          name: "ok"
-        }
-      };
-  })
-  public async login(req: any, res: any, scope: any) {
-    // req.session.user.name
-    // ok
-    ...
-  }
-}
-```
