@@ -61,6 +61,35 @@ class User {
     // expect(req.query.page === 20);
     res.end("User Id!");
   }
+
+  @http("get", "/handled/:id")
+  @body()
+  @query()
+  @filter({
+    query: {
+      page: {
+        type: "numeric",
+        required: true,
+      },
+    },
+    params: {
+      id: {
+        type: "numeric",
+        required: true,
+      },
+    },
+
+    failbacks: {
+      params: async function(_req : any, res: any) {
+        res.end("Params failed!");
+      }
+    }
+  })
+  public async handled(req: any, res: any, _scope: any) {
+    expect(req.params.id === 111);
+    // expect(req.query.page === 20);
+    res.end("Handled!");
+  }
 }
 
 const aex = new Aex();
@@ -99,6 +128,14 @@ test("should", async done => {
   }, 1000);
 
   await GetStatus(port, "/profile/ddd", 500);
+});
+
+test("Should filter query && params", async () => {
+  await GetText(port, "Handled!", "/handled/111?page=20");
+});
+
+test("Should filter query && params", async () => {
+  await GetText(port, "Params failed!", "/handled/aaa?page=20");
 });
 
 afterAll(async () => {

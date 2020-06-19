@@ -1,15 +1,23 @@
 import * as validator from "node-form-validator";
 import InternalServerError from "../status/500";
+import { IAsyncMiddleware } from "../types";
+
+export interface IFilterFailback {
+  params?: IAsyncMiddleware,
+  body?: IAsyncMiddleware,
+  query?: IAsyncMiddleware;
+}
 
 export interface IFilterOptions {
   params?: any;
   body?: any;
   query?: any;
+  failbacks?: IFilterFailback
 }
 
 export function filter(options: IFilterOptions) {
   // tslint:disable-next-line: only-arrow-functions
-  return function(
+  return function (
     target: any,
     // tslint:disable-next-line: variable-name
     _propertyKey: string,
@@ -50,9 +58,16 @@ export function filter(options: IFilterOptions) {
             break;
           case "query":
             passed = validate(req.query, options.query);
+
             break;
         }
         if (!passed) {
+          const failbacks = options.failbacks as any;
+          const handler: any = failbacks ? failbacks[key] : null;
+          if (handler) {
+            return handler.apply(target, args);
+          }
+
           InternalServerError(args[1]);
           return;
         }
