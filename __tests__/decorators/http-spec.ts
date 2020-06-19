@@ -73,16 +73,31 @@ test("Should decorate methods with array", async () => {
 });
 
 test("Should decorate methods with array", async () => {
-  await GetText(port, "User Login!", "/user/login", "localhost", {
-    headers: { "Set-Cookie": "aa=a100" },
-  }, false);
+  await GetText(
+    port,
+    "User Login!",
+    "/user/login",
+    "localhost",
+    {
+      headers: { "Set-Cookie": "aa=a100" },
+    },
+    false
+  );
 });
 
-
 test("Should decorate methods with array", async () => {
-  await PostText(port, {}, "User Login!", "/user/login", "localhost", "POST", {
-    headers: { aa: 1 },
-  }, false);
+  await PostText(
+    port,
+    {},
+    "User Login!",
+    "/user/login",
+    "localhost",
+    "POST",
+    {
+      headers: { aa: 1 },
+    },
+    false
+  );
 });
 
 test("Should decorate methods with array", async () => {
@@ -90,7 +105,6 @@ test("Should decorate methods with array", async () => {
     headers: { aa: 1 },
   });
 });
-
 
 test("Should decorate methods with array", async () => {
   await PostText(port, {}, "User Login!", "/user/login", "localhost", "POST");

@@ -80,10 +80,10 @@ class User {
     },
 
     failbacks: {
-      params: async function(_req : any, res: any) {
+      params: async function(_req: any, res: any) {
         res.end("Params failed!");
-      }
-    }
+      },
+    },
   })
   public async handled(req: any, res: any, _scope: any) {
     expect(req.params.id === 111);

@@ -3,8 +3,8 @@ import InternalServerError from "../status/500";
 import { IAsyncMiddleware } from "../types";
 
 export interface IFilterFailback {
-  params?: IAsyncMiddleware,
-  body?: IAsyncMiddleware,
+  params?: IAsyncMiddleware;
+  body?: IAsyncMiddleware;
   query?: IAsyncMiddleware;
 }
 
@@ -12,12 +12,12 @@ export interface IFilterOptions {
   params?: any;
   body?: any;
   query?: any;
-  failbacks?: IFilterFailback
+  failbacks?: IFilterFailback;
 }
 
 export function filter(options: IFilterOptions) {
   // tslint:disable-next-line: only-arrow-functions
-  return function (
+  return function(
     target: any,
     // tslint:disable-next-line: variable-name
     _propertyKey: string,

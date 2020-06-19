@@ -2,6 +2,13 @@
 [![Coverage Status](https://coveralls.io/repos/github/calidion/aex/badge.svg?branch=master)](https://coveralls.io/github/calidion/aex?branch=master)
 [![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
 
+
+[![NPM version][npm-image]][npm-url] 
+[![Downloads][downloads-image]][npm-url]
+[![Downloads][downloads-image-month]][npm-url]
+[![Dependency Status][daviddm-image]][daviddm-url]
+
+
 # AEX
 
 A simple, easy to use, scoped web server, with async linear middlewares and no callbacks.
@@ -521,3 +528,12 @@ aex.use(pOld);
 
 > You should be cautious to use express middlewares.
 > Full testing is appreciated.
+
+
+
+[downloads-image]: http://img.shields.io/npm/dt/@aex/core.svg
+[downloads-image-month]: http://img.shields.io/npm/dm/@aex/core.svg
+[npm-image]: https://img.shields.io/npm/v/@aex/core.svg
+[npm-url]: https://npmjs.org/package/@aex/core
+[daviddm-image]: https://david-dm.org/calidion/@aex/core.svg?theme=shields.io
+[daviddm-url]: https://david-dm.org/calidion/@aex/core
