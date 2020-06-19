@@ -179,6 +179,11 @@ class User {
         minLength: 4,
         maxLength: 64
       }
+    },
+    fallbacks: {
+      body: async(req, res, scope) {
+        res.end("Body parser failed!");
+      }
     }
   })
   public async login(req: any, res: any, _scope: any) {
