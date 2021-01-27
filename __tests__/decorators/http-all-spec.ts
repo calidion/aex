@@ -21,6 +21,7 @@ class Hello {
 }
 
 const aex = new Aex();
+aex.push(Hello);
 aex.prepare();
 
 let port: number = 0;
@@ -30,8 +31,8 @@ beforeAll(async () => {
 });
 
 test("Should get all methods and urls", async () => {
-  const exam = new Hello();
-  expect(exam).toBeTruthy();
+  // const exam = new Hello();
+  // expect(exam).toBeTruthy();
   await GetText(port, "Hello Aex!", "/");
   await PostText(port, {}, "Hello Aex!", "/abcd");
   const res = await PostText(

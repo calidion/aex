@@ -8,6 +8,8 @@ import { processMiddleware } from "./util";
 export class Aex {
   // tslint:disable-next-line:variable-name
   private _server?: Server;
+  private _controllers: any[] = [];
+  private _controllerInstances: any[] = [];
   private middlewares: IAsyncMiddleware[] = [];
   private scope = new Scope();
 
@@ -19,11 +21,35 @@ export class Aex {
     return this._server;
   }
 
+  /**
+   * push a controller to aex
+   * @param aClass
+   */
+  public push(aClass: any) {
+    this._controllers.push(aClass);
+  }
+
+  /**
+   * prepare the web server
+   */
   public prepare() {
+    // prepare middlewares
     const router = One.instance();
     this.use(router.toMiddleware());
+    // prepare handlers
+    for (const controller of this._controllers) {
+      this._controllerInstances.push(new controller());
+    }
     return this;
   }
+
+  /**
+   * start the web server
+   *
+   * @param port the port taken by the web server, default to 3000
+   * @param ip the ip address where the port bind to, default to localhost
+   * @param prepare prepare middlewares or not, used when middlewares are not previously prepared
+   */
 
   public async start(
     port: number = 3000,

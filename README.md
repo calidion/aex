@@ -21,7 +21,7 @@ It is an example:
 # A simple example
 
 ```ts
-import { Aex, Router, http } from "@aex/core";
+import { Aex, http } from "@aex/core";
 
 class HelloAex {
   @http("*", "*")
@@ -32,8 +32,8 @@ class HelloAex {
 
 // create Aex instance
 const aex = new Aex();
-// init http requests handler
-const hello = new HelloAex();
+// push your controller into aex
+aex.push(HelloAex)
 aex
   .prepare()
   .start(8080)
