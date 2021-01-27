@@ -18,7 +18,7 @@ It is an example:
    > For the stacked middleware model will carry response back to the top most so called middleware pushed, where every middleware can access to the body returned.
 3. To pass some vairiables through middlewares and to the final handler.
 
-# Context
+# Content
 
 1. [Core functions](#core-functions)
 2. [Decorators](#decorators)
