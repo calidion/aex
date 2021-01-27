@@ -510,22 +510,26 @@ async (req, res, scope) => {
 };
 ```
 
-the `scope` variable has three native attributes: `time`, `outer`, `inner`.
+the `scope` variable has 7 native attributes: `time`, `outer`, `inner`, `query`, `params`, `body`, `error`.
 
 The `time` attribute contains the started time and passed time of requests.
 The `outer` attribute is to store general or global data.
 The `inner` attribute is to store specific or local data.
+The `query` attribute is to store http query.
+The `body` attribute is to store http body.
+The `params` attribute is to store http params.
+The `error` attribute is to store scoped errors.
 
 ## `time`
 
-1. Get the requesting time
+### Get the requesting time
 
 ```ts
 scope.time.started;
 // 2019-12-12T09:01:49.543Z
 ```
 
-2.  Get the passed time
+### Get the passed time
 
 ```ts
 scope.time.passed;
@@ -549,6 +553,10 @@ scope.outer.a = 120;
 // scope.outer = {};  // Wrong operation!
 // scope.inner = {};   // Wrong operation!
 // scope.time = {};    // Wrong operation!
+// scope.query = {};    // Wrong operation!
+// scope.params = {};    // Wrong operation!
+// scope.body = {};    // Wrong operation!
+// scope.error = {};    // Wrong operation!
 // scope.time.started = {};  // Wrong operation!
 // scope.time.passed = {};   // Wrong operation!
 ```
