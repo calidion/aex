@@ -65,6 +65,7 @@ Decorators will be enriched over time. Currently aex provides 6 most important d
 3. `@body` defines your way to parse your body.
 4. `@query` extract http query into `req.query` and `scope.query`;
 5. `@filter` fiters and validates data from http requests, takes `body`, `params` and `query` types only.
+6. `@error` defines scoped errors
 
 ## @http
 
@@ -244,7 +245,7 @@ class User {
     }
   })
   public road(_req: any, res: any, scope: any) {
-    const {ILoveYou} = scope.error;
+    const { ILoveYou } = scope.error;
     // throw new ILoveYou('en-US');
     // throw new ILoveYou('zh-CN');
     res.end("User Error!");
