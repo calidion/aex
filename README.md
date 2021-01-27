@@ -116,6 +116,13 @@ Aex provides the `@http` decorator to ease the way http requests being handled b
 
 The member methods are of `IAsyncMiddleware` type as well.
 
+`@http` takes two parameter:
+
+1. http method name(s)
+2. url(s);
+
+You can just pass url(s) if you use http `GET` method only.
+
 ```ts
 import { http } from "@aex/core";
 
@@ -128,6 +135,12 @@ class User {
 
   @http("post", "/user/logout")
   logout(req, res, scope) {}
+
+  @http("/user/:id")
+  info(req, res, scope) {}
+
+  @http(["/user/followers", "/user/subscribes"])
+  followers(req, res, scope) {}
 }
 ```
 
