@@ -18,6 +18,17 @@ It is an example:
    > For the stacked middleware model will carry response back to the top most so called middleware pushed, where every middleware can access to the body returned.
 3. To pass some vairiables through middlewares and to the final handler.
 
+# Context
+
+1. [Core functions](#core-functions)
+2. [Decorators](#decorators)
+3. [Usage with no decorator](#usage)
+4. [Websocket support](#websocket-support)
+5. [Middlewares](#middlewares)
+6. [Scope](#scope)
+7. [Express Middleware Integration](#use-middlewares-from-expressjs)
+8. [Get the web server](#accessable-members)
+
 # A simple example
 
 ```ts
@@ -33,7 +44,7 @@ class HelloAex {
 // create Aex instance
 const aex = new Aex();
 // push your controller into aex
-aex.push(HelloAex)
+aex.push(HelloAex);
 aex
   .prepare()
   .start(8080)
@@ -51,6 +62,36 @@ or
 ```sh
 yarn add @aex/core
 ```
+
+# Core functions
+
+## prepare
+
+`prepare` is used here to init middlewares and controllers if controllers are pushed into the `aex` instance. It takes no parameter and return the `aex` instance. so you can invoke the `start` function of aex.
+
+```
+aex.prepare().start();
+```
+
+## start
+
+`start` function is used to bootstrap the server with cerntain port. It takes three parameters:
+
+1. `port` the port taken by the web server, default to 3000
+2. `ip` the ip address where the port bind to, default to localhost
+3. `prepare` prepare middlewares or not, used when middlewares are not previously prepared
+
+## push
+
+push a controller to aex
+
+```
+aex.push(HelloAex);
+```
+
+## use
+
+add middlewares to aex, see detailed explanation in [middlewares](#middlewares)
 
 # Decorators
 
