@@ -10,9 +10,11 @@ import { PostText, initRandomPort } from "../../src/util/request";
 class User {
   @http("post", "/user/login")
   @body()
-  public all(req: any, res: any, _scope: any) {
+  public all(req: any, res: any, scope: any) {
     expect(req.body.username === "aaa");
     expect(req.body.password === "sososo");
+    expect(scope.body.username === "aaa");
+    expect(scope.body.password === "sososo");
     res.end("User All!");
   }
 

@@ -16,21 +16,24 @@ export function body(
 
   if (bodyTypes.indexOf(type) === -1) {
     // tslint:disable-next-line: only-arrow-functions
-    return function() {};
+    return function () { };
   }
   const parser: any = bodyParser;
   const cb = parser[type](options);
   const asyncCB = toAsyncMiddleware(cb);
   // tslint:disable-next-line: only-arrow-functions
-  return function(target: any, _propertyKey: any, descriptor: any) {
+  return function (target: any, _propertyKey: any, descriptor: any) {
     const origin = descriptor.value;
 
     // tslint:disable-next-line: only-arrow-functions
-    descriptor.value = async function(...args: any[]) {
+    descriptor.value = async function (...args: any[]) {
       await asyncCB.apply(
         asyncCB,
         args as [IncomingMessage, ServerResponse, (Scope | undefined)?]
       );
+      const req: any = args[0];
+      const scope: Scope = args[2];
+      Object.assign(scope.body, req.body);
       await origin.apply(target, args);
     };
     return descriptor;

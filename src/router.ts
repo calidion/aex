@@ -1,6 +1,6 @@
 import { IncomingMessage, METHODS, ServerResponse } from "http";
 import { match } from "path-to-regexp";
-import { Scope } from "./scope";
+import { Scope } from './scope';
 import NotFound from "./status/404";
 import {
   IAsyncHandler,
@@ -95,7 +95,7 @@ export class Router {
       return;
     }
     if (router.matched && Object.keys(router.matched.params).length) {
-      this.enhanceRequest(req, router.matched.params);
+      this.enhanceRequest(router.matched.params, req, scope);
     }
     await this.requestHandling(req, res, router.handler, scope);
   }
@@ -123,13 +123,14 @@ export class Router {
     return;
   }
 
-  protected enhanceRequest(req: IncomingMessage, params: object) {
+  protected enhanceRequest(params: object, req: IncomingMessage, scope?: Scope) {
     Object.defineProperty(req, "params", {
       enumerable: true,
       get: () => {
         return params;
       },
     });
+    Object.assign(scope!.params, params);
   }
 
   protected async requestHandling(

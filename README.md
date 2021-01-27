@@ -2,12 +2,10 @@
 [![Coverage Status](https://coveralls.io/repos/github/calidion/aex/badge.svg?branch=master)](https://coveralls.io/github/calidion/aex?branch=master)
 [![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
 
-
-[![NPM version][npm-image]][npm-url] 
+[![NPM version][npm-image]][npm-url]
 [![Downloads][downloads-image]][npm-url]
 [![Downloads][downloads-image-month]][npm-url]
 [![Dependency Status][daviddm-image]][daviddm-url]
-
 
 # AEX
 
@@ -32,7 +30,9 @@ class HelloAex {
   }
 }
 
+// create Aex instance
 const aex = new Aex();
+// init http requests handler
 const hello = new HelloAex();
 aex
   .prepare()
@@ -56,14 +56,15 @@ yarn add @aex/core
 
 Aex is simplified by decorators, so you should be familiar with decorators to full utilize aex.
 
-Decorators will be enriched over time. Currently aex provides 5 most important decorators. They are
-`http`, `body`, `query`, `filter`, `inject`.
+Decorators will be enriched over time. Currently aex provides 6 most important decorators. They are
+`@inject`, `@http`, `@body`, `@query`, `@filter`, `@error`.
 
-1. @http define your http handler, the most important and fundamental decorator should be used in every request handler.
-2. @body define your way to parse your body.
-3. @query enable `req.query`.
-4. @filter fiter and validate data from request, takes `body`, `params` and `query` types only.
-5. @inject inject any middleware you want to
+1. `@inject` is the generate purpose decorator for client users to customize their handling. Users can inject any middleware with `@inject`;
+
+2. `@http` defines your http handler with a member function, it is the most important and fundamental decorator for `aex` as a http web server.
+3. `@body` defines your way to parse your body.
+4. `@query` extract http query into `req.query` and `scope.query`;
+5. `@filter` fiters and validates data from http requests, takes `body`, `params` and `query` types only.
 
 ## @http
 
@@ -211,6 +212,42 @@ class User {
   public async id(req: any, res: any, _scope: any) {
     // req.params.id
     // req.query.page
+  }
+}
+```
+
+## @error
+
+Decorator `@error` will generate errors for you.
+
+Reference [errorable](!https://github.com/calidion/errorable) for detailed usage.
+
+`@error` take two parameters exactly what function `Generator.generate` takes.
+
+```ts
+class User {
+  @http("post", "/error")
+  @error({
+    I: {
+      Love: {
+        You: {
+          code: 1,
+          messages: {
+            "en-US": "I Love U!",
+            "zh-CN": "我爱你！"
+          }
+        }
+      }
+    },
+    Me: {
+      alias: "I"
+    }
+  })
+  public road(_req: any, res: any, scope: any) {
+    const {ILoveYou} = scope.error;
+    // throw new ILoveYou('en-US');
+    // throw new ILoveYou('zh-CN');
+    res.end("User Error!");
   }
 }
 ```
@@ -533,8 +570,6 @@ aex.use(pOld);
 
 > You should be cautious to use express middlewares.
 > Full testing is appreciated.
-
-
 
 [downloads-image]: http://img.shields.io/npm/dt/@aex/core.svg
 [downloads-image-month]: http://img.shields.io/npm/dm/@aex/core.svg

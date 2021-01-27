@@ -130,6 +130,10 @@ test("Should allow in request middlewares", async () => {
       res.write(" world!");
       expect(scope.outer).toBeTruthy();
       expect(scope.inner).toBeTruthy();
+      expect(scope.body).toBeTruthy();
+      expect(scope.session).toBeTruthy();
+      expect(scope.error).toBeTruthy();
+      expect(scope.query).toBeTruthy();
       scope.inner.a = 100;
       scope.outer.a = 120;
       expect(scope.inner.a === 100).toBeTruthy();

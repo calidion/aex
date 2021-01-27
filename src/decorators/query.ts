@@ -1,4 +1,5 @@
 import * as qs from "querystring";
+import { Scope } from '../scope';
 
 export function query() {
   // tslint:disable-next-line: only-arrow-functions
@@ -19,6 +20,8 @@ export function query() {
       if (splited.length > 1) {
         req.query = qs.parse(splited[1]);
       }
+      const scope: Scope = args[2];
+      Object.assign(scope.query, req.query);
       await origin.apply(target, args);
     };
     return descriptor;

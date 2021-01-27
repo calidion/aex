@@ -5,7 +5,7 @@ import Aex from "../../src/core";
 import { body } from "../../src/decorators/body";
 import { filter } from "../../src/decorators/filter";
 import { http } from "../../src/decorators/http";
-import { query } from "../../src/decorators/query";
+import { query } from '../../src/decorators/query';
 
 import {
   GetStatus,
@@ -58,7 +58,7 @@ class User {
   })
   public async id(req: any, res: any, _scope: any) {
     expect(req.params.id === 111);
-    // expect(req.query.page === 20);
+    expect(req.query.page === 20);
     res.end("User Id!");
   }
 
@@ -85,9 +85,11 @@ class User {
       },
     },
   })
-  public async handled(req: any, res: any, _scope: any) {
+  public async handled(req: any, res: any, scope: any) {
     expect(req.params.id === 111);
-    // expect(req.query.page === 20);
+    expect(scope.params.id === 111);
+    expect(scope.query.page === 20);
+    expect(req.query.page === 20);
     res.end("Handled!");
   }
 }

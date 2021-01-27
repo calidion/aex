@@ -34,7 +34,7 @@ export class Aex {
       this.prepare();
     }
     return new Promise((resolve, reject) => {
-      const server = createServer((req, res) => {
+      const server = createServer((req: any, res: any) => {
         this.routing(req, res).then();
       });
 
@@ -52,7 +52,7 @@ export class Aex {
 
   protected async routing(req: IncomingMessage, res: ServerResponse) {
     const scope: Scope = Object.create(this.scope);
-    scope.time.reset();
+    scope.reset();
 
     const middlewares = this.middlewares;
     if (middlewares && middlewares.length) {
