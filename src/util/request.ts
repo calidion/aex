@@ -105,7 +105,9 @@ export async function PostText(
   options: any = {},
   compare: boolean = true
 ) {
-  (options.hostname = domain), (options.port = port), (options.path = url);
+  options.hostname = domain;
+  options.port = port;
+  options.path = url;
   options.method = method;
   const res = await POST(options, body);
   const od = Object.getOwnPropertyDescriptor(res, "text");

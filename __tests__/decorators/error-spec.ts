@@ -5,14 +5,14 @@ import Aex from "../../src/core";
 import { http } from "../../src/decorators/http";
 
 import { PostText, initRandomPort } from "../../src/util/request";
-import { error } from '../../src/decorators/error';
+import { error } from "../../src/decorators/error";
 
 class User {
   @http("post", "/user/login")
   @error({
     Hello: {
       code: 100,
-      messages: {}
+      messages: {},
     },
     I: {
       Love: {
@@ -20,14 +20,14 @@ class User {
           code: 1,
           messages: {
             "en-US": "I Love U!",
-            "zh-CN": "我爱你！"
-          }
-        }
-      }
+            "zh-CN": "我爱你！",
+          },
+        },
+      },
     },
     Me: {
-      alias: "I"
-    }
+      alias: "I",
+    },
   })
   public all(_req: any, res: any, scope: any) {
     expect(scope.error.Hello).toBeTruthy();
@@ -41,26 +41,29 @@ class User {
   }
 
   @http("post", "/user/ok")
-  @error({
-    Hello: {
-      code: 100,
-      messages: {}
+  @error(
+    {
+      Hello: {
+        code: 100,
+        messages: {},
+      },
+      I: {
+        Love: {
+          You: {
+            code: 1,
+            messages: {
+              "en-US": "I Love U!",
+              "zh-CN": "我爱你！",
+            },
+          },
+        },
+      },
+      Me: {
+        alias: "I",
+      },
     },
-    I: {
-      Love: {
-        You: {
-          code: 1,
-          messages: {
-            "en-US": "I Love U!",
-            "zh-CN": "我爱你！"
-          }
-        }
-      }
-    },
-    Me: {
-      alias: "I"
-    }
-  }, true)
+    true
+  )
   public road(_req: any, res: any, scope: any) {
     expect(scope.error.HELLO).toBeTruthy();
     expect(scope.error.I_LOVE_YOU).toBeTruthy();
@@ -112,7 +115,6 @@ test("Should use decorator error with upper case", async () => {
     "POST"
   );
 });
-
 
 test("Should use decorator error with no error defined", async () => {
   await PostText(

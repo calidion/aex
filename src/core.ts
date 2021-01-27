@@ -1,9 +1,9 @@
 import { createServer, IncomingMessage, Server, ServerResponse } from "http";
+import { One } from "./decorators/one";
 import { Scope } from "./scope";
 import NotFound from "./status/404";
 import { IAsyncMiddleware } from "./types";
 import { processMiddleware } from "./util";
-import { One } from "./decorators/one";
 
 export class Aex {
   // tslint:disable-next-line:variable-name

@@ -1,5 +1,5 @@
 import * as qs from "querystring";
-import { Scope } from '../scope';
+import { Scope } from "../scope";
 
 export function query() {
   // tslint:disable-next-line: only-arrow-functions

@@ -1,6 +1,6 @@
 import { IncomingMessage, METHODS, ServerResponse } from "http";
 import { match } from "path-to-regexp";
-import { Scope } from './scope';
+import { Scope } from "./scope";
 import NotFound from "./status/404";
 import {
   IAsyncHandler,
@@ -123,7 +123,11 @@ export class Router {
     return;
   }
 
-  protected enhanceRequest(params: object, req: IncomingMessage, scope?: Scope) {
+  protected enhanceRequest(
+    params: object,
+    req: IncomingMessage,
+    scope?: Scope
+  ) {
     Object.defineProperty(req, "params", {
       enumerable: true,
       get: () => {

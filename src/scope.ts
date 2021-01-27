@@ -49,7 +49,7 @@ export class Scope {
     return this._params;
   }
 
-  reset() {
+  public reset() {
     this._body = {};
     this._session = {};
     this._query = {};

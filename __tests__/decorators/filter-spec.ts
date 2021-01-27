@@ -5,7 +5,7 @@ import Aex from "../../src/core";
 import { body } from "../../src/decorators/body";
 import { filter } from "../../src/decorators/filter";
 import { http } from "../../src/decorators/http";
-import { query } from '../../src/decorators/query';
+import { query } from "../../src/decorators/query";
 
 import {
   GetStatus,

@@ -1,6 +1,6 @@
 {
   "name": "@aex/core",
-  "version": "0.8.9",
+  "version": "0.9.0",
   "description": "aex",
   "license": "MIT",
   "repository": "calidion/aex",
@@ -20,11 +20,11 @@
   "scripts": {
     "clean": "rimraf lib && rimraf coverage",
     "format": "prettier --write \"{src,__tests__}/**/*.ts\" --trailing-comma es5",
-    "lint": "tslint --force --format verbose \"src/**/*.ts\"",
+    "lint": "tslint --fix --force --format verbose \"src/**/*.ts\"",
     "prepublishOnly": "npm run build",
     "prebuild": "npm run clean && npm run format && npm run lint && echo Using TypeScript && tsc --version",
     "build": "tsc --pretty",
-    "test": "jest --coverage",
+    "test": "npm run build && jest --coverage",
     "coverage": "jest --coverage",
     "watch": "npm run build -- --watch",
     "watch:test": "jest --watch"
