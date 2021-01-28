@@ -1,3 +1,4 @@
+import * as debug from "debug";
 import { Timer } from "./scoped/timer";
 
 export class Scope {
@@ -57,5 +58,9 @@ export class Scope {
     this._params = {};
     this._error = {};
     this._timer.reset();
+  }
+
+  get debug() {
+    return debug;
   }
 }

@@ -9,7 +9,7 @@ export type Response = ServerResponse;
 export type IMiddeleWare = (
   req: Request | any,
   res: Response | any,
-  next: ICallback
+  next: ICallback | any
 ) => void;
 
 export type IAsyncMiddleware = (

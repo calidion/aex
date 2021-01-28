@@ -6,19 +6,19 @@ import { IAsyncMiddleware } from "./types";
 import { processMiddleware } from "./util";
 
 export class Aex {
+  get server() {
+    return this._server;
+  }
+
+  protected middlewares: IAsyncMiddleware[] = [];
+  protected scope = new Scope();
   // tslint:disable-next-line:variable-name
   private _server?: Server;
   private _controllers: any[] = [];
   private _controllerInstances: any[] = [];
-  private middlewares: IAsyncMiddleware[] = [];
-  private scope = new Scope();
 
   public use(cb: IAsyncMiddleware) {
     this.middlewares.push(cb);
-  }
-
-  get server() {
-    return this._server;
   }
 
   /**
@@ -60,9 +60,11 @@ export class Aex {
       this.prepare();
     }
     return new Promise((resolve, reject) => {
-      const server = createServer((req: any, res: any) => {
-        this.routing(req, res).then();
-      });
+      const server = createServer(
+        (req: IncomingMessage, res: ServerResponse) => {
+          this.routing(req, res).then();
+        }
+      );
 
       server.listen(port, ip);
       server.on("error", (error: Error) => {
