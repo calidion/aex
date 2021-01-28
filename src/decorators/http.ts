@@ -8,7 +8,7 @@ import { One } from "./one";
  * @param url route name or array
  */
 
-export function http(name: string | string[], url: string | string[]) {
+export function http(name: string | string[], url?: string | string[]) {
   const router = One.instance();
   // tslint:disable-next-line: only-arrow-functions
   return function (
@@ -23,28 +23,33 @@ export function http(name: string | string[], url: string | string[]) {
       return func.apply(target, args);
     }
 
-    function addUrl(method: string) {
-      if (typeof url === "string") {
-        router[method.toLowerCase()](url, invoke);
+    function addUrl(method: string, urls: string | string[]) {
+      if (typeof urls === "string") {
+        router[method.toLowerCase()](urls, invoke);
         return;
       }
-      assert(Array.isArray(url));
-      for (const u of url) {
+      assert(Array.isArray(urls));
+      for (const u of urls) {
         router[method.toLowerCase()](u, invoke);
       }
+    }
+
+    if (!url) {
+      url = name;
+      name = "get";
     }
 
     if (typeof name === "string") {
       if (name === "*") {
         for (const method of METHODS) {
-          addUrl(method);
+          addUrl(method, url);
         }
         return descriptor;
       }
 
       if (METHODS.indexOf(name.toUpperCase()) !== -1) {
         name = name.toLowerCase();
-        addUrl(name);
+        addUrl(name, url);
       }
       return descriptor;
     }
@@ -53,7 +58,7 @@ export function http(name: string | string[], url: string | string[]) {
 
     for (const item of name) {
       if (METHODS.indexOf(item.toUpperCase()) !== -1) {
-        addUrl(item);
+        addUrl(item, url);
       }
     }
     return descriptor;

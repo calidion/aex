@@ -41,6 +41,11 @@ class Exam {
   public no(_req: any, res: any, _scope: any) {
     res.end();
   }
+
+  @http("/user/default")
+  public simple(_req: any, res: any, _scope: any) {
+    res.end("User Simple!");
+  }
 }
 
 const aex = new Aex();
@@ -140,6 +145,10 @@ test("Should decorate methods with all methods", async () => {
 
 test("Should decorate methods with all methods", async () => {
   await GetText(port, "", "/user/null");
+});
+
+test("Should decorate methods with default method", async () => {
+  await GetText(port, "User Simple!", "/user/default");
 });
 
 afterAll(async () => {
