@@ -1,4 +1,5 @@
 import * as validator from "node-form-validator";
+import { Scope } from "../scope";
 import InternalServerError from "../status/500";
 import { IAsyncMiddleware } from "../types";
 
@@ -17,7 +18,7 @@ export interface IFilterOptions {
 
 export function filter(options: IFilterOptions) {
   // tslint:disable-next-line: only-arrow-functions
-  return function(
+  return function (
     target: any,
     // tslint:disable-next-line: variable-name
     _propertyKey: string,
@@ -27,15 +28,15 @@ export function filter(options: IFilterOptions) {
 
     let extracted: any;
 
-    function validate(data: any, rules: any) {
+    function validate(data: any, rules: any, scope: Scope) {
       const error = validator.validate(data, rules);
       if (!error) {
         return false;
       }
 
       if (error.code !== 0) {
-        // tslint:disable-next-line: no-console
-        console.error(error.message);
+        const debug = scope.debug("aex:filter");
+        debug(error.message);
         return false;
       }
 
@@ -51,13 +52,13 @@ export function filter(options: IFilterOptions) {
       for (const key of Object.keys(options)) {
         switch (key) {
           case "params":
-            passed = validate(req.params, options.params);
+            passed = validate(req.params, options.params, scope);
             break;
           case "body":
-            passed = validate(req.body, options.body);
+            passed = validate(req.body, options.body, scope);
             break;
           case "query":
-            passed = validate(req.query, options.query);
+            passed = validate(req.query, options.query, scope);
 
             break;
         }

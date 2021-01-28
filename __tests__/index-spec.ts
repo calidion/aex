@@ -140,6 +140,10 @@ test("Should allow in request middlewares", async () => {
       expect(scope.inner.a === 100).toBeTruthy();
       expect(scope.outer.a === 120).toBeTruthy();
       let catched = false;
+
+      const { debug } = scope;
+      const logger = debug("aex:scope");
+      logger("this is a debugging info");
       try {
         scope.outer = {};
       } catch (e) {

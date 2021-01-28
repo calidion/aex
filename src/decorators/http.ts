@@ -11,7 +11,7 @@ import { One } from "./one";
 export function http(name: string | string[], url: string | string[]) {
   const router = One.instance();
   // tslint:disable-next-line: only-arrow-functions
-  return function(
+  return function (
     target: any,
     // tslint:disable-next-line: variable-name
     _propertyKey: string,

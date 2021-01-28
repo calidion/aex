@@ -3,7 +3,7 @@ import { Scope } from "../scope";
 
 export function query() {
   // tslint:disable-next-line: only-arrow-functions
-  return function(
+  return function (
     target: any,
     // tslint:disable-next-line: variable-name
     _propertyKey: any,
@@ -12,7 +12,7 @@ export function query() {
     const origin = descriptor.value;
 
     // tslint:disable-next-line: only-arrow-functions
-    descriptor.value = async function(...args: any[]) {
+    descriptor.value = async function (...args: any[]) {
       const req = args[0];
 
       let splited: any = req.url as string;

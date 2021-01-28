@@ -3,13 +3,13 @@ import * as qs from "querystring";
 import Aex from "../core";
 
 function GET(options: any): Promise<IncomingMessage> {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     // This is an example of an http request, for example to fetch
     // user data from an API.
     // This module is being mocked in __mocks__/request.js
     get(options, (response: IncomingMessage) => {
       const data: any[] = [];
-      response.on("data", chunk => data.push(chunk));
+      response.on("data", (chunk) => data.push(chunk));
       response.on("end", () => {
         const value = String(data.join(""));
         Object.defineProperty(response, "text", {
@@ -23,7 +23,7 @@ function GET(options: any): Promise<IncomingMessage> {
 }
 
 function POST(options: any, body: any): Promise<IncomingMessage> {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     // This is an example of an http request, for example to fetch
     // user data from an API.
     // This module is being mocked in __mocks__/request.js
@@ -41,7 +41,7 @@ function POST(options: any, body: any): Promise<IncomingMessage> {
     options.body = postData;
     const req = request(options, (response: IncomingMessage) => {
       const data: any[] = [];
-      response.on("data", chunk => data.push(chunk));
+      response.on("data", (chunk) => data.push(chunk));
       response.on("end", () => {
         const value = String(data.join(""));
         Object.defineProperty(response, "text", {

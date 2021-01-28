@@ -551,7 +551,7 @@ async (req, res, scope) => {
 };
 ```
 
-the `scope` variable has 7 native attributes: `time`, `outer`, `inner`, `query`, `params`, `body`, `error`.
+the `scope` variable has 8 native attributes: `time`, `outer`, `inner`, `query`, `params`, `body`, `error`, `debug`
 
 The `time` attribute contains the started time and passed time of requests.
 The `outer` attribute is to store general or global data.
@@ -560,6 +560,7 @@ The `query` attribute is to store http query.
 The `body` attribute is to store http body.
 The `params` attribute is to store http params.
 The `error` attribute is to store scoped errors.
+The `debug` attribute is to provide handlers the debugging ability.
 
 ## `time`
 
@@ -588,6 +589,24 @@ scope.inner.a = 100;
 scope.outer.a = 120;
 ```
 
+## `debug`
+
+`debug` is provided for debugging purposes.
+
+It is a simple import of the package `debug`.
+
+Its usage is of the same to the package `debug`, go [debug](https://github.com/visionmedia/debug) for detailed info.
+
+Here is a simple example.
+
+```ts
+async (req, res, scope) => {
+  const { debug } = scope;
+  const logger = debug("aex:scope");
+  logger("this is a debugging info");
+};
+```
+
 ## all these build-in attribute are readonly
 
 ```ts
@@ -598,6 +617,7 @@ scope.outer.a = 120;
 // scope.params = {};    // Wrong operation!
 // scope.body = {};    // Wrong operation!
 // scope.error = {};    // Wrong operation!
+// scope.debug = {};    // Wrong operation!
 // scope.time.started = {};  // Wrong operation!
 // scope.time.passed = {};   // Wrong operation!
 ```

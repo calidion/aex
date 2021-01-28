@@ -80,7 +80,7 @@ class User {
     },
 
     failbacks: {
-      params: async function(_req: any, res: any) {
+      params: async function (_req: any, res: any) {
         res.end("Params failed!");
       },
     },
@@ -124,7 +124,7 @@ test("should", async () => {
   await GetStatus(port, "/profile/ddd?page=aaa", 500);
 });
 
-test("should", async done => {
+test("should", async (done) => {
   setTimeout(() => {
     done();
   }, 1000);
