@@ -8,6 +8,15 @@ import { http } from "../../src/decorators/http";
 import { PostText, initRandomPort } from "../../src/util/request";
 
 class User {
+  private _name: string;
+  constructor(name: string) {
+    this._name = name;
+  }
+
+  get name() {
+    return this._name;
+  }
+
   @http("post", "/user/login")
   @body()
   public all(req: any, res: any, scope: any) {
@@ -26,14 +35,17 @@ class User {
 }
 
 const aex = new Aex();
+
+aex.push(User, "Aex");
 aex.prepare();
 
 let port: number = 0;
 
 beforeAll(async () => {
   port = await initRandomPort(aex);
-  const user = new User();
+  const user = aex.instances[0];
   expect(user).toBeTruthy();
+  expect(user.name === "Aex").toBeTruthy();
 });
 
 test("Should decorate methods with array", async () => {

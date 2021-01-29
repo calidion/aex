@@ -17,11 +17,15 @@ export class Aex {
     return this._server;
   }
 
+  get instances() {
+    return this._controllerInstances;
+  }
+
   protected middlewares: IAsyncMiddleware[] = [];
   protected scope = new Scope();
   // tslint:disable-next-line:variable-name
   private _server?: Server;
-  private _controllers: any[] = [];
+  private _classes: any[] = [];
   private _controllerInstances: any[] = [];
 
   public use(cb: IAsyncMiddleware) {
@@ -32,8 +36,8 @@ export class Aex {
    * push a controller to aex
    * @param aClass
    */
-  public push(aClass: any) {
-    this._controllers.push(aClass);
+  public push(aClass: any, ...options: any[]) {
+    this._classes.push([aClass, options]);
   }
 
   /**
@@ -44,8 +48,10 @@ export class Aex {
     const router = One.instance();
     this.use(router.toMiddleware());
     // prepare handlers
-    for (const controller of this._controllers) {
-      this._controllerInstances.push(new controller());
+    for (const classPair of this._classes) {
+      const controller = classPair[0];
+      const options = classPair[1];
+      this._controllerInstances.push(new controller(...options));
     }
     return this;
   }
