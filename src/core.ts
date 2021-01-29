@@ -6,6 +6,7 @@
 
 import { createServer, IncomingMessage, Server, ServerResponse } from "http";
 import { One } from "./decorators/one";
+import { redirect } from "./response/redirect";
 import { Scope } from "./scope";
 import NotFound from "./status/404";
 import { IAsyncMiddleware } from "./types";
@@ -88,12 +89,18 @@ export class Aex {
     const scope: Scope = Object.create(this.scope);
     scope.reset();
 
+    this.enhanceRes(res);
+
     const middlewares = this.middlewares;
     if (middlewares && middlewares.length) {
       await processMiddleware(req, res, middlewares, scope);
     } else {
       await NotFound(res);
     }
+  }
+
+  protected enhanceRes(res: ServerResponse) {
+    redirect(res);
   }
 }
 export default Aex;

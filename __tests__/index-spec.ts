@@ -290,6 +290,27 @@ test("Should add http methods", async () => {
   await GetTextWithAex(aex, "Hello Aex!");
 });
 
+test("Should redirect", async () => {
+  const aex = new Aex();
+  const router = new Router();
+
+  router.handle({
+    method: "get",
+    url: "/",
+    // tslint:disable-next-line:object-literal-sort-keys
+    handler: async (
+      // tslint:disable-next-line:variable-name
+      _req: any,
+      res: any
+    ) => {
+      res.redirect("Hello Aex!");
+    },
+  });
+
+  aex.use(router.toMiddleware());
+  await GetStatusWithAex(aex, "/", 301);
+});
+
 test("Should return 404 when no route found!", async () => {
   const aex = new Aex();
   await GetStatusWithAex(aex, "/user/aoaoa", 404);
