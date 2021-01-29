@@ -7,8 +7,11 @@ import { http } from "../../src/decorators/http";
 import { GetText, PostText, initRandomPort } from "../../src/util/request";
 
 class Exam {
+  private name = "hello";
+
   @http("", "/notstring/:name")
   public notstring(_req: any, res: any, _scope: any) {
+    expect(this.name === "hello").toBeTruthy();
     res.end("Hello Aex!");
   }
 
@@ -44,19 +47,23 @@ class Exam {
 
   @http("/user/default")
   public simple(_req: any, res: any, _scope: any) {
+    expect(this.name === "hello").toBeTruthy();
     res.end("User Simple!");
   }
 }
 
+class TTT {}
+
 const aex = new Aex();
+
+aex.push(Exam);
+aex.push(TTT);
 aex.prepare();
 
 let port: number = 0;
 
 beforeAll(async () => {
   port = await initRandomPort(aex);
-  const exam = new Exam();
-  expect(exam).toBeTruthy();
 });
 
 test("Should decorate methods with single http method name", async () => {

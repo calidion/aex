@@ -16,7 +16,7 @@ export function error(
   upperOrCamel: boolean = false
 ) {
   // tslint:disable-next-line: only-arrow-functions
-  return function (target: any, _propertyKey: any, descriptor: any) {
+  return function (_target: any, _propertyKey: any, descriptor: any) {
     const origin = descriptor.value;
 
     // tslint:disable-next-line: only-arrow-functions
@@ -24,7 +24,7 @@ export function error(
       const scope: Scope = args[2];
       const generated = Generator.generate(errors, upperOrCamel);
       Object.assign(scope.error, generated);
-      await origin.apply(target, args);
+      await origin.apply(this, args);
     };
     return descriptor;
   };

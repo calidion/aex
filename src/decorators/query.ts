@@ -9,7 +9,7 @@ import { Scope } from "../scope";
 export function query() {
   // tslint:disable-next-line: only-arrow-functions
   return function (
-    target: any,
+    _target: any,
     // tslint:disable-next-line: variable-name
     _propertyKey: any,
     descriptor: any
@@ -27,7 +27,7 @@ export function query() {
       }
       const scope: Scope = args[2];
       Object.assign(scope.query, req.query);
-      await origin.apply(target, args);
+      await origin.apply(this, args);
     };
     return descriptor;
   };

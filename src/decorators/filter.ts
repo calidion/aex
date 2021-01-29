@@ -80,7 +80,7 @@ export function filter(options: IFilterOptions) {
 
         scope.extracted[key] = extracted;
       }
-      return func.apply(target, args);
+      return func.apply(this, args);
     };
     return descriptor;
   };

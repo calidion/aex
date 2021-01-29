@@ -8,6 +8,8 @@ import { PostText, initRandomPort } from "../../src/util/request";
 import { error } from "../../src/decorators/error";
 
 class User {
+  protected hello = "error";
+
   @http("post", "/user/login")
   @error({
     Hello: {
@@ -30,6 +32,7 @@ class User {
     },
   })
   public all(_req: any, res: any, scope: any) {
+    expect(this.hello === "error").toBeTruthy();
     expect(scope.error.Hello).toBeTruthy();
     expect(scope.error.ILoveYou).toBeTruthy();
     expect(scope.error.MeLoveYou).toBeTruthy();
@@ -65,6 +68,7 @@ class User {
     true
   )
   public road(_req: any, res: any, scope: any) {
+    expect(this.hello === "error").toBeTruthy();
     expect(scope.error.HELLO).toBeTruthy();
     expect(scope.error.I_LOVE_YOU).toBeTruthy();
     expect(scope.error.ME_LOVE_YOU).toBeTruthy();
@@ -84,14 +88,13 @@ class User {
 }
 
 const aex = new Aex();
+aex.push(User);
 aex.prepare();
 
 let port: number = 0;
 
 beforeAll(async () => {
   port = await initRandomPort(aex);
-  const user = new User();
-  expect(user).toBeTruthy();
 });
 
 test("Should use decorator error", async () => {

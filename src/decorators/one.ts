@@ -6,6 +6,7 @@
 import { Router } from "../router";
 
 export class One {
+  public static cache: any[] = [];
   public static instance() {
     return One.router;
   }

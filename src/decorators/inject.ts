@@ -10,7 +10,7 @@ import { IAsyncMiddleware } from "../types";
 export function inject(cb: IAsyncMiddleware) {
   // tslint:disable-next-line: only-arrow-functions
   return function (
-    target: any,
+    _target: any,
     // tslint:disable-next-line: variable-name
     _propertyKey: any,
     descriptor: any
@@ -21,9 +21,9 @@ export function inject(cb: IAsyncMiddleware) {
     descriptor.value = async function (...args: any[]) {
       return (
         (await cb.apply(
-          target,
+          this,
           args as [IncomingMessage, ServerResponse, (Scope | undefined)?]
-        )) !== false && origin.apply(target, args)
+        )) !== false && origin.apply(this, args)
       );
     };
     return descriptor;

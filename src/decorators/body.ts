@@ -27,7 +27,7 @@ export function body(
   const cb = parser[type](options);
   const asyncCB = toAsyncMiddleware(cb);
   // tslint:disable-next-line: only-arrow-functions
-  return function (target: any, _propertyKey: any, descriptor: any) {
+  return function (_target: any, _propertyKey: any, descriptor: any) {
     const origin = descriptor.value;
 
     // tslint:disable-next-line: only-arrow-functions
@@ -39,7 +39,7 @@ export function body(
       const req: any = args[0];
       const scope: Scope = args[2];
       Object.assign(scope.body, req.body);
-      await origin.apply(target, args);
+      await origin.apply(this, args);
     };
     return descriptor;
   };

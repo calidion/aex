@@ -9,6 +9,7 @@ import { inject } from "../../src/decorators/inject";
 import { PostText, initRandomPort } from "../../src/util/request";
 
 class User {
+  protected name = "inject";
   @http("post", "/user/login")
   @body()
   // tslint:disable-next-line: variable-name
@@ -22,6 +23,7 @@ class User {
     }
   })
   public async login(req: any, res: any, scope: any) {
+    expect(this.name === "inject");
     expect(req.body.username === "aaaa");
     expect(req.body.password === "sosodddso");
     expect(scope!.outer!.session!.user!.name === "ok");
@@ -30,15 +32,13 @@ class User {
 }
 
 const aex = new Aex();
+aex.push(User);
 aex.prepare();
 
 let port: number = 0;
 
 beforeAll(async () => {
   port = await initRandomPort(aex);
-  const user = new User();
-
-  expect(user).toBeTruthy();
 });
 
 test("Should decorate methods with array", async () => {

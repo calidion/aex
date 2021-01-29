@@ -20,6 +20,7 @@ class User {
   @http("post", "/user/login")
   @body()
   public all(req: any, res: any, scope: any) {
+    expect(this.name === "Aex");
     expect(req.body.username === "aaa");
     expect(req.body.password === "sososo");
     expect(scope.body.username === "aaa");
@@ -30,6 +31,7 @@ class User {
   @http("post", "/user/ok")
   @body("roodod")
   public road(_req: any, res: any) {
+    expect(this.name === "Aex");
     res.end("User Road!");
   }
 }

@@ -15,6 +15,8 @@ import {
 } from "../../src/util/request";
 
 class User {
+  protected name = "filter";
+
   @http("post", "/user/login")
   @body()
   @filter({
@@ -34,6 +36,7 @@ class User {
     },
   })
   public async login(req: any, res: any, _scope: any) {
+    expect(this.name === "filter");
     expect(req.body.username === "aaaa");
     expect(req.body.password === "sosodddso");
     res.end("User All!");
@@ -57,6 +60,7 @@ class User {
     },
   })
   public async id(req: any, res: any, _scope: any) {
+    expect(this.name === "filter");
     expect(req.params.id === 111);
     expect(req.query.page === 20);
     res.end("User Id!");
@@ -86,6 +90,7 @@ class User {
     },
   })
   public async handled(req: any, res: any, scope: any) {
+    expect(this.name === "filter");
     expect(req.params.id === 111);
     expect(scope.params.id === 111);
     expect(scope.query.page === 20);
@@ -95,14 +100,13 @@ class User {
 }
 
 const aex = new Aex();
+aex.push(User);
 aex.prepare();
 
 let port: number = 0;
 
 beforeAll(async () => {
   port = await initRandomPort(aex);
-  const user = new User();
-  expect(user).toBeTruthy();
 });
 
 test("Should decorate methods with array", async () => {
