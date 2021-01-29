@@ -1,3 +1,9 @@
+/**
+ * aex
+ * Copyright(c) 2020- calidion<calidion@gmail.com>
+ * MIT Licensed
+ */
+
 import { get, IncomingMessage, request } from "http";
 import * as qs from "querystring";
 import Aex from "../core";

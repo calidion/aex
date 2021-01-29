@@ -1,3 +1,9 @@
+/**
+ * aex
+ * Copyright(c) 2020- calidion<calidion@gmail.com>
+ * MIT Licensed
+ */
+
 export * from "./core";
 export * from "./util";
 export * from "./router";

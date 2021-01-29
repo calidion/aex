@@ -1,3 +1,9 @@
+/**
+ * aex
+ * Copyright(c) 2020- calidion<calidion@gmail.com>
+ * MIT Licensed
+ */
+
 export class Timer {
   // tslint:disable-next-line:variable-name
   private _started: Date;

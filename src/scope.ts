@@ -1,3 +1,9 @@
+/**
+ * aex
+ * Copyright(c) 2020- calidion<calidion@gmail.com>
+ * MIT Licensed
+ */
+
 import * as debug from "debug";
 import { Timer } from "./scoped/timer";
 

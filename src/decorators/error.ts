@@ -1,3 +1,8 @@
+/**
+ * aex
+ * Copyright(c) 2020- calidion<calidion@gmail.com>
+ * MIT Licensed
+ */
 import { Generator } from "errorable";
 import { Scope } from "../scope";
 

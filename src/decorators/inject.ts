@@ -1,3 +1,8 @@
+/**
+ * aex
+ * Copyright(c) 2020- calidion<calidion@gmail.com>
+ * MIT Licensed
+ */
 import { IncomingMessage, ServerResponse } from "http";
 import { Scope } from "../scope";
 import { IAsyncMiddleware } from "../types";

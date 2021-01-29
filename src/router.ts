@@ -1,3 +1,9 @@
+/**
+ * aex
+ * Copyright(c) 2020- calidion<calidion@gmail.com>
+ * MIT Licensed
+ */
+
 import { IncomingMessage, METHODS, ServerResponse } from "http";
 import { match } from "path-to-regexp";
 import { Scope } from "./scope";

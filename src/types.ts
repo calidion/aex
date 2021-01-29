@@ -1,3 +1,9 @@
+/**
+ * aex
+ * Copyright(c) 2020- calidion<calidion@gmail.com>
+ * MIT Licensed
+ */
+
 import { IncomingMessage, ServerResponse } from "http";
 import * as WebSocket from "ws";
 import { Scope } from "./scope";

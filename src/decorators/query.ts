@@ -1,3 +1,8 @@
+/**
+ * aex
+ * Copyright(c) 2020- calidion<calidion@gmail.com>
+ * MIT Licensed
+ */
 import * as qs from "querystring";
 import { Scope } from "../scope";
 

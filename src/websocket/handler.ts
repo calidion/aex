@@ -1,3 +1,9 @@
+/**
+ * aex
+ * Copyright(c) 2020- calidion<calidion@gmail.com>
+ * MIT Licensed
+ */
+
 import { EventEmitter } from "events";
 import * as WebSocket from "ws";
 import { Scope } from "../scope";

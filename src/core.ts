@@ -1,3 +1,9 @@
+/**
+ * aex
+ * Copyright(c) 2020- calidion<calidion@gmail.com>
+ * MIT Licensed
+ */
+
 import { createServer, IncomingMessage, Server, ServerResponse } from "http";
 import { One } from "./decorators/one";
 import { Scope } from "./scope";

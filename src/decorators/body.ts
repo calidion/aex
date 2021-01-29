@@ -1,3 +1,8 @@
+/**
+ * aex
+ * Copyright(c) 2020- calidion<calidion@gmail.com>
+ * MIT Licensed
+ */
 import * as bodyParser from "body-parser";
 import { IncomingMessage, ServerResponse } from "http";
 import { Scope } from "../scope";

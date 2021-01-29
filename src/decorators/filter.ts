@@ -1,3 +1,8 @@
+/**
+ * aex
+ * Copyright(c) 2020- calidion<calidion@gmail.com>
+ * MIT Licensed
+ */
 import * as validator from "node-form-validator";
 import { Scope } from "../scope";
 import InternalServerError from "../status/500";

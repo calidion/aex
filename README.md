@@ -9,7 +9,7 @@
 
 # AEX
 
-A simple, easy to use, scoped web server, with async linear middlewares and no callbacks.
+A simple, easy to use, decorated, scoped web server, with async linear middlewares and no more callbacks in middlewares.
 
 It is an example:
 
@@ -20,6 +20,8 @@ It is an example:
 
 # Content
 
+Aex is built and powerized by the following parts.
+
 1. [Core functions](#core-functions)
 2. [Decorators](#decorators)
 3. [Usage with no decorator](#usage)
@@ -29,7 +31,29 @@ It is an example:
 7. [Express Middleware Integration](#use-middlewares-from-expressjs)
 8. [Get the web server](#accessable-members)
 
-# A simple example
+# Philosophy
+
+1. Keep in mind to separate web logic from business logic, and only develope for web logic.
+2. Focus soly on web flow.
+3. Simplify the way to make good web projects.
+4. Consider web interactions as phrased straight lines, which we call it Web Straight Line.
+5. No MVC, soly focusing on architecture which is the web logic.
+
+# Quick Start
+
+## Add @aex/core to your project
+
+```sh
+npm install @aex/core # or npm i @aex/core
+```
+
+or if you use yarn
+
+```sh
+yarn add @aex/core
+```
+
+## use @http to enable web process ability
 
 ```ts
 import { Aex, http } from "@aex/core";
@@ -40,15 +64,34 @@ class HelloAex {
     res.end("Hello Aex!");
   }
 }
+```
 
+## Create aex instance
+
+```ts
 // create Aex instance
 const aex = new Aex();
+```
+
+## Add your web handler to aex
+
+```ts
 // push your controller into aex
 aex.push(HelloAex);
-aex
-  .prepare()
-  .start(8080)
-  .then();
+```
+
+## Prepare aex enviroment
+
+```ts
+aex.prepare();
+```
+
+### Start aex web server
+
+```ts
+aex.start(8080).then();
+// or
+await aex.start(8080);
 ```
 
 # Install
@@ -83,7 +126,7 @@ aex.prepare().start();
 
 ## push
 
-push a controller to aex
+push a controller class to aex
 
 ```
 aex.push(HelloAex);
@@ -289,14 +332,14 @@ class User {
           code: 1,
           messages: {
             "en-US": "I Love U!",
-            "zh-CN": "我爱你！"
-          }
-        }
-      }
+            "zh-CN": "我爱你！",
+          },
+        },
+      },
     },
     Me: {
-      alias: "I"
-    }
+      alias: "I",
+    },
   })
   public road(_req: any, res: any, scope: any) {
     const { ILoveYou } = scope.error;
@@ -386,7 +429,7 @@ const ws = new WebSocketServer(server);
 2. Get handler for one websocket connection
 
 ```ts
-ws.on(WebSocketServer.ENTER, handler => {
+ws.on(WebSocketServer.ENTER, (handler) => {
   // process/here
 });
 ```
@@ -394,8 +437,8 @@ ws.on(WebSocketServer.ENTER, handler => {
 3. Listen on user-customized events
 
 ```ts
-ws.on(WebSocketServer.ENTER, handler => {
-  handler.on("event-name", data => {
+ws.on(WebSocketServer.ENTER, (handler) => {
+  handler.on("event-name", (data) => {
     // data.message = "Hello world!"
   });
 });
@@ -404,7 +447,7 @@ ws.on(WebSocketServer.ENTER, handler => {
 4. Send message to browser / client
 
 ```ts
-ws.on(WebSocketServer.ENTER, handler => {
+ws.on(WebSocketServer.ENTER, (handler) => {
   handler.send("event-name", { key: "value" });
 });
 ```
@@ -435,8 +478,8 @@ wsc.on("open", function open() {
     JSON.stringify({
       event: "event-name",
       data: {
-        message: "Hello world!"
-      }
+        message: "Hello world!",
+      },
     })
   );
 });
@@ -509,7 +552,7 @@ router.get(
     async (req, res, scope) => {
       // process N
       // return false
-    }
+    },
   ]
 );
 ```
@@ -653,6 +696,17 @@ aex.use(pOld);
 
 > You should be cautious to use express middlewares.
 > Full testing is appreciated.
+
+# Tests
+
+```
+npm install
+npm test
+```
+
+# Lincense
+
+MIT
 
 [downloads-image]: http://img.shields.io/npm/dt/@aex/core.svg
 [downloads-image-month]: http://img.shields.io/npm/dm/@aex/core.svg

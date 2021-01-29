@@ -1,3 +1,8 @@
+/**
+ * aex
+ * Copyright(c) 2020- calidion<calidion@gmail.com>
+ * MIT Licensed
+ */
 import * as assert from "assert";
 import { METHODS } from "http";
 import { One } from "./one";
