@@ -10,6 +10,7 @@
 # AEX
 
 A simple, easy to use, decorated, scoped web server, with async linear middlewares and no more callbacks in middlewares.
+It is a web framework for typescript and nodejs.
 
 It is an example:
 
@@ -53,15 +54,16 @@ or if you use yarn
 yarn add @aex/core
 ```
 
-## use @http to enable web process ability
+## Use @http to enable web processing ability
 
 ```ts
 import { Aex, http } from "@aex/core";
 
 class HelloAex {
+  private message = "aex";
   @http("*", "*")
   public all(_req: any, res: any, _scope: any) {
-    res.end("Hello Aex!");
+    res.end("Hello " + this.message + "!");
   }
 }
 ```
@@ -73,7 +75,7 @@ class HelloAex {
 const aex = new Aex();
 ```
 
-## Add your web handler to aex
+## Add your web handler to aex with parameters
 
 ```ts
 // push your controller into aex
@@ -112,8 +114,15 @@ yarn add @aex/core
 
 `prepare` is used here to init middlewares and controllers if controllers are pushed into the `aex` instance. It takes no parameter and return the `aex` instance. so you can invoke the `start` function of aex.
 
-```
-aex.prepare().start();
+```ts
+await aex.prepare().start();
+// or
+aex
+  .prepare()
+  .start()
+  .then(() => {
+    // further processing
+  });
 ```
 
 ## start
@@ -126,10 +135,16 @@ aex.prepare().start();
 
 ## push
 
-push a controller class to aex
+push a controller class to aex, it takes on parameter and other arguments:
 
-```
+1. aClass: a class prototype.
+2. args: takes the rest arguments for the class constructor
+
+```ts
 aex.push(HelloAex);
+//or
+aex.push(HelloAex, parameter1, parameter2, ..., parameterN);
+// will be invoked as `new HelloAlex(parameter1, parameter2, ..., parameterN)`
 ```
 
 ## use
