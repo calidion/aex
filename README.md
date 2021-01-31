@@ -9,10 +9,11 @@
 
 # AEX
 
-A simple, easy to use, decorated, scoped web server, with async linear middlewares and no more callbacks in middlewares.
+A simple, easy to use, decorated, scoped, object-oriented web server, with async linear middlewares and no more callbacks in middlewares.
+
 It is a web framework for typescript and nodejs.
 
-It is an example:
+It is also an example:
 
 1. To show that callbacks are not needed with promise/async/await.
 2. To use middlewares in a linear way instead of stacked way which is insecure.
