@@ -6,13 +6,13 @@
 import * as validator from "node-form-validator";
 import { Scope } from "../scope";
 import InternalServerError from "../status/500";
-import { IAsyncMiddleware } from "../types";
+import { IAsyncFilterMiddleware } from "../types";
 import { One } from "./one";
 
 export interface IFilterFallback {
-  params?: IAsyncMiddleware;
-  body?: IAsyncMiddleware;
-  query?: IAsyncMiddleware;
+  params?: IAsyncFilterMiddleware;
+  body?: IAsyncFilterMiddleware;
+  query?: IAsyncFilterMiddleware;
   [x: string]: any;
 }
 

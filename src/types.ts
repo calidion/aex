@@ -24,6 +24,13 @@ export type IAsyncMiddleware = (
   scope?: Scope
 ) => Promise<boolean | undefined | null | void>;
 
+export type IAsyncFilterMiddleware = (
+  error: any,
+  req: Request,
+  res: Response,
+  scope?: Scope
+) => Promise<boolean | undefined | null | void>;
+
 export type IAsyncHandler = IAsyncMiddleware;
 
 export interface IRouteItem {
