@@ -7,11 +7,13 @@ import * as validator from "node-form-validator";
 import { Scope } from "../scope";
 import InternalServerError from "../status/500";
 import { IAsyncMiddleware } from "../types";
+import { One } from "./one";
 
 export interface IFilterFallback {
   params?: IAsyncMiddleware;
   body?: IAsyncMiddleware;
   query?: IAsyncMiddleware;
+  [x: string]: any;
 }
 
 export interface IFilterOptions {
@@ -26,7 +28,7 @@ export function filter(options: IFilterOptions) {
   return function (
     target: any,
     // tslint:disable-next-line: variable-name
-    _propertyKey: string,
+    propertyKey: string,
     descriptor: PropertyDescriptor
   ) {
     const func = descriptor.value;
@@ -54,6 +56,7 @@ export function filter(options: IFilterOptions) {
       const scope = args[2];
       scope.extracted = {};
       let passed;
+      const instance = One.getInstance(target, propertyKey);
       for (const key of Object.keys(options)) {
         switch (key) {
           case "params":
@@ -71,7 +74,7 @@ export function filter(options: IFilterOptions) {
           const fallbacks = options.fallbacks as any;
           const handler: any = fallbacks ? fallbacks[key] : null;
           if (handler) {
-            return handler.apply(target, args);
+            return handler.apply(instance, args);
           }
 
           InternalServerError(args[1]);

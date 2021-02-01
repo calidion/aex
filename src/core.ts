@@ -123,6 +123,7 @@ export class Aex {
       const methods = this.findMethods(controller);
       const instance = new controller(...options);
       for (const method of Object.keys(methods)) {
+        One.putInstance(controller.prototype, method, instance);
         this.bindInstance(instance, method, methods[method]);
       }
       this._controllerInstances.push(instance);
