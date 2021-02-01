@@ -44,6 +44,11 @@ export class Aex {
    * @param aClass
    */
   public push(aClass: any, ...options: any[]) {
+    for (const one of this._classes) {
+      if (aClass === one[0]) {
+        throw new Error("Duplicated class found!");
+      }
+    }
     this._classes.push([aClass, options]);
   }
 

@@ -61,6 +61,17 @@ test("Should decorate methods with array", async () => {
   );
 });
 
+test("Should not push again a calss", async () => {
+  let catched = false;
+  try {
+    aex.push(User);
+  } catch (e) {
+    catched = true;
+    expect(e.message).toBe("Duplicated class found!");
+  }
+  expect(catched).toBeTruthy();
+});
+
 afterAll(async () => {
   aex.server?.close();
 });
