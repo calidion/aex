@@ -6,24 +6,26 @@
 import { IncomingMessage, ServerResponse } from "http";
 import { Scope } from "../scope";
 import { IAsyncMiddleware } from "../types";
+import { One } from "./one";
 
 export function inject(cb: IAsyncMiddleware) {
   // tslint:disable-next-line: only-arrow-functions
   return function (
-    _target: any,
+    target: any,
     // tslint:disable-next-line: variable-name
-    _propertyKey: any,
+    propertyKey: any,
     descriptor: any
   ) {
     const origin = descriptor.value;
 
     // tslint:disable-next-line: only-arrow-functions
     descriptor.value = async function (...args: any[]) {
+      const instance = One.getInstance(target, propertyKey);
       return (
         (await cb.apply(
-          this,
+          instance,
           args as [IncomingMessage, ServerResponse, (Scope | undefined)?]
-        )) !== false && origin.apply(this, args)
+        )) !== false && origin.apply(instance, args)
       );
     };
     return descriptor;

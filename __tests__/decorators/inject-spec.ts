@@ -13,7 +13,8 @@ class User {
   @http("post", "/user/login")
   @body()
   // tslint:disable-next-line: variable-name
-  @inject(async (_req, _res, scope) => {
+  @inject(async function (this: any, _req, _res, scope) {
+    expect(this.name === "inject");
     if (scope) {
       scope.outer.session = {
         user: {

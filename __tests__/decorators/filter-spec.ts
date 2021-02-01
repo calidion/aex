@@ -84,7 +84,7 @@ class User {
     },
 
     fallbacks: {
-      params: async function (_req: any, res: any) {
+      params: async function (this: any, _req: any, res: any) {
         expect(this.name === "filter");
         res.end("Params failed!");
       },

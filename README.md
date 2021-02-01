@@ -278,6 +278,7 @@ Reference [node-form-validator](!https://github.com/calidion/node-form-validator
 
 ```ts
 class User {
+  private name = "Aex";
   @http("post", "/user/login")
   @body()
   @filter({
@@ -321,6 +322,12 @@ class User {
         type: "numeric",
         required: true
       }
+    },
+    fallbacks: {
+      params: async function (this: any, _req: any, res: any) {
+        this.name = "Alice";
+        res.end("Params failed!");
+      },
     }
   })
   public async id(req: any, res: any, _scope: any) {
@@ -372,9 +379,18 @@ Inject any middleware when necessary. But you should be careful with middlewares
 
 ```ts
 class User {
+  private name = "Aex";
   @http("post", "/user/login")
   @body()
   @inject(async (req, res, scope) => {
+      req.session = {
+        user: {
+          name: "ok"
+        }
+      };
+  })
+  @inject(async (this:any, req, res, scope) => {
+      this.name = "Peter";
       req.session = {
         user: {
           name: "ok"
