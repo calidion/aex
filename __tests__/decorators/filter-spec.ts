@@ -83,7 +83,7 @@ class User {
       },
     },
 
-    failbacks: {
+    fallbacks: {
       params: async function (_req: any, res: any) {
         res.end("Params failed!");
       },

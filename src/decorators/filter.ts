@@ -8,7 +8,7 @@ import { Scope } from "../scope";
 import InternalServerError from "../status/500";
 import { IAsyncMiddleware } from "../types";
 
-export interface IFilterFailback {
+export interface IFilterFallback {
   params?: IAsyncMiddleware;
   body?: IAsyncMiddleware;
   query?: IAsyncMiddleware;
@@ -18,7 +18,7 @@ export interface IFilterOptions {
   params?: any;
   body?: any;
   query?: any;
-  failbacks?: IFilterFailback;
+  fallbacks?: IFilterFallback;
 }
 
 export function filter(options: IFilterOptions) {
@@ -68,8 +68,8 @@ export function filter(options: IFilterOptions) {
             break;
         }
         if (!passed) {
-          const failbacks = options.failbacks as any;
-          const handler: any = failbacks ? failbacks[key] : null;
+          const fallbacks = options.fallbacks as any;
+          const handler: any = fallbacks ? fallbacks[key] : null;
           if (handler) {
             return handler.apply(target, args);
           }
