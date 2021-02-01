@@ -297,7 +297,7 @@ class User {
       }
     },
     fallbacks: {
-      body: async(req, res, scope) {
+      body: async(error, req, res, scope) {
         res.end("Body parser failed!");
       }
     }
@@ -324,7 +324,7 @@ class User {
       }
     },
     fallbacks: {
-      params: async function (this: any, _req: any, res: any) {
+      params: async function (this: any, _error: any, _req: any, res: any) {
         this.name = "Alice";
         res.end("Params failed!");
       },

@@ -34,9 +34,10 @@ export function filter(options: IFilterOptions) {
     const func = descriptor.value;
 
     let extracted: any;
+    let error: any;
 
     function validate(data: any, rules: any, scope: Scope) {
-      const error = validator.validate(data, rules);
+      error = validator.validate(data, rules);
       if (!error) {
         return false;
       }
@@ -74,7 +75,8 @@ export function filter(options: IFilterOptions) {
           const fallbacks = options.fallbacks as any;
           const handler: any = fallbacks ? fallbacks[key] : null;
           if (handler) {
-            return handler.apply(instance, args);
+            const newArgs = [error].concat(args);
+            return handler.apply(instance, newArgs);
           }
 
           InternalServerError(args[1]);
