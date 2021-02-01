@@ -12,7 +12,7 @@ import {
   Server,
   ServerResponse,
 } from "http";
-import { One } from "./decorators/one";
+import { One } from "./one";
 import { redirect } from "./response/redirect";
 import { Scope } from "./scope";
 import NotFound from "./status/404";

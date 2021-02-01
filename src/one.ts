@@ -3,13 +3,23 @@
  * Copyright(c) 2020- calidion<calidion@gmail.com>
  * MIT Licensed
  */
-import { Router } from "../router";
+import { Router } from "./router";
 
 export class One {
   public static cache: any[] = [];
   public static instances: any = {};
   public static instance() {
+    if (One.router) {
+      return One.router;
+    }
+    One.router = new Router();
     return One.router;
+  }
+
+  public static reset() {
+    One.router = new Router();
+    One.cache = [];
+    One.instances = {};
   }
 
   public static putInstance(aClass: any, method: any, instance: any) {
@@ -28,5 +38,5 @@ export class One {
     }
     return One.instances[aClass][method];
   }
-  private static router: Router = new Router();
+  private static router: Router | null;
 }

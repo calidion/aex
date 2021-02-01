@@ -4,10 +4,10 @@
  * MIT Licensed
  */
 import * as validator from "node-form-validator";
+import { One } from "../one";
 import { Scope } from "../scope";
 import InternalServerError from "../status/500";
 import { IAsyncFilterMiddleware } from "../types";
-import { One } from "./one";
 
 export interface IFilterFallback {
   params?: IAsyncFilterMiddleware;

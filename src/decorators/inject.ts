@@ -4,9 +4,9 @@
  * MIT Licensed
  */
 import { IncomingMessage, ServerResponse } from "http";
+import { One } from "../one";
 import { Scope } from "../scope";
 import { IAsyncMiddleware } from "../types";
-import { One } from "./one";
 
 export function inject(cb: IAsyncMiddleware) {
   // tslint:disable-next-line: only-arrow-functions

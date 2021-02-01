@@ -1,4 +1,4 @@
-import { One } from "../src/decorators/one";
+import { One } from "../src/one";
 
 test("One should put instances and get them correctly", async () => {
   class A {
@@ -42,4 +42,15 @@ test("One should put instances and get them correctly", async () => {
   expect(iac).toBeFalsy();
   expect(iaa === iab).toBeTruthy();
   expect(a === iaa).toBeTruthy();
+
+  const oneInstance = One.instance();
+
+  const instances = One.instances;
+  One.cache.push(["aaa"]);
+  expect(Object.keys(instances).length === 2);
+  One.reset();
+  const afterInstance = One.instance();
+  expect(oneInstance !== afterInstance);
+  expect(One.cache.length === 0);
+  expect(Object.keys(One.instances).length === 0);
 });

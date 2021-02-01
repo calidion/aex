@@ -3,7 +3,7 @@
  * Copyright(c) 2020- calidion<calidion@gmail.com>
  * MIT Licensed
  */
-import { One } from "./one";
+import { One } from "../one";
 /**
  *
  * @param name http method or array

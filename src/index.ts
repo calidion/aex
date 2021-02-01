@@ -10,7 +10,7 @@ export * from "./router";
 export * from "./scope";
 export * from "./types";
 export * from "./decorators/http";
-export * from "./decorators/one";
+export * from "./one";
 export * from "./decorators/filter";
 export * from "./decorators/inject";
 export * from "./decorators/body";
