@@ -1,9 +1,9 @@
 // import * as express from 'express';
 // tslint:disable-next-line:no-duplicate-imports
 
-import Aex from "../src/core";
-import { Router } from "../src/router";
-import { GetStatusWithAex, GetTextWithAex } from "../src/util/request";
+import { Aex } from "../src/index";
+import { Router } from "../src/index";
+import { GetStatusWithAex, GetTextWithAex } from "../src/index";
 
 test("Should have Aex available", () => {
   expect(Aex).toBeTruthy();

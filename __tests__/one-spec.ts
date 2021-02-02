@@ -1,4 +1,4 @@
-import { One } from "../src/one";
+import { One } from "../src/index";
 
 test("One should put instances and get them correctly", async () => {
   class A {

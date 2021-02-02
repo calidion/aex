@@ -1,9 +1,9 @@
 import * as session from "express-session";
-import { Aex } from "../src/core";
+import { Aex } from "../src/index";
 
-import { Router } from "../src/router";
-import { toAsyncMiddleware } from "../src/util";
-import { GetTextWithAex } from "../src/util/request";
+import { Router } from "../src/index";
+import { toAsyncMiddleware } from "../src/index";
+import { GetTextWithAex } from "../src/index";
 
 test("Should compatible with express middlewares", async () => {
   const aex = new Aex();

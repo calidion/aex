@@ -1,10 +1,10 @@
 // import * as express from 'express';
 // tslint:disable-next-line:no-duplicate-imports
 
-import Aex from "../../src/core";
-import { http } from "../../src/decorators/http";
+import { Aex } from "../../src/index";
+import { http } from "../../src/index";
 
-import { GetText, PostText, initRandomPort } from "../../src/util/request";
+import { GetText, PostText, initRandomPort } from "../../src/index";
 
 class Exam {
   private name = "hello";

@@ -1,12 +1,12 @@
 // import * as express from 'express';
 // tslint:disable-next-line:no-duplicate-imports
 
-import Aex from "../../src/core";
-import { body } from "../../src/decorators/body";
-import { http } from "../../src/decorators/http";
-import { inject } from "../../src/decorators/inject";
+import { Aex } from "../../src/index";
+import { body } from "../../src/index";
+import { http } from "../../src/index";
+import { inject } from "../../src/index";
 
-import { PostText, initRandomPort } from "../../src/util/request";
+import { PostText, initRandomPort } from "../../src/index";
 
 class User {
   protected name = "inject";

@@ -1,8 +1,8 @@
 // import * as express from 'express';
 // tslint:disable-next-line:no-duplicate-imports
 
-import Aex from "../../src/core";
-import { http } from "../../src/decorators/http";
+import { Aex } from "../../src/index";
+import { http } from "../../src/index";
 
 import { IncomingMessage } from "http";
 import {

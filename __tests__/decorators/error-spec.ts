@@ -1,11 +1,11 @@
 // import * as express from 'express';
 // tslint:disable-next-line:no-duplicate-imports
 
-import Aex from "../../src/core";
-import { http } from "../../src/decorators/http";
+import { Aex } from "../../src/index";
+import { http } from "../../src/index";
 
-import { PostText, initRandomPort } from "../../src/util/request";
-import { error } from "../../src/decorators/error";
+import { PostText, initRandomPort } from "../../src/index";
+import { error } from "../../src/index";
 
 class User {
   protected hello = "error";

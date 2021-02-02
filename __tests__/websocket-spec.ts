@@ -1,6 +1,6 @@
 import * as WebSocket from "ws";
-import { Aex } from "../src/core";
-import { WebSocketServer } from "../src/websocket/server";
+import { Aex } from "../src/index";
+import { WebSocketServer } from "../src/index";
 
 test("Should support websocket", (done) => {
   const aex = new Aex();
