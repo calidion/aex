@@ -67,7 +67,6 @@ class User {
   }
 
   @http("get", "/handled/:id")
-  @body()
   @query()
   @filter({
     query: {
@@ -121,12 +120,12 @@ test("Should decorate methods with array", async () => {
   );
 });
 
-test("Should filter query && params", async () => {
+test("Should filter query && params 1", async () => {
   await GetText(port, "User Id!", "/profile/111?page=20");
 });
 
 test("should", async () => {
-  await GetStatus(port, "/profile/ddd?page=aaa", 500);
+  await GetStatus(port, "/profile/ddd?page=aaa", 400);
 });
 
 test("should", async (done) => {
@@ -134,14 +133,14 @@ test("should", async (done) => {
     done();
   }, 1000);
 
-  await GetStatus(port, "/profile/ddd", 500);
+  await GetStatus(port, "/profile/ddd", 400);
 });
 
-test("Should filter query && params", async () => {
+test("Should filter query && params 2", async () => {
   await GetText(port, "Handled!", "/handled/111?page=20");
 });
 
-test("Should filter query && params", async () => {
+test("Should filter query && params 3", async () => {
   await GetText(port, "Params failed!", "/handled/aaa?page=20");
 });
 

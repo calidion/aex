@@ -6,7 +6,7 @@
 import * as validator from "node-form-validator";
 import { One } from "../one";
 import { Scope } from "../scope";
-import InternalServerError from "../status/500";
+import BadRequest from "../status/400";
 import { IAsyncFilterMiddleware } from "../types";
 
 export interface IFilterFallback {
@@ -21,6 +21,7 @@ export interface IFilterOptions {
   body?: any;
   query?: any;
   fallbacks?: IFilterFallback;
+  [x: string]: any;
 }
 
 export function filter(options: IFilterOptions) {
@@ -38,10 +39,6 @@ export function filter(options: IFilterOptions) {
 
     function validate(data: any, rules: any, scope: Scope) {
       error = validator.validate(data, rules);
-      if (!error) {
-        return false;
-      }
-
       if (error.code !== 0) {
         const debug = scope.debug("aex:filter");
         debug(error.message);
@@ -58,19 +55,11 @@ export function filter(options: IFilterOptions) {
       scope.extracted = {};
       let passed;
       const instance = One.getInstance(target, propertyKey);
-      for (const key of Object.keys(options)) {
-        switch (key) {
-          case "params":
-            passed = validate(req.params, options.params, scope);
-            break;
-          case "body":
-            passed = validate(req.body, options.body, scope);
-            break;
-          case "query":
-            passed = validate(req.query, options.query, scope);
-
-            break;
+      for (const key of ["params", "query", "body"]) {
+        if (!options[key] || Object.keys(options[key]).length === 0) {
+          continue;
         }
+        passed = validate(req[key], options[key], scope);
         if (!passed) {
           const fallbacks = options.fallbacks as any;
           const handler: any = fallbacks ? fallbacks[key] : null;
@@ -78,8 +67,10 @@ export function filter(options: IFilterOptions) {
             const newArgs = [error].concat(args);
             return handler.apply(instance, newArgs);
           }
-
-          InternalServerError(args[1]);
+          const { debug } = scope;
+          const printer = debug("aex:filter");
+          printer("Bad Request!");
+          BadRequest(args[1]);
           return;
         }
 
