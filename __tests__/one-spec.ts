@@ -46,11 +46,9 @@ test("One should put instances and get them correctly", async () => {
   const oneInstance = One.instance();
 
   const instances = One.instances;
-  One.cache.push(["aaa"]);
   expect(Object.keys(instances).length === 2);
   One.reset();
   const afterInstance = One.instance();
   expect(oneInstance !== afterInstance);
-  expect(One.cache.length === 0);
   expect(Object.keys(One.instances).length === 0);
 });

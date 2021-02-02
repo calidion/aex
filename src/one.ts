@@ -18,7 +18,6 @@ export class One {
 
   public static reset() {
     One.router = new Router();
-    One.cache = [];
     One.instances = {};
   }
 
