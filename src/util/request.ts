@@ -8,7 +8,7 @@ import { get, IncomingMessage, request } from "http";
 import * as qs from "querystring";
 import Aex from "../core";
 
-function GET(options: any): Promise<IncomingMessage> {
+export function GET(options: any): Promise<IncomingMessage> {
   return new Promise((resolve) => {
     // This is an example of an http request, for example to fetch
     // user data from an API.
@@ -28,7 +28,7 @@ function GET(options: any): Promise<IncomingMessage> {
   });
 }
 
-function POST(options: any, body: any): Promise<IncomingMessage> {
+export function POST(options: any, body: any): Promise<IncomingMessage> {
   return new Promise((resolve) => {
     // This is an example of an http request, for example to fetch
     // user data from an API.
@@ -64,6 +64,36 @@ function POST(options: any, body: any): Promise<IncomingMessage> {
   });
 }
 
+export async function Get(
+  port: number,
+  path: string,
+  domain: string,
+  options: any
+) {
+  Object.assign(options, {
+    hostname: domain,
+    port,
+    // tslint:disable-next-line: object-literal-sort-keys
+    path,
+    method: "GET",
+  });
+  return GET(options);
+}
+
+export async function Post(
+  port: number,
+  body: any,
+  url: string,
+  domain: string,
+  options: any
+) {
+  options.hostname = domain;
+  options.port = port;
+  options.path = url;
+  options.method = "POST";
+  return POST(options, body);
+}
+
 export async function GetTextWithAex(
   aex: Aex,
   message: string,
@@ -85,14 +115,7 @@ export async function GetText(
   options: any = {},
   compare: boolean = true
 ) {
-  Object.assign(options, {
-    hostname: domain,
-    port,
-    // tslint:disable-next-line: object-literal-sort-keys
-    path,
-    method: "GET",
-  });
-  const res = await GET(options);
+  const res = await Get(port, path, domain, options);
   const od = Object.getOwnPropertyDescriptor(res, "text");
 
   if (compare) {
@@ -115,7 +138,7 @@ export async function PostText(
   options.port = port;
   options.path = url;
   options.method = method;
-  const res = await POST(options, body);
+  const res = await Post(port, body, url, domain, options);
   const od = Object.getOwnPropertyDescriptor(res, "text");
 
   if (compare) {
