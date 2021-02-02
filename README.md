@@ -744,5 +744,5 @@ MIT
 [downloads-image-month]: http://img.shields.io/npm/dm/@aex/core.svg
 [npm-image]: https://img.shields.io/npm/v/@aex/core.svg
 [npm-url]: https://npmjs.org/package/@aex/core
-[daviddm-image]: https://david-dm.org/calidion/@aex/core.svg?theme=shields.io
-[daviddm-url]: https://david-dm.org/calidion/@aex/core
+[daviddm-image]: https://david-dm.org/calidion/aex/core.svg?theme=shields.io
+[daviddm-url]: https://david-dm.org/calidion/aex
