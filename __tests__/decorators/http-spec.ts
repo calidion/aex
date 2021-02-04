@@ -6,7 +6,7 @@ import { http } from "../../src/index";
 
 import { GetText, PostText, initRandomPort } from "../../src/index";
 
-class Exam {
+class Http {
   private name = "hello";
 
   @http("", "/notstring/:name")
@@ -56,7 +56,7 @@ class TTT {}
 
 const aex = new Aex();
 
-aex.push(Exam);
+aex.push(Http);
 aex.push(TTT);
 aex.prepare();
 

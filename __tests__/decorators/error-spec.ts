@@ -7,7 +7,7 @@ import { http } from "../../src/index";
 import { PostText, initRandomPort } from "../../src/index";
 import { error } from "../../src/index";
 
-class User {
+class Error {
   protected hello = "error";
 
   @http("post", "/user/login")
@@ -40,7 +40,7 @@ class User {
     expect(scope.error.HELLO === undefined).toBeTruthy();
     expect(scope.error.I_LOVE_YOU === undefined).toBeTruthy();
     expect(scope.error.ME_LOVE_YOU === undefined).toBeTruthy();
-    res.end("User All!");
+    res.end("Error All!");
   }
 
   @http("post", "/user/ok")
@@ -76,19 +76,19 @@ class User {
     expect(scope.error.ILoveYou === undefined).toBeTruthy();
     expect(scope.error.MeLoveYou === undefined).toBeTruthy();
     expect(scope.error.AAA === undefined).toBeTruthy();
-    res.end("User Road!");
+    res.end("Error Road!");
   }
 
   @http("post", "/user/none")
   @error()
   public none(_req: any, res: any, scope: any) {
     expect(scope.error.AAA === undefined).toBeTruthy();
-    res.end("User None!");
+    res.end("Error None!");
   }
 }
 
 const aex = new Aex();
-aex.push(User);
+aex.push(Error);
 aex.prepare();
 
 let port: number = 0;
@@ -101,7 +101,7 @@ test("Should use decorator error", async () => {
   await PostText(
     port,
     { username: "aaa", password: "sososo" },
-    "User All!",
+    "Error All!",
     "/user/login",
     "localhost",
     "POST"
@@ -112,7 +112,7 @@ test("Should use decorator error with upper case", async () => {
   await PostText(
     port,
     { username: "aaa", password: "sososo" },
-    "User Road!",
+    "Error Road!",
     "/user/ok",
     "localhost",
     "POST"
@@ -123,7 +123,7 @@ test("Should use decorator error with no error defined", async () => {
   await PostText(
     port,
     { username: "aaa", password: "sososo" },
-    "User None!",
+    "Error None!",
     "/user/none",
     "localhost",
     "POST"

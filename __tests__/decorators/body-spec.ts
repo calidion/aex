@@ -7,7 +7,7 @@ import { http } from "../../src/index";
 
 import { PostText, initRandomPort } from "../../src/index";
 
-class User {
+class Body {
   private _name: string;
   constructor(name: string) {
     this._name = name;
@@ -25,20 +25,20 @@ class User {
     expect(req.body.password === "sososo");
     expect(scope.body.username === "aaa");
     expect(scope.body.password === "sososo");
-    res.end("User All!");
+    res.end("Body All!");
   }
 
   @http("post", "/user/ok")
   @body("roodod")
   public road(_req: any, res: any) {
     expect(this.name === "Aex");
-    res.end("User Road!");
+    res.end("Body Road!");
   }
 }
 
 const aex = new Aex();
 
-aex.push(User, "Aex");
+aex.push(Body, "Aex");
 aex.prepare();
 
 let port: number = 0;
@@ -54,7 +54,7 @@ test("Should decorate methods with array", async () => {
   await PostText(
     port,
     { username: "aaa", password: "sososo" },
-    "User All!",
+    "Body All!",
     "/user/login",
     "localhost",
     "POST"
@@ -64,7 +64,7 @@ test("Should decorate methods with array", async () => {
 test("Should not push again a calss", async () => {
   let catched = false;
   try {
-    aex.push(User);
+    aex.push(Body);
   } catch (e) {
     catched = true;
     expect(e.message).toBe("Duplicated class found!");

@@ -8,7 +8,7 @@ import { One } from "../one";
 import { Scope } from "../scope";
 import { IAsyncMiddleware } from "../types";
 
-export function inject(cb: IAsyncMiddleware) {
+export function inject(cb: IAsyncMiddleware, fallbacks?: IAsyncMiddleware) {
   // tslint:disable-next-line: only-arrow-functions
   return function (
     target: any,
@@ -18,14 +18,20 @@ export function inject(cb: IAsyncMiddleware) {
     const origin = descriptor.value;
 
     // tslint:disable-next-line: only-arrow-functions
-    descriptor.value = async function (...args: any[]) {
+    descriptor.value = async function (
+      req: IncomingMessage,
+      res: ServerResponse,
+      scope?: Scope
+    ) {
       const instance = One.getInstance(target, propertyKey);
-      return (
-        (await cb.apply(
-          instance,
-          args as [IncomingMessage, ServerResponse, (Scope | undefined)?]
-        )) !== false && origin.apply(instance, args)
-      );
+      const result = await cb.apply(instance, [req, res, scope]);
+      if (result === false) {
+        if (fallbacks) {
+          await fallbacks.apply(instance, [req, res, scope]);
+        }
+        return false;
+      }
+      return origin.apply(instance, [req, res, scope]);
     };
     return descriptor;
   };

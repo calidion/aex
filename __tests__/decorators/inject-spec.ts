@@ -1,15 +1,17 @@
 // import * as express from 'express';
 // tslint:disable-next-line:no-duplicate-imports
 
-import { Aex } from "../../src/index";
+import { Aex, One } from "../../src/index";
 import { body } from "../../src/index";
 import { http } from "../../src/index";
 import { inject } from "../../src/index";
 
 import { PostText, initRandomPort } from "../../src/index";
 
-class User {
+class Inject {
   protected name = "inject";
+  public fallbacked = false;
+
   @http("post", "/user/login")
   @body()
   // tslint:disable-next-line: variable-name
@@ -28,17 +30,41 @@ class User {
     expect(req.body.username === "aaaa");
     expect(req.body.password === "sosodddso");
     expect(scope!.outer!.session!.user!.name === "ok");
-    res.end("User All!");
+    res.end("Inject All!");
+  }
+
+  @http("post", "/user/fallback")
+  @body()
+  // tslint:disable-next-line: variable-name
+  @inject(
+    async function (this: Inject) {
+      expect(this.name === "inject");
+      return false;
+    },
+    async function (this: Inject, _req, res) {
+      expect(this.name === "inject");
+      this.fallbacked = true;
+      res.end("Fallback!");
+      return false;
+    }
+  )
+  public async fallback(req: any, res: any, scope: any) {
+    expect(this.name === "inject");
+    expect(req.body.username === "aaaa");
+    expect(req.body.password === "sosodddso");
+    expect(scope!.outer!.session!.user!.name === "ok");
+    res.end("Inject All!");
   }
 }
 
 const aex = new Aex();
-aex.push(User);
-aex.prepare();
 
 let port: number = 0;
 
 beforeAll(async () => {
+  One.reset();
+  aex.push(Inject);
+  aex.prepare();
   port = await initRandomPort(aex);
 });
 
@@ -46,11 +72,24 @@ test("Should decorate methods with array", async () => {
   await PostText(
     port,
     { username: "aaaa", password: "sosodddso" },
-    "User All!",
+    "Inject All!",
     "/user/login",
     "localhost",
     "POST"
   );
+});
+
+test("Should decorate methods with array", async () => {
+  await PostText(
+    port,
+    { username: "aaaa", password: "sosodddso" },
+    "Fallback!",
+    "/user/fallback",
+    "localhost",
+    "POST"
+  );
+  const instance = One.getInstance(Inject.prototype, "fallback");
+  expect(instance.fallback).toBeTruthy();
 });
 
 afterAll(async () => {
