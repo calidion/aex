@@ -16,7 +16,11 @@ export function error(
   upperOrCamel: boolean = false
 ) {
   // tslint:disable-next-line: only-arrow-functions
-  return function (_target: any, _propertyKey: any, descriptor: any) {
+  return function (
+    _target: any,
+    _propertyKey: string,
+    descriptor: PropertyDescriptor
+  ) {
     const origin = descriptor.value;
 
     // tslint:disable-next-line: only-arrow-functions

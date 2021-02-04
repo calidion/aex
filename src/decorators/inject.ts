@@ -12,9 +12,8 @@ export function inject(cb: IAsyncMiddleware) {
   // tslint:disable-next-line: only-arrow-functions
   return function (
     target: any,
-    // tslint:disable-next-line: variable-name
-    propertyKey: any,
-    descriptor: any
+    propertyKey: string,
+    descriptor: PropertyDescriptor
   ) {
     const origin = descriptor.value;
 

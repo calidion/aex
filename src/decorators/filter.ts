@@ -28,7 +28,6 @@ export function filter(options: IFilterOptions) {
   // tslint:disable-next-line: only-arrow-functions
   return function (
     target: any,
-    // tslint:disable-next-line: variable-name
     propertyKey: string,
     descriptor: PropertyDescriptor
   ) {

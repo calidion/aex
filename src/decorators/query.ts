@@ -11,8 +11,8 @@ export function query() {
   return function (
     _target: any,
     // tslint:disable-next-line: variable-name
-    _propertyKey: any,
-    descriptor: any
+    _propertyKey: string,
+    descriptor: PropertyDescriptor
   ) {
     const origin = descriptor.value;
 
