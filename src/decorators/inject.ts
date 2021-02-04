@@ -8,7 +8,15 @@ import { One } from "../one";
 import { Scope } from "../scope";
 import { IAsyncMiddleware } from "../types";
 
-export function inject(cb: IAsyncMiddleware, fallbacks?: IAsyncMiddleware) {
+/**
+ *
+ * @param injector main logic / data processing middleware or some checks
+ * @param fallback optional fallback when the injector fails
+ */
+export function inject(
+  injector: IAsyncMiddleware,
+  fallback?: IAsyncMiddleware
+) {
   // tslint:disable-next-line: only-arrow-functions
   return function (
     target: any,
@@ -24,10 +32,10 @@ export function inject(cb: IAsyncMiddleware, fallbacks?: IAsyncMiddleware) {
       scope?: Scope
     ) {
       const instance = One.getInstance(target, propertyKey);
-      const result = await cb.apply(instance, [req, res, scope]);
+      const result = await injector.apply(instance, [req, res, scope]);
       if (result === false) {
-        if (fallbacks) {
-          await fallbacks.apply(instance, [req, res, scope]);
+        if (fallback) {
+          await fallback.apply(instance, [req, res, scope]);
         }
         return false;
       }

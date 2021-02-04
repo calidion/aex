@@ -377,6 +377,11 @@ class User {
 
 Inject any middleware when necessary. But you should be careful with middlewares' order.
 
+`@inject` decrator takes two parameters:
+
+1. injector: the main injected middleware for data further processing or policy checking
+2. fallback: optional fallback when the injector fails and returned `false`
+
 ```ts
 class User {
   private name = "Aex";
@@ -389,13 +394,22 @@ class User {
         }
       };
   })
-  @inject(async (this:any, req, res, scope) => {
+  @inject(async function(this:User, req, res, scope) {
       this.name = "Peter";
       req.session = {
         user: {
           name: "ok"
         }
       };
+  })
+  @inject(async function(this:User, req, res, scope) => {
+      this.name = "Peter";
+      if (...) {
+        return false
+      }
+  }, async function fallback(this:User, req, res, scope){
+    // some fallback processing
+    res.end("Fallback");
   })
   public async login(req: any, res: any, scope: any) {
     // req.session.user.name

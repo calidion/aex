@@ -55,6 +55,21 @@ class Inject {
     expect(scope!.outer!.session!.user!.name === "ok");
     res.end("Inject All!");
   }
+  @http("post", "/user/nofallback")
+  @body()
+  // tslint:disable-next-line: variable-name
+  @inject(async function (this: Inject, _req, res) {
+    expect(this.name === "inject");
+    res.end("No Fallback!");
+    return false;
+  })
+  public async nocallback(req: any, res: any, scope: any) {
+    expect(this.name === "inject");
+    expect(req.body.username === "aaaa");
+    expect(req.body.password === "sosodddso");
+    expect(scope!.outer!.session!.user!.name === "ok");
+    res.end("Inject All!");
+  }
 }
 
 const aex = new Aex();
@@ -68,7 +83,7 @@ beforeAll(async () => {
   port = await initRandomPort(aex);
 });
 
-test("Should decorate methods with array", async () => {
+test("Should inject", async () => {
   await PostText(
     port,
     { username: "aaaa", password: "sosodddso" },
@@ -79,12 +94,25 @@ test("Should decorate methods with array", async () => {
   );
 });
 
-test("Should decorate methods with array", async () => {
+test("Should inject with fallback", async () => {
   await PostText(
     port,
     { username: "aaaa", password: "sosodddso" },
     "Fallback!",
     "/user/fallback",
+    "localhost",
+    "POST"
+  );
+  const instance = One.getInstance(Inject.prototype, "fallback");
+  expect(instance.fallback).toBeTruthy();
+});
+
+test("Should fall with out fallback", async () => {
+  await PostText(
+    port,
+    { username: "aaaa", password: "sosodddso" },
+    "No Fallback!",
+    "/user/nofallback",
     "localhost",
     "POST"
   );
