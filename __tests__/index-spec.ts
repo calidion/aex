@@ -137,6 +137,7 @@ test("Should allow in request middlewares", async () => {
       expect(scope.debug).toBeTruthy();
       scope.inner.a = 100;
       scope.outer.a = 120;
+      scope.session = {};
       expect(scope.inner.a === 100).toBeTruthy();
       expect(scope.outer.a === 120).toBeTruthy();
       let catched = false;

@@ -48,6 +48,9 @@ export class Scope {
   get session() {
     return this._session;
   }
+  set session(value) {
+    this._session = value;
+  }
   get query() {
     return this._query;
   }
