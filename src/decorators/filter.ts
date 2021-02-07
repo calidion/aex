@@ -53,7 +53,7 @@ export function filter(options: IFilterOptions) {
       const scope = args[2];
       scope.extracted = {};
       let passed;
-      const instance = One.getInstance(target, propertyKey);
+      const instance = One.getInstance(target.constructor.name, propertyKey);
       for (const key of ["params", "query", "body"]) {
         if (!options[key] || Object.keys(options[key]).length === 0) {
           continue;

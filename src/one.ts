@@ -21,21 +21,21 @@ export class One {
     One.instances = {};
   }
 
-  public static putInstance(aClass: any, method: any, instance: any) {
-    if (!One.instances[aClass]) {
-      One.instances[aClass] = {};
+  public static putInstance(aClassName: string, method: string, instance: any) {
+    if (!One.instances[aClassName]) {
+      One.instances[aClassName] = {};
     }
-    if (One.instances[aClass][method]) {
+    if (One.instances[aClassName][method]) {
       throw new Error("Duplicated instance found!");
     }
-    One.instances[aClass][method] = instance;
+    One.instances[aClassName][method] = instance;
   }
 
-  public static getInstance(aClass: any, method: any) {
-    if (!One.instances[aClass]) {
+  public static getInstance(aClassName: string, method: string) {
+    if (!One.instances[aClassName]) {
       return null;
     }
-    return One.instances[aClass][method];
+    return One.instances[aClassName][method];
   }
   private static router: Router | null;
 }

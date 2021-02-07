@@ -31,7 +31,7 @@ export function inject(
       res: ServerResponse,
       scope?: Scope
     ) {
-      const instance = One.getInstance(target, propertyKey);
+      const instance = One.getInstance(target.constructor.name, propertyKey);
       const result = await injector.apply(instance, [req, res, scope]);
       if (result === false) {
         if (fallback) {

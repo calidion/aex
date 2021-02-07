@@ -103,7 +103,10 @@ test("Should inject with fallback", async () => {
     "localhost",
     "POST"
   );
-  const instance = One.getInstance(Inject.prototype, "fallback");
+  const instance = One.getInstance(
+    Inject.prototype.constructor.name,
+    "fallback"
+  );
   expect(instance.fallback).toBeTruthy();
 });
 
@@ -116,7 +119,10 @@ test("Should fall with out fallback", async () => {
     "localhost",
     "POST"
   );
-  const instance = One.getInstance(Inject.prototype, "fallback");
+  const instance = One.getInstance(
+    Inject.prototype.constructor.name,
+    "fallback"
+  );
   expect(instance.fallback).toBeTruthy();
 });
 
