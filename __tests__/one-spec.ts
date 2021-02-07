@@ -1,47 +1,50 @@
-import { One } from "../src/index";
+import { One, Aex, http } from "../src/index";
 
 test("One should put instances and get them correctly", async () => {
   class A {
+    @http("/aa")
     public a() {
       return "aa";
     }
+
+    @http("/ab")
     public b() {
       return "ab";
     }
   }
   class B {
+    @http("/ba")
     public a() {
       return "ba";
     }
+
+    @http("/bb")
     public b() {
       return "bb";
     }
   }
 
-  const a = new A();
-  const b = new B();
+  const aex = new Aex();
 
-  One.putInstance(A, "a", a);
-  One.putInstance(A, "b", a);
-  One.putInstance(B, "a", b);
-  One.putInstance(B, "b", b);
+  aex.push(A);
+  aex.push(B);
+  aex.prepare();
 
   let catched = false;
   try {
-    One.putInstance(A, "a", a);
+    One.putInstance(A.prototype.constructor.name, "a", new A());
   } catch (e) {
     catched = true;
     expect(e.message).toBe("Duplicated instance found!");
   }
   expect(catched).toBeTruthy();
 
-  const iaa = One.getInstance(A, "a");
-  const iab = One.getInstance(A, "b");
+  const iaa = One.getInstance(A.prototype.constructor.name, "a");
+  const iab = One.getInstance(A.prototype.constructor.name, "b");
   const iac = One.getInstance("ddo", "c");
 
   expect(iac).toBeFalsy();
   expect(iaa === iab).toBeTruthy();
-  expect(a === iaa).toBeTruthy();
 
   const oneInstance = One.instance();
 
