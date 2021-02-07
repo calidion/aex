@@ -274,7 +274,7 @@ Decorator @query will parse query for you. After @query you will have `req.query
 
 Decorator @filter will filter `body`, `params` and `query` data for you.
 
-Reference [node-form-validator](!https://github.com/calidion/node-form-validator) for detailed usage.
+Reference [node-form-validator](https://github.com/calidion/node-form-validator) for detailed usage.
 
 ```ts
 class User {
