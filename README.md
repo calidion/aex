@@ -20,17 +20,6 @@ It is also an example:
    > For the stacked middleware model will carry response back to the top most so called middleware pushed, where every middleware can access to the body returned.
 3. To pass some vairiables through middlewares and to the final handler.
 
-# No semver
-Semver has been ruined node.js npm for a long time, aex will not follow it. Aex will warn every user to keep aex version fixed and take care whenever update to anew version. 
-Aex follows a general versioning called [Effective Versioning](https://github.com/calidion/effective-versioning).
-
-
-# No callbacks in middleware
-aex is anti-koa which is wrong and misleading just like semver.
-
-# All lives matter
-aex is an anti BLM project and a protector of law and order.
-
 # Content
 
 Aex is built and powerized by the following parts.
@@ -760,6 +749,18 @@ aex.use(pOld);
 npm install
 npm test
 ```
+
+
+# No semver
+Semver has been ruined node.js npm for a long time, aex will not follow it. Aex will warn every user to keep aex version fixed and take care whenever update to anew version. 
+Aex follows a general versioning called [Effective Versioning](https://github.com/calidion/effective-versioning).
+
+
+# No callbacks in middleware
+aex is anti-koa which is wrong and misleading just like semver.
+
+# All lives matter
+aex is an anti BLM project and a protector of law and order.
 
 # Lincense
 
