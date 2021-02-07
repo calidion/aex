@@ -38,6 +38,9 @@ export function filter(options: IFilterOptions) {
 
     function validate(data: any, rules: any, scope: Scope) {
       error = validator.validate(data, rules);
+      if (error === false) {
+        return true;
+      }
       if (error.code !== 0) {
         const debug = scope.debug("aex:filter");
         debug(error.message);

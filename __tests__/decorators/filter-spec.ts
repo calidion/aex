@@ -49,7 +49,6 @@ class User {
     query: {
       page: {
         type: "numeric",
-        required: true,
       },
     },
     params: {
@@ -62,7 +61,9 @@ class User {
   public async id(req: any, res: any, _scope: any) {
     expect(this.name === "filter");
     expect(req.params.id === 111);
-    expect(req.query.page === 20);
+    if (req.query) {
+      expect(req.query.page === 20);
+    }
     res.end("User Id!");
   }
 
@@ -72,7 +73,6 @@ class User {
     query: {
       page: {
         type: "numeric",
-        required: true,
       },
     },
     params: {
@@ -81,7 +81,6 @@ class User {
         required: true,
       },
     },
-
     fallbacks: {
       params: async function (this: any, _error: any, _req: any, res: any) {
         expect(this.name === "filter");
@@ -93,8 +92,10 @@ class User {
     expect(this.name === "filter");
     expect(req.params.id === 111);
     expect(scope.params.id === 111);
-    expect(scope.query.page === 20);
-    expect(req.query.page === 20);
+    if (scope.query) {
+      expect(scope.query.page === 20);
+      expect(req.query.page === 20);
+    }
     res.end("Handled!");
   }
 }
@@ -122,6 +123,10 @@ test("Should decorate methods with array", async () => {
 
 test("Should filter query && params 1", async () => {
   await GetText(port, "User Id!", "/profile/111?page=20");
+});
+
+test("Should filter query && params 1", async () => {
+  await GetText(port, "User Id!", "/profile/111");
 });
 
 test("should", async () => {
