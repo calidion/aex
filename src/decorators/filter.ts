@@ -39,6 +39,11 @@ export function filter(options: IFilterOptions) {
     function validate(data: any, rules: any, scope: Scope) {
       error = validator.validate(data, rules);
       if (error === false) {
+        for (const key of Object.keys(rules)) {
+          if (rules[key].required) {
+            return false;
+          }
+        }
         return true;
       }
       if (error.code !== 0) {
