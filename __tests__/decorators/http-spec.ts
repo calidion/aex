@@ -1,8 +1,7 @@
 // import * as express from 'express';
 // tslint:disable-next-line:no-duplicate-imports
 
-import { Aex } from "../../src/index";
-import { http } from "../../src/index";
+import { Aex, post, http, get } from "../../src/index";
 
 import { GetText, PostText, initRandomPort } from "../../src/index";
 
@@ -49,6 +48,18 @@ class Http {
   public simple(_req: any, res: any, _scope: any) {
     expect(this.name === "hello").toBeTruthy();
     res.end("User Simple!");
+  }
+
+  @get("/http/get")
+  public async rawget(_req: any, res: any, _scope: any) {
+    expect(this.name === "hello").toBeTruthy();
+    res.end("Http Get!");
+  }
+
+  @post("/http/post")
+  public async rawpost(_req: any, res: any, _scope: any) {
+    expect(this.name === "hello").toBeTruthy();
+    res.end("Http Post!");
   }
 }
 
@@ -156,6 +167,14 @@ test("Should decorate methods with all methods", async () => {
 
 test("Should decorate methods with default method", async () => {
   await GetText(port, "User Simple!", "/user/default");
+});
+
+test("Should decorate methods with default method", async () => {
+  await GetText(port, "Http Get!", "/http/get");
+});
+
+test("Should decorate methods with default method", async () => {
+  await PostText(port, {}, "Http Post!", "/http/post");
 });
 
 afterAll(async () => {

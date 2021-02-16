@@ -25,6 +25,8 @@ export class Scope {
   private _query: { [x: string]: object } = {};
   // tslint:disable-next-line:variable-name
   private _params: { [x: string]: object } = {};
+  // tslint:disable-next-line:variable-name
+  private _files: { [x: string]: object } = {};
 
   get time() {
     return this._timer;
@@ -59,6 +61,10 @@ export class Scope {
     return this._params;
   }
 
+  get files() {
+    return this._files;
+  }
+
   public reset() {
     this._body = {};
     this._session = {};
@@ -66,6 +72,7 @@ export class Scope {
     this._inner = {};
     this._params = {};
     this._error = {};
+    this._files = {};
     this._timer.reset();
   }
 

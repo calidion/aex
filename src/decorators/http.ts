@@ -23,3 +23,11 @@ export function http(name: string | string[], url?: string | string[]) {
     return descriptor;
   };
 }
+
+export function get(url?: string | string[]) {
+  return http("get", url);
+}
+
+export function post(url?: string | string[]) {
+  return http("post", url);
+}

@@ -18,4 +18,5 @@ export * from "./decorators/inject";
 export * from "./decorators/body";
 export * from "./decorators/query";
 export * from "./decorators/error";
+export * from "./decorators/formdata";
 export * from "./util/request";
