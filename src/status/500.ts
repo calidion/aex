@@ -7,7 +7,7 @@
 import { ServerResponse } from "http";
 
 // tslint:disable-next-line:variable-name
-export async function InternalServerError(res: ServerResponse) {
+export function InternalServerError(res: ServerResponse) {
   res.statusCode = 500;
 
   const html = `

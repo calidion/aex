@@ -51,7 +51,7 @@ class User {
 }
 ```
 
-## 2. Request parsing decorators
+## 2. Data parsing decorators
 
 These decorators will parse all data passed thought the HTTP protocol.
 They are `@formdata`, `@query`, `@body`.
@@ -68,6 +68,8 @@ Decorator `@formdata` is a simplified version of node package [`busboy`](https:/
 All uploaded files are in array format, and it parses body as well.
 
 ```ts
+import { http, formdata } from "@aex/core";
+
 class Formdata {
   protected name = "formdata";
 
@@ -114,7 +116,7 @@ Simply put:
 Full example
 
 ```ts
-import { http } from "@aex/core";
+import { http, body } from "@aex/core";
 
 class User {
   @http("post", "/user/login")
@@ -136,11 +138,43 @@ class User {
 Decorator @query will parse query for you. After decorated with `@query` you will have `scope.query` to use. `req.query` is available for compatible reasion, but it is discouraged.
 
 ```ts
+class Query {
   @http("get", "/profile/:id")
   @query()
   public async id(req: any, res: any, _scope: any) {
     // get /profile/111?page=20
-    req.query.page
+    req.query.page;
     // 20
   }
+}
+```
+
+## 3. Static file serving decorators
+
+Aex provides `@serve` decorator for static file serving.
+
+### Usage
+
+#### `@serve`
+
+Decorator `@serve` provides a simple way to serve static files. It a is a simplified version of node package [serve-staticserve-static](https://github.com/expressjs/serve-static).
+
+It takes two parameters:
+
+1. url: the base url for your served files.
+2. options: exact options package `serve-static` takes.
+
+then inside the member function you should return the absolute path of of the root of the static files.
+
+```ts
+import { serve } from "@aex/core";
+
+class StaticFileServer {
+  protected name = "formdata";
+
+  @serve("/assets")
+  public async upload() {
+    return resolve(__dirname, "./fixtures");
+  }
+}
 ```

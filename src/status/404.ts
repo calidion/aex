@@ -7,7 +7,7 @@
 import { ServerResponse } from "http";
 
 // tslint:disable-next-line:variable-name
-export async function NotFound(res: ServerResponse) {
+export function NotFound(res: ServerResponse) {
   res.statusCode = 404;
 
   const html = `
