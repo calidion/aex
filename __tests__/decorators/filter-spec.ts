@@ -43,18 +43,26 @@ class User {
   }
 
   @http("get", "/profile/:id")
-  @body()
   @query()
   @filter({
     query: {
       page: {
         type: "numeric",
       },
+      limit: {
+        type: "numeric",
+        required: true,
+      },
     },
     params: {
       id: {
         type: "numeric",
         required: true,
+      },
+    },
+    fallbacks: {
+      query: async function (_error: any, _req: any, res: any) {
+        res.end("User Id1!");
       },
     },
   })
@@ -92,8 +100,7 @@ class User {
     expect(this.name === "filter");
     expect(req.params.id === 111);
     expect(scope.params.id === 111);
-    if (scope.query) {
-      expect(scope.query.page === 20);
+    if (req.query) {
       expect(req.query.page === 20);
     }
     res.end("Handled!");
@@ -119,14 +126,24 @@ test("Should decorate methods with array", async () => {
     "localhost",
     "POST"
   );
+  await PostText(
+    port,
+    { username: "aaaa", ad: "sosodddso" },
+    "User All!",
+    "/user/login",
+    "localhost",
+    "POST",
+    {},
+    false
+  );
 });
 
 test("Should filter query && params 1", async () => {
-  await GetText(port, "User Id!", "/profile/111?page=20");
+  await GetText(port, "User Id!", "/profile/111?page=20&limit=1000");
 });
 
 test("Should filter query && params 1", async () => {
-  await GetText(port, "User Id!", "/profile/111");
+  await GetText(port, "User Id1!", "/profile/111");
 });
 
 test("should", async () => {
@@ -143,6 +160,10 @@ test("should", async (done) => {
 
 test("Should filter query && params 2", async () => {
   await GetText(port, "Handled!", "/handled/111?page=20");
+});
+
+test("Should filter query && params 2", async () => {
+  await GetText(port, "Handled!", "/handled/111");
 });
 
 test("Should filter query && params 3", async () => {
