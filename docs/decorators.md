@@ -4,10 +4,21 @@ Aex is simplified by decorators, so you should be familiar with decorators to fu
 
 Decorators will be enriched over time. Currently aex provides the following decorators:
 
+1. HTTP method decorators: `@http`, `@get`, `@post`
+2. Data parsing decorators: `@formdata`, `@query`, `@body`
+3. Static file serving decorators: `@serve`
+4. Session management decorators: `@session`
+5. Data filtering and validation decorators: `@filter`
+6. Error definition decorators: `@error`
+7. Custome middleware decorators: `@inject`
+
 ## 1. HTTP method decorators
 
 This decorators are the most basic decorators, all decorators should follow them. They are
 `@http` , `@get` , `@post` .
+
+
+### `@http`,`@get`, `@post`
 
 `@http` is the generic http method decorator. `@get` , `@post` are the shortcuts for `@http` ; 
 
@@ -60,9 +71,7 @@ They are `@formdata` , `@query` , `@body` .
 2. `@query` can parse url query into `scope.query`.
 3. `@body` can parse some simple formdata into `scope.body`.
 
-### Usage
-
-#### `@formdata`
+### `@formdata`
 
 Decorator `@formdata` is a simplified version of node package [ `busboy` ](https://github.com/mscdex/busboy) for `aex` , only the `headers` options will be auto replaced by `aex` . So you can parse valid options when necesary.
 All uploaded files are in array format, and it parses body as well.
@@ -96,7 +105,7 @@ class Formdata {
 }
 ```
 
-#### `@body`
+### `@body`
 
 Decorator @body provides a simple way to process data with body parser. It a is a simplified version of node package [body-parser](https://github.com/expressjs/body-parser).
 
@@ -133,7 +142,7 @@ class User {
 }
 ```
 
-#### `@query`
+### `@query`
 
 Decorator @query will parse query for you. After decorated with `@query` you will have `scope.query` to use. `req.query` is available for compatible reasion, but it is discouraged.
 
@@ -149,13 +158,11 @@ class Query {
 }
 ```
 
-## 3. Static file serving decorator
+## 3. Static file serving decorators
 
 Aex provides `@serve` decorator for static file serving.
 
-### Usage
-
-#### `@serve`
+### `@serve`
 
 Decorator `@serve` provides a simple way to serve static files. It a is a simplified version of node package [serve-staticserve-static](https://github.com/expressjs/serve-static).
 
@@ -184,9 +191,7 @@ class StaticFileServer {
 Aex provides `@session` decorator for default cookie based session management.
 Session in other format can be realized with decorator `@inject` .
 
-### Usage
-
-#### `@session`
+### `@session`
 
 Decorator `@session` takes a store as the parameter. It is an object derived from the abstract class ISessionStore. which is defined like this:
 
@@ -202,7 +207,7 @@ export declare abstract class ISessionStore {
 `RedisStore` can be configurated by passing options through its constructor. The passed options is of the same to the function `createClient` of the package `redis` . You can check the option details [here](https://github.com/NodeRedis/node-redis#options-object-properties)
 
 For `MemoryStore` , you can simply decorate with `@session()` .
-For `RedisStore` , you can decorate with an RedisStore as `@session(redisStore)` .
+For `RedisStore` , you can decorate with an RedisStore as `@session(redisStore)` . Be sure to keep the variable redisStore global, because sessions must share only one store.
 
 ``` ts
 // Must not be used @session(new RedisStore(options)).
@@ -236,3 +241,160 @@ class Session {
 ```
 
 > Share only one store object over requests.
+
+## 5. Data filtering and validation decorators
+
+Aex provides `@filter` to filter and validate data for you.
+
+### `@filter`
+
+Decorator `@filter` will filter `body`, `params` and `query` data for you, and provide fallbacks respectively for each invalid data processing.
+
+Reference [node-form-validator](https://github.com/calidion/node-form-validator) for detailed usage.
+
+```ts
+class User {
+  private name = "Aex";
+  @http("post", "/user/login")
+  @body()
+  @filter({
+    body: {
+      username: {
+        type: "string",
+        required: true,
+        minLength: 4,
+        maxLength: 20
+      },
+      password: {
+        type: "string",
+        required: true,
+        minLength: 4,
+        maxLength: 64
+      }
+    },
+    fallbacks: {
+      body: async(error, req, res, scope) {
+        res.end("Body parser failed!");
+      }
+    }
+  })
+  public async login(req: any, res: any, _scope: any) {
+    // req.body.username
+    // req.body.password
+  }
+
+  @http("get", "/profile/:id")
+  @body()
+  @query()
+  @filter({
+    query: {
+      page: {
+        type: "numeric",
+        required: true
+      }
+    },
+    params: {
+      id: {
+        type: "numeric",
+        required: true
+      }
+    },
+    fallbacks: {
+      params: async function (this: any, _error: any, _req: any, res: any) {
+        this.name = "Alice";
+        res.end("Params failed!");
+      },
+    }
+  })
+  public async id(req: any, res: any, _scope: any) {
+    // req.params.id
+    // req.query.page
+  }
+}
+```
+
+## 6. Error definition decorators
+
+Aex provides `@error` decorator for error definition
+
+## @error
+
+Decorator `@error` will generate errors for you.
+
+Reference [errorable](!https://github.com/calidion/errorable) for detailed usage.
+
+`@error` take two parameters exactly what function `Generator.generate` takes.
+
+```ts
+class User {
+  @http("post", "/error")
+  @error({
+    I: {
+      Love: {
+        You: {
+          code: 1,
+          messages: {
+            "en-US": "I Love U!",
+            "zh-CN": "我爱你！",
+          },
+        },
+      },
+    },
+    Me: {
+      alias: "I",
+    },
+  })
+  public road(_req: any, res: any, scope: any) {
+    const { ILoveYou } = scope.error;
+    // throw new ILoveYou('en-US');
+    // throw new ILoveYou('zh-CN');
+    res.end("User Error!");
+  }
+}
+```
+
+## 7. Custome middleware decorators
+
+Aex provides `@inject` decorator for middleware injection.
+
+`@inject` decrator takes two parameters:
+
+1. injector: the main injected middleware for data further processing or policy checking
+2. fallback: optional fallback when the injector fails and returned `false`
+
+```ts
+class User {
+  private name = "Aex";
+  @http("post", "/user/login")
+  @body()
+  @inject(async (req, res, scope) => {
+      req.session = {
+        user: {
+          name: "ok"
+        }
+      };
+  })
+  @inject(async function(this:User, req, res, scope) {
+      this.name = "Peter";
+      req.session = {
+        user: {
+          name: "ok"
+        }
+      };
+  })
+  @inject(async function(this:User, req, res, scope) => {
+      this.name = "Peter";
+      if (...) {
+        return false
+      }
+  }, async function fallback(this:User, req, res, scope){
+    // some fallback processing
+    res.end("Fallback");
+  })
+  public async login(req: any, res: any, scope: any) {
+    // req.session.user.name
+    // ok
+    ...
+  }
+}
+```
