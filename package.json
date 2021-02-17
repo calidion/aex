@@ -1,6 +1,6 @@
 {
   "name": "@aex/core",
-  "version": "0.12.0",
+  "version": "0.13.0",
   "description": "aex",
   "license": "MIT",
   "repository": "calidion/aex",
@@ -30,6 +30,7 @@
     "watch:test": "jest --watch"
   },
   "dependencies": {
+    "@aex/session": "^0.1.2",
     "@types/busboy": "^0.2.3",
     "@types/finalhandler": "^1.1.0",
     "@types/node": "^14.14.22",

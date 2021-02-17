@@ -1,3 +1,8 @@
+/**
+ * aex
+ * Copyright(c) 2020- calidion<calidion@gmail.com>
+ * MIT Licensed
+ */
 import * as finalhandler from "finalhandler";
 import { IncomingMessage, ServerResponse } from "http";
 import * as staticServer from "serve-static";

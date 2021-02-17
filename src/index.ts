@@ -20,4 +20,5 @@ export * from "./decorators/query";
 export * from "./decorators/error";
 export * from "./decorators/formdata";
 export * from "./decorators/serve";
+export * from "./decorators/session";
 export * from "./util/request";

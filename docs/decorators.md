@@ -7,9 +7,9 @@ Decorators will be enriched over time. Currently aex provides the following deco
 ## 1. HTTP method decorators
 
 This decorators are the most basic decorators, all decorators should follow them. They are
-`@http`, `@get`, `@post`.
+`@http` , `@get` , `@post` .
 
-`@http` is the generic http method decorator. `@get`, `@post` are the shortcuts for `@http`;
+`@http` is the generic http method decorator. `@get` , `@post` are the shortcuts for `@http` ; 
 
 The `@http` decorator defines your http handler with a member function.
 
@@ -20,11 +20,11 @@ The member methods are of `IAsyncMiddleware` type.
 1. http method name(s)
 2. url(s);
 
-You can just pass url(s) if you use http `GET` method only or you can use `@get`.
+You can just pass url(s) if you use http `GET` method only or you can use `@get` .
 
 Here is how your define your handlers.
 
-```ts
+``` ts
 import { http, get, post } from "@aex/core";
 
 class User {
@@ -54,9 +54,9 @@ class User {
 ## 2. Data parsing decorators
 
 These decorators will parse all data passed thought the HTTP protocol.
-They are `@formdata`, `@query`, `@body`.
+They are `@formdata` , `@query` , `@body` .
 
-1. `@formdata` can parse `mulit-part` formdata such as files into `scope.files` and other formdata into `scope.body`. When parsed, you can retrieve your `multi-part` formdata from `scope.files`, `scope.body`.
+1. `@formdata` can parse `mulit-part` formdata such as files into `scope.files` and other formdata into `scope.body`. When parsed, you can retrieve your `multi-part` formdata from `scope.files`,  `scope.body`.
 2. `@query` can parse url query into `scope.query`.
 3. `@body` can parse some simple formdata into `scope.body`.
 
@@ -64,10 +64,10 @@ They are `@formdata`, `@query`, `@body`.
 
 #### `@formdata`
 
-Decorator `@formdata` is a simplified version of node package [`busboy`](https://github.com/mscdex/busboy) for `aex`, only the `headers` options will be auto replaced by `aex`. So you can parse valid options when necesary.
+Decorator `@formdata` is a simplified version of node package [ `busboy` ](https://github.com/mscdex/busboy) for `aex` , only the `headers` options will be auto replaced by `aex` . So you can parse valid options when necesary.
 All uploaded files are in array format, and it parses body as well.
 
-```ts
+``` ts
 import { http, formdata } from "@aex/core";
 
 class Formdata {
@@ -105,17 +105,17 @@ It takes two parameters:
 1. types in ["urlencoded", "raw", "text", "json"]
 2. options the same as body-parser take.
 
-then be parsed into `scope.body`, for compatibility `req.body` is still available.
+then be parsed into `scope.body` , for compatibility `req.body` is still available.
 
 Simply put:
 
-```ts
+``` ts
 @body("urlencoded", { extended: false })
 ```
 
 Full example
 
-```ts
+``` ts
 import { http, body } from "@aex/core";
 
 class User {
@@ -137,7 +137,7 @@ class User {
 
 Decorator @query will parse query for you. After decorated with `@query` you will have `scope.query` to use. `req.query` is available for compatible reasion, but it is discouraged.
 
-```ts
+``` ts
 class Query {
   @http("get", "/profile/:id")
   @query()
@@ -149,7 +149,7 @@ class Query {
 }
 ```
 
-## 3. Static file serving decorators
+## 3. Static file serving decorator
 
 Aex provides `@serve` decorator for static file serving.
 
@@ -166,7 +166,7 @@ It takes two parameters:
 
 then inside the member function you should return the absolute path of of the root of the static files.
 
-```ts
+``` ts
 import { serve } from "@aex/core";
 
 class StaticFileServer {
@@ -178,3 +178,61 @@ class StaticFileServer {
   }
 }
 ```
+
+## 4. Session management decorators
+
+Aex provides `@session` decorator for default cookie based session management.
+Session in other format can be realized with decorator `@inject` .
+
+### Usage
+
+#### `@session`
+
+Decorator `@session` takes a store as the parameter. It is an object derived from the abstract class ISessionStore. which is defined like this:
+
+``` ts
+export declare abstract class ISessionStore {
+    abstract set(id: string, value: any): any;
+    abstract get(id: string): any;
+    abstract destroy(id: string): any;
+}
+```
+
+`aex` provides two default store: `MemoryStore` and `RedisStore` .
+`RedisStore` can be configurated by passing options through its constructor. The passed options is of the same to the function `createClient` of the package `redis` . You can check the option details [here](https://github.com/NodeRedis/node-redis#options-object-properties)
+
+For `MemoryStore` , you can simply decorate with `@session()` .
+For `RedisStore` , you can decorate with an RedisStore as `@session(redisStore)` .
+
+``` ts
+// Must not be used @session(new RedisStore(options)).
+// For sessions share only one store over every request.
+// There must be only one object of the store.
+const store = new RedisStore(options); 
+class Session {
+  @post("/user/login")
+  @session()
+  public async get(req, res, scope) {
+    const {session} = scope;
+    session.user = user;
+  }
+
+  @get("/user/profile")
+  @session()
+  public async get(req, res, scope) {
+    const {session} = scope;
+    const user = session.user;
+    res.end(JSON.stringify(user));
+  }
+
+  @get("/user/redis")
+  @session(store)
+  public async get(req, res, scope) {
+    const {session} = scope;
+    const user = session.user;
+    res.end(JSON.stringify(user));
+  }
+}
+```
+
+> Share only one store object over requests.
