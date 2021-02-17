@@ -4,21 +4,21 @@ Aex is simplified by decorators, so you should be familiar with decorators to fu
 
 Decorators will be enriched over time. Currently aex provides the following decorators:
 
-1. HTTP method decorators: `@http`, `@get`, `@post`
-2. Data parsing decorators: `@formdata`, `@query`, `@body`
-3. Static file serving decorators: `@serve`
-4. Session management decorators: `@session`
-5. Data filtering and validation decorators: `@filter`
-6. Error definition decorators: `@error`
-7. Custome middleware decorators: `@inject`
+1. [HTTP method decorators](#1-http-method-decorators) (`@http`,  `@get`,  `@post`)
+
+2. [Data parsing decorators](#2-data-parsing-decorators) (`@formdata`,  `@query`,  `@body`)
+3. [Static file serving decorators](#3-static-file-serving-decorators) (`@serve`)
+4. [Session management decorators](#4-session-management-decorators) (`@session`)
+5. [Data filtering and validation decorators](#5-data-filtering-and-validation-decorators) ( `@filter`)
+6. [Error definition decorators](#6-error-definition-decorators) (`@error`)
+7. [Custome middleware decorators](#7-custome-middleware-decorators) (`@inject`)
 
 ## 1. HTTP method decorators
 
 This decorators are the most basic decorators, all decorators should follow them. They are
 `@http` , `@get` , `@post` .
 
-
-### `@http`,`@get`, `@post`
+### `@http` , `@get` , `@post`
 
 `@http` is the generic http method decorator. `@get` , `@post` are the shortcuts for `@http` ; 
 
@@ -248,11 +248,11 @@ Aex provides `@filter` to filter and validate data for you.
 
 ### `@filter`
 
-Decorator `@filter` will filter `body`, `params` and `query` data for you, and provide fallbacks respectively for each invalid data processing.
+Decorator `@filter` will filter `body` , `params` and `query` data for you, and provide fallbacks respectively for each invalid data processing.
 
 Reference [node-form-validator](https://github.com/calidion/node-form-validator) for detailed usage.
 
-```ts
+``` ts
 class User {
   private name = "Aex";
   @http("post", "/user/login")
@@ -325,7 +325,7 @@ Reference [errorable](!https://github.com/calidion/errorable) for detailed usage
 
 `@error` take two parameters exactly what function `Generator.generate` takes.
 
-```ts
+``` ts
 class User {
   @http("post", "/error")
   @error({
@@ -362,7 +362,7 @@ Aex provides `@inject` decorator for middleware injection.
 1. injector: the main injected middleware for data further processing or policy checking
 2. fallback: optional fallback when the injector fails and returned `false`
 
-```ts
+``` ts
 class User {
   private name = "Aex";
   @http("post", "/user/login")
