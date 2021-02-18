@@ -32,18 +32,17 @@ It is also an example:
 
 # Content
 
-Aex is built and powerized by the following parts.
-
 1. [Install](#install)
 2. [Quick Start](#quick-start)
 3. [Framework functions](#framework-functions)
 4. [Decorators](#decorators)
 5. [Usage with no decorators](#usage-with-no-decorators)
-6. [Websocket support](#websocket-support)
-7. [Middlewares](#middlewares)
-8. [Scope](#scope)
-9. [Express Middleware Integration](#use-middlewares-from-expressjs)
-10. [Get the web server](#accessable-members)
+6. [Middlewares](#middlewares)
+7. [Scope](#scope)
+8. [Express Middleware Integration](#use-middlewares-from-expressjs)
+9. [Get the web server](#accessable-members)
+10. [Websocket support](#websocket-support)
+
 
 ## Shortcuts for decorators
 
@@ -92,7 +91,6 @@ yarn add @aex/core
 2. Create an aex instance
 
     ``` ts
-    // create Aex instance
     const aex = new Aex();
     ```
 
@@ -148,7 +146,8 @@ aex.push(HelloAex, parameter1, parameter2, ..., parameterN);
 
 ## prepare
 
-`prepare` is used here to init middlewares and controllers if controllers are pushed into the `aex` instance. It takes no parameter and return the `aex` instance. so you can invoke the `start` function of aex.
+`prepare` is used here to init middlewares and business controllers if controllers are pushed into the `aex` instance. It takes no parameter and return the `aex` instance. so you can invoke the `start` function of aex.
+Aex itself has no mvc concepts, aex has the Web Straight Line concept that process all things on the line for each request.
 
 ``` ts
 await aex.prepare().start();
