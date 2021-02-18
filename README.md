@@ -38,7 +38,7 @@ It can be breifly describe as the following diagram:
 
 > The Web Staight Line
 
-![](./docs/Web_Straight_Line.png)
+![](./docs/Web_Straight_Line-1.png)
 
 # Content
 
