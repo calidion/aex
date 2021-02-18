@@ -30,6 +30,16 @@ It is also an example:
 4. Consider web interactions as phrased straight lines, which we call it Web Straight Line.
 5. No MVC, soly focusing on architecture which is the web logic.
 
+# What is Web Straight Line?
+
+Web Straight Line is used to describe the phrases of the processes on the http/web request.
+
+It can be breifly describe as the following diagram:
+
+> The Web Staight Line
+
+![](./docs/Web_Straight_Line.png)
+
 # Content
 
 1. [Install](#install)
@@ -42,7 +52,6 @@ It is also an example:
 8. [Express Middleware Integration](#use-middlewares-from-expressjs)
 9. [Get the web server](#accessable-members)
 10. [Websocket support](#websocket-support)
-
 
 ## Shortcuts for decorators
 
