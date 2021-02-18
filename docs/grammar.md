@@ -8,12 +8,5 @@ https://bottlecaps.de/rr/ui
 
 ``` grammar
 Web_Straight_Line
-         ::= 
-( 'Request' | http | websocket )
-( 'routing' | method url )
-( 'authoriation' | cookie | session | http-auth )
-( 'data parsing' | query | formdata | files )
-( 'policy' | isLogined | isOwner | isAdmin | '...' )
-( 'bussiness logic' | ((  'command' | (get process) )  ouput))
-('Response' | html | xml | json | rest | graphql | stream '...')
+         ::= ( 'Request' | http | websocket ) ( 'routing' | method url ) ( 'authoriation' | cookie | session | http-auth ) ( 'data parsing' | query | formdata | files ) ( 'policy' | isLogined | isOwner | isAdmin | '...' ) ( 'bussiness logic' | ( 'command' | get process ) ouput ) ( 'Response' | html | xml | json | rest | graphql | stream | '...' )
 ```
