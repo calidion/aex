@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@aex/session@^0.1.2":
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/@aex/session/-/session-0.1.2.tgz#42c9ef02cc61da6ebf4d790f225834c66bc72728"
-  integrity sha512-7Ocjsj1/FgvZOhrInLmMaOd5l4NLdIAPSybqcK0mox8ZDr5PNYlxCu96XL2tyZGvmSWPLHIfrJblr93eSZpFnA==
+"@aex/session@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@aex/session/-/session-0.2.0.tgz#53fd44b9ae213d5eda3baa1f8edba1a68c1b3305"
+  integrity sha512-0DykzgHmE45lP7FVXJWG3WTDeCT8Kk4AY3150aY3mvbkPN4agX63M8Inbq35vpqmTQL9TUH+GNVRasZD+fnT/w==
   dependencies:
     "@types/cookie" "^0.4.0"
     "@types/redis" "^2.8.28"

@@ -17,21 +17,10 @@ It is also an example:
 
 1. To show that callbacks are not needed with promise/async/await.
 2. To use middlewares in a linear way instead of stacked way which is insecure.
+
    > For the stacked middleware model will carry response back to the top most so called middleware pushed, where every middleware can access to the body returned.
+
 3. To pass some vairiables through middlewares and to the final handler.
-
-# Content
-
-Aex is built and powerized by the following parts.
-
-1. [Core functions](#core-functions)
-2. [Decorators](#decorators)
-3. [Usage with no decorator](#usage)
-4. [Websocket support](#websocket-support)
-5. [Middlewares](#middlewares)
-6. [Scope](#scope)
-7. [Express Middleware Integration](#use-middlewares-from-expressjs)
-8. [Get the web server](#accessable-members)
 
 # Philosophy
 
@@ -41,81 +30,135 @@ Aex is built and powerized by the following parts.
 4. Consider web interactions as phrased straight lines, which we call it Web Straight Line.
 5. No MVC, soly focusing on architecture which is the web logic.
 
-# Quick Start
+# What is Web Straight Line?
 
-## Add @aex/core to your project
+Web Straight Line is used to describe the phrases of the processes on the http/web request.
 
-```sh
+It can be breifly describe as the following diagram:
+
+> The Web Staight Line
+
+![](./docs/Web_Straight_Line-1.png)
+
+# Content
+
+1. [Install](#install)
+2. [Quick Start](#quick-start)
+3. [Framework functions](#framework-functions)
+4. [Decorators](#decorators)
+5. [Usage with no decorators](#usage-with-no-decorators)
+6. [Middlewares](#middlewares)
+7. [Scope](#scope)
+8. [Express Middleware Integration](#use-middlewares-from-expressjs)
+9. [Get the web server](#accessable-members)
+10. [Websocket support](#websocket-support)
+
+## Shortcuts for decorators
+
+1. [HTTP method decorators](#1-http-method-decorators) (`@http`,  `@get`,  `@post`)
+
+2. [Data parsing decorators](#2-data-parsing-decorators) (`@formdata`,  `@query`,  `@body`)
+3. [Static file serving decorators](#3-static-file-serving-decorators) (`@serve`)
+4. [Session management decorators](#4-session-management-decorators) (`@session`)
+5. [Data filtering and validation decorators](#5-data-filtering-and-validation-decorators) ( `@filter`)
+6. [Error definition decorators](#6-error-definition-decorators) (`@error`)
+7. [Custome middleware decorators](#7-custome-middleware-decorators) (`@inject`)
+
+# Install
+
+if you use npm
+
+``` sh
 npm install @aex/core # or npm i @aex/core
 ```
 
 or if you use yarn
 
-```sh
+``` sh
 yarn add @aex/core
 ```
 
-## Use @http to enable web processing ability
+# Quick Start
 
-```ts
-import { Aex, http } from "@aex/core";
+1. Use `@http` to enable a class with web ability
 
-class HelloAex {
-  private message = "aex";
-  @http("*", "*")
-  public all(_req: any, res: any, _scope: any) {
-    res.end("Hello " + this.message + "!");
-  }
-}
-```
+    ``` ts
+    import { Aex, http } from "@aex/core";
 
-## Create aex instance
+    class HelloAex {
+      private name = "Alice";
+      constructor(name: string) {
+        this.name = name;
+      }
+      @http("*", "*")
+      public all(_req: any, res: any, _scope: any) {
+        res.end("Hello from " + this.name + "!");
+      }
+    }
+    ```
 
-```ts
-// create Aex instance
-const aex = new Aex();
-```
+2. Create an aex instance
 
-## Add your web handler to aex with parameters
+    ``` ts
+    const aex = new Aex();
+    ```
 
-```ts
-// push your controller into aex
+3. Push your class to aex with parameters if you
+
+    ``` ts
+    // push your handler into aex with constructor parameters in order
+    aex.push(HelloAex, "Eric");
+    ```
+
+4. Prepare aex enviroment
+
+    ``` ts
+    aex.prepare();
+    ```
+
+5. Start aex web server
+
+    ``` ts
+    aex.start(8080).then();
+    // or
+    await aex.start(8080);
+    ```
+
+# Framework functions
+
+The aex object has many functions for middlewares and classes.
+
+They are:
+
+1. [use](#use)          add a middleware
+2. [push](#push)        push a class
+3. [prepare](#prepare)  prepare the server
+4. [start](#start)      start the server
+
+## use
+
+Add middlewares to aex, see detailed explanations in [middlewares](#middlewares). These middlewares will be global to all http requests.
+
+## push
+
+push a controller class to aex, it takes on parameter and other arguments:
+
+1. aClass: a class prototype.
+2. args: takes the rest arguments for the class constructor
+
+``` ts
 aex.push(HelloAex);
+//or
+aex.push(HelloAex, parameter1, parameter2, ..., parameterN);
+// will be invoked as `new HelloAlex(parameter1, parameter2, ..., parameterN)`
 ```
-
-## Prepare aex enviroment
-
-```ts
-aex.prepare();
-```
-
-### Start aex web server
-
-```ts
-aex.start(8080).then();
-// or
-await aex.start(8080);
-```
-
-# Install
-
-```sh
-npm i @aex/core
-```
-
-or
-
-```sh
-yarn add @aex/core
-```
-
-# Core functions
 
 ## prepare
 
-`prepare` is used here to init middlewares and controllers if controllers are pushed into the `aex` instance. It takes no parameter and return the `aex` instance. so you can invoke the `start` function of aex.
+`prepare` is used here to init middlewares and business controllers if controllers are pushed into the `aex` instance. It takes no parameter and return the `aex` instance. so you can invoke the `start` function of aex.
+Aex itself has no mvc concepts, aex has the Web Straight Line concept that process all things on the line for each request.
 
-```ts
+``` ts
 await aex.prepare().start();
 // or
 aex
@@ -134,56 +177,45 @@ aex
 2. `ip` the ip address where the port bind to, default to localhost
 3. `prepare` prepare middlewares or not, used when middlewares are not previously prepared
 
-## push
-
-push a controller class to aex, it takes on parameter and other arguments:
-
-1. aClass: a class prototype.
-2. args: takes the rest arguments for the class constructor
-
-```ts
-aex.push(HelloAex);
-//or
-aex.push(HelloAex, parameter1, parameter2, ..., parameterN);
-// will be invoked as `new HelloAlex(parameter1, parameter2, ..., parameterN)`
-```
-
-## use
-
-add middlewares to aex, see detailed explanation in [middlewares](#middlewares)
-
 # Decorators
 
 Aex is simplified by decorators, so you should be familiar with decorators to full utilize aex.
 
-Decorators will be enriched over time. Currently aex provides 6 most important decorators. They are
-`@inject`, `@http`, `@body`, `@query`, `@filter`, `@error`.
+Decorators will be enriched over time. Currently aex provides the following decorators:
 
-1. `@inject` is the generate purpose decorator for client users to customize their handling. Users can inject any middleware with `@inject`;
+1. [HTTP method decorators](#1-http-method-decorators) (`@http`,  `@get`,  `@post`)
 
-2. `@http` defines your http handler with a member function, it is the most important and fundamental decorator for `aex` as a http web server.
-3. `@body` defines your way to parse your body.
-4. `@query` extract http query into `req.query` and `scope.query`;
-5. `@filter` fiters and validates data from http requests, takes `body`, `params` and `query` types only.
-6. `@error` defines scoped errors
+2. [Data parsing decorators](#2-data-parsing-decorators) (`@formdata`,  `@query`,  `@body`)
+3. [Static file serving decorators](#3-static-file-serving-decorators) (`@serve`)
+4. [Session management decorators](#4-session-management-decorators) (`@session`)
+5. [Data filtering and validation decorators](#5-data-filtering-and-validation-decorators) ( `@filter`)
+6. [Error definition decorators](#6-error-definition-decorators) (`@error`)
+7. [Custome middleware decorators](#7-custome-middleware-decorators) (`@inject`)
 
-## @http
+## 1. HTTP method decorators
 
-Aex provides the `@http` decorator to ease the way http requests being handled by classes. It is very simple and intuitive.
+This decorators are the most basic decorators, all decorators should follow them. They are
+`@http` , `@get` , `@post` .
 
-### Define a class with it's methods decorated by `@http`
+### `@http` , `@get` , `@post`
 
-The member methods are of `IAsyncMiddleware` type as well.
+`@http` is the generic http method decorator. `@get` , `@post` are the shortcuts for `@http` ; 
+
+The `@http` decorator defines your http handler with a member function.
+
+The member methods are of `IAsyncMiddleware` type.
 
 `@http` takes two parameter:
 
 1. http method name(s)
 2. url(s);
 
-You can just pass url(s) if you use http `GET` method only.
+You can just pass url(s) if you use http `GET` method only or you can use `@get` .
 
-```ts
-import { http } from "@aex/core";
+Here is how your define your handlers.
+
+``` ts
+import { http, get, post } from "@aex/core";
 
 class User {
   @http("get", ["/profile", "/home"])
@@ -200,83 +232,206 @@ class User {
 
   @http(["/user/followers", "/user/subscribes"])
   followers(req, res, scope) {}
+
+  @get(["/user/get", "/user/gets"])
+  rawget(req, res, scope) {}
+
+  @post("/user/post")
+  rawpost(req, res, scope) {}
 }
 ```
 
-### Get router from One
+## 2. Data parsing decorators
 
-```ts
-import { One } from "@aex/core";
-const router = One.instance();
+These decorators will parse all data passed thought the HTTP protocol.
+They are `@formdata` , `@query` , `@body` .
+
+1. `@formdata` can parse `mulit-part` formdata such as files into `scope.files` and other formdata into `scope.body`. When parsed, you can retrieve your `multi-part` formdata from `scope.files`,  `scope.body`.
+2. `@query` can parse url query into `scope.query`.
+3. `@body` can parse some simple formdata into `scope.body`.
+
+### `@formdata`
+
+Decorator `@formdata` is a simplified version of node package [ `busboy` ](https://github.com/mscdex/busboy) for `aex` , only the `headers` options will be auto replaced by `aex` . So you can parse valid options when necesary.
+All uploaded files are in array format, and it parses body as well.
+
+``` ts
+import { http, formdata } from "@aex/core";
+
+class Formdata {
+  protected name = "formdata";
+
+  @http("post", "/file/upload")
+  @formdata()
+  public async upload(_req: any, res: any, scope: any) {
+    const { files, body } = scope;
+
+    // Access your files
+    const uploadedSingleFile = files["fieldname1"][0];
+    const uploadedFileArray = files["fieldname2"];
+
+    // Access your file info
+
+    uploadedSingleFile.temp; // temporary file saved
+    uploadedSingleFile.filename; // original filename
+    uploadedSingleFile.encoding; // file encoding
+    uploadedSingleFile.mimetype; // mimetype
+
+    // Access none file form data
+    const value = body["fieldname3"];
+    res.end("File Uploaded!");
+  }
+}
 ```
 
-### New the class
+### `@body`
 
-You need to create an instance of your class for request being processed.
+Decorator @body provides a simple way to process data with body parser. It a is a simplified version of node package [body-parser](https://github.com/expressjs/body-parser).
 
-```ts
-const user = new User();
-// do some initialization
-```
+It takes two parameters:
 
-### Start Aex server
+1. types in ["urlencoded", "raw", "text", "json"]
+2. options the same as body-parser take.
 
-```ts
-import { Aex } from "@aex/core";
-const aex = new Aex();
-aex.use(router.toMiddleware());
-aex.start();
-```
+then be parsed into `scope.body` , for compatibility `req.body` is still available.
 
-## @body
+Simply put:
 
-Decorator @body provides a simple way to process data with body parser.
-
-@body accept body parser package's function and its options, and they are optional.
-
-```ts
+``` ts
 @body("urlencoded", { extended: false })
 ```
 
-and should succeed to @http decorator.
+Full example
 
-```ts
-import { http } from "@aex/core";
+``` ts
+import { http, body } from "@aex/core";
 
 class User {
   @http("post", "/user/login")
   @body("urlencoded", { extended: false })
-  login(req, res, scope) {}
+  login(req, res, scope) {
+    const { body } = scope;
+  }
 
   @http("post", "/user/logout")
   @body()
-  login(req, res, scope) {}
+  login(req, res, scope) {
+    const { body } = scope;
+  }
 }
 ```
 
-You may look up npm package `body-parser` for detailed usage.
+### `@query`
 
-## @query
+Decorator @query will parse query for you. After decorated with `@query` you will have `scope.query` to use. `req.query` is available for compatible reasion, but it is discouraged.
 
-Decorator @query will parse query for you. After @query you will have `req.query` to use.
-
-```ts
+``` ts
+class Query {
   @http("get", "/profile/:id")
   @query()
   public async id(req: any, res: any, _scope: any) {
     // get /profile/111?page=20
-    req.query.page
+    req.query.page;
     // 20
   }
+}
 ```
 
-## @filter
+## 3. Static file serving decorators
 
-Decorator @filter will filter `body`, `params` and `query` data for you.
+Aex provides `@serve` decorator for static file serving.
+
+### `@serve`
+
+Decorator `@serve` provides a simple way to serve static files. It a is a simplified version of node package [serve-staticserve-static](https://github.com/expressjs/serve-static).
+
+It takes two parameters:
+
+1. url: the base url for your served files.
+2. options: exact options package `serve-static` takes.
+
+then inside the member function you should return the absolute path of of the root of the static files.
+
+``` ts
+import { serve } from "@aex/core";
+
+class StaticFileServer {
+  protected name = "formdata";
+
+  @serve("/assets")
+  public async upload() {
+    return resolve(__dirname, "./fixtures");
+  }
+}
+```
+
+## 4. Session management decorators
+
+Aex provides `@session` decorator for default cookie based session management.
+Session in other format can be realized with decorator `@inject` .
+
+### `@session`
+
+Decorator `@session` takes a store as the parameter. It is an object derived from the abstract class ISessionStore. which is defined like this:
+
+``` ts
+export declare abstract class ISessionStore {
+    abstract set(id: string, value: any): any;
+    abstract get(id: string): any;
+    abstract destroy(id: string): any;
+}
+```
+
+`aex` provides two default store: `MemoryStore` and `RedisStore` .
+`RedisStore` can be configurated by passing options through its constructor. The passed options is of the same to the function `createClient` of the package `redis` . You can check the option details [here](https://github.com/NodeRedis/node-redis#options-object-properties)
+
+For `MemoryStore` , you can simply decorate with `@session()` .
+For `RedisStore` , you can decorate with an RedisStore as `@session(redisStore)` . Be sure to keep the variable redisStore global, because sessions must share only one store.
+
+``` ts
+// Must not be used @session(new RedisStore(options)).
+// For sessions share only one store over every request.
+// There must be only one object of the store.
+const store = new RedisStore(options); 
+class Session {
+  @post("/user/login")
+  @session()
+  public async get(req, res, scope) {
+    const {session} = scope;
+    session.user = user;
+  }
+
+  @get("/user/profile")
+  @session()
+  public async get(req, res, scope) {
+    const {session} = scope;
+    const user = session.user;
+    res.end(JSON.stringify(user));
+  }
+
+  @get("/user/redis")
+  @session(store)
+  public async get(req, res, scope) {
+    const {session} = scope;
+    const user = session.user;
+    res.end(JSON.stringify(user));
+  }
+}
+```
+
+> Share only one store object over requests.
+
+## 5. Data filtering and validation decorators
+
+Aex provides `@filter` to filter and validate data for you.
+
+### `@filter`
+
+Decorator `@filter` will filter `body` , `params` and `query` data for you, and provide fallbacks respectively for each invalid data processing.
 
 Reference [node-form-validator](https://github.com/calidion/node-form-validator) for detailed usage.
 
-```ts
+``` ts
 class User {
   private name = "Aex";
   @http("post", "/user/login")
@@ -337,6 +492,10 @@ class User {
 }
 ```
 
+## 6. Error definition decorators
+
+Aex provides `@error` decorator for error definition
+
 ## @error
 
 Decorator `@error` will generate errors for you.
@@ -345,7 +504,7 @@ Reference [errorable](!https://github.com/calidion/errorable) for detailed usage
 
 `@error` take two parameters exactly what function `Generator.generate` takes.
 
-```ts
+``` ts
 class User {
   @http("post", "/error")
   @error({
@@ -373,16 +532,16 @@ class User {
 }
 ```
 
-## @inject
+## 7. Custome middleware decorators
 
-Inject any middleware when necessary. But you should be careful with middlewares' order.
+Aex provides `@inject` decorator for middleware injection.
 
 `@inject` decrator takes two parameters:
 
 1. injector: the main injected middleware for data further processing or policy checking
 2. fallback: optional fallback when the injector fails and returned `false`
 
-```ts
+``` ts
 class User {
   private name = "Aex";
   @http("post", "/user/login")
@@ -419,46 +578,47 @@ class User {
 }
 ```
 
-# Usage
 
-## 1. Create an Aex instance
+# Usage with no decorators
 
-```ts
-const aex = new Aex();
-```
+1. Create an Aex instance
 
-## 2. Create a Router
+    ``` ts
+    const aex = new Aex();
+    ```
 
-```ts
-const router = new Router();
-```
+2. Create a Router
 
-## 2. Setup the option for handler
+    ``` ts
+    const router = new Router();
+    ```
 
-```ts
-router.get("/", async (req, res, scope) => {
-  // request processing time started
-  console.log(scope.time.stated);
-  // processing time passed
-  console.log(scope.time.passed);
-  res.end("Hello Aex!");
-});
-```
+3. Setup the option for handler
 
-## 3. Use router as an middleware
+    ``` ts
+    router.get("/", async (req, res, scope) => {
+      // request processing time started
+      console.log(scope.time.stated);
+      // processing time passed
+      console.log(scope.time.passed);
+      res.end("Hello Aex!");
+    });
+    ```
 
-```ts
-aex.use(router.toMiddleware());
-```
+4. Use router as an middleware
 
-## 4. Start the server
+    ``` ts
+    aex.use(router.toMiddleware());
+    ```
 
-```ts
-const port = 3000;
-const host = "localhost";
-const server = await aex.start(port, host);
-// server === aex.server
-```
+5. Start the server
+
+    ``` ts
+    const port = 3000;
+    const host = "localhost";
+    const server = await aex.start(port, host);
+    // server === aex.server
+    ```
 
 # Websocket support
 
@@ -466,80 +626,92 @@ const server = await aex.start(port, host);
 
 1. Create a `WebSocketServer` instance
 
-```ts
-const aex = new Aex();
-const server = await aex.start();
-const ws = new WebSocketServer(server);
-```
+    ``` ts
+    const aex = new Aex();
+    const server = await aex.start();
+    const ws = new WebSocketServer(server);
+    ```
 
 2. Get handler for one websocket connection
 
-```ts
-ws.on(WebSocketServer.ENTER, (handler) => {
-  // process/here
-});
-```
+    ``` ts
+    ws.on(WebSocketServer.ENTER, (handler) => {
+      // process/here
+    });
+    ```
 
 3. Listen on user-customized events
 
-```ts
-ws.on(WebSocketServer.ENTER, (handler) => {
-  handler.on("event-name", (data) => {
-    // data.message = "Hello world!"
-  });
-});
-```
+    ``` ts
+    ws.on(WebSocketServer.ENTER, (handler) => {
+      handler.on("event-name", (data) => {
+        // data.message = "Hello world!"
+      });
+    });
+    ```
 
 4. Send message to browser / client
 
-```ts
-ws.on(WebSocketServer.ENTER, (handler) => {
-  handler.send("event-name", { key: "value" });
-});
-```
+    ``` ts
+    ws.on(WebSocketServer.ENTER, (handler) => {
+      handler.send("event-name", { key: "value" });
+    });
+    ```
 
 5. New browser/client WebSocket object
 
-```ts
-const wsc: WebSocket = new WebSocket("ws://localhost:3000/path");
-wsc.on("open", function open() {
-  wsc.send("");
-});
-```
+    ``` ts
+    const wsc: WebSocket = new WebSocket("ws://localhost:3000/path");
+    wsc.on("open", function open() {
+      wsc.send("");
+    });
+    ```
 
 6. Listen on user-customized events
 
-```ts
-ws.on("new-message", () => {
-  // process/here
-});
-```
+    ``` ts
+    ws.on("new-message", () => {
+      // process/here
+    });
+    ```
 
 7. Sending ws message in browser/client
 
-```ts
-const wsc: WebSocket = new WebSocket("ws://localhost:3000/path");
-wsc.on("open", function open() {
-  wsc.send(
-    JSON.stringify({
-      event: "event-name",
-      data: {
-        message: "Hello world!",
-      },
-    })
-  );
-});
-```
+    ``` ts
+    const wsc: WebSocket = new WebSocket("ws://localhost:3000/path");
+    wsc.on("open", function open() {
+      wsc.send(
+        JSON.stringify({
+          event: "event-name",
+          data: {
+            message: "Hello world!",
+          },
+        })
+      );
+    });
+    ```
 
 8. Use websocket middlewares
 
-```ts
-ws.use(async (req, ws, scope) => {
-  // return false
-});
-```
+    ``` ts
+    ws.use(async (req, ws, scope) => {
+      // return false
+    });
+    ```
 
 # Middlewares
+
+Middlewares are defined like this:
+
+```ts
+export type IAsyncMiddleware = (
+  req: Request,
+  res: Response,
+  scope?: Scope
+) => Promise<boolean | undefined | null | void>;
+```
+
+They return promise. so they must be called with `await` or `.then()`.
 
 ## Global middlewares
 
@@ -547,7 +719,7 @@ Global middlewares are effective all over the http request process.
 
 They can be added by `aex.use` function.
 
-```ts
+``` ts
 aex.use(async (req, res, scope) => {
   // process 1
   // return false
@@ -573,13 +745,13 @@ aex.use(async (req, res, scope) => {
 
 Handler specific middlewares are effective only to the specific handler.
 
-They can be optionally added to the handler option via the optional attribute `middlewares`.
+They can be optionally added to the handler option via the optional attribute `middlewares` .
 
-the `middlewares` attribute is an array of async functions of `IAsyncMiddleware`.
+the `middlewares` attribute is an array of async functions of `IAsyncMiddleware` .
 
 so we can simply define handler specific middlewares as follows:
 
-```ts
+``` ts
 router.get(
   "/",
   async (req, res, scope) => {
@@ -607,7 +779,7 @@ router.get(
 
 Websocket middlewares are of the same to the above middlewares except that the parameters are of different.
 
-```ts
+``` ts
 type IWebSocketAsyncMiddleware = (
   req: Request,
   socket: WebSocket,
@@ -615,7 +787,7 @@ type IWebSocketAsyncMiddleware = (
 ) => Promise<boolean | undefined | null | void>;
 ```
 
-The Websocket Middlewares are defined as `IWebSocketAsyncMiddleware`, they pass three parameters:
+The Websocket Middlewares are defined as `IWebSocketAsyncMiddleware` , they pass three parameters:
 
 1. the http request
 2. the websocket object
@@ -627,11 +799,11 @@ THe middlewares can stop websocket from further execution by return `false`
 
 ## server
 
-The node system `http.Server`.
+The node system `http.Server` .
 
-Accessable through `aex.server`.
+Accessable through `aex.server` .
 
-```ts
+``` ts
 const aex = new Aex();
 const server = await aex.start();
 expect(server === aex.server).toBeTruthy();
@@ -642,18 +814,18 @@ server.close();
 
 Aex provides scoped data for global and local usage.
 
-A scope object is passed by middlewares and handlers right after `req`, `res` as the third parameter.
+A scope object is passed by middlewares and handlers right after `req` , `res` as the third parameter.
 
 It is defined in `IAsyncMiddleware` as the following:
 
-```ts
+``` ts
 async (req, res, scope) => {
   // process N
   // return false
 };
 ```
 
-the `scope` variable has 8 native attributes: `time`, `outer`, `inner`, `query`, `params`, `body`, `error`, `debug`
+the `scope` variable has 8 native attributes: `time` , `outer` , `inner` , `query` , `params` , `body` , `error` , `debug`
 
 The `time` attribute contains the started time and passed time of requests.
 The `outer` attribute is to store general or global data.
@@ -668,25 +840,25 @@ The `debug` attribute is to provide handlers the debugging ability.
 
 ### Get the requesting time
 
-```ts
+``` ts
 scope.time.started;
 // 2019-12-12T09:01:49.543Z
 ```
 
 ### Get the passed time
 
-```ts
+``` ts
 scope.time.passed;
 // 2019-12-12T09:01:49.543Z
 ```
 
 ## `outer` and `inner`
 
-The `outer` and `inner`variables are objects used to store data for different purposes.
+The `outer` and `inner` variables are objects used to store data for different purposes.
 
-You can simply assign them a new attribute with data;
+You can simply assign them a new attribute with data; 
 
-```ts
+``` ts
 scope.inner.a = 100;
 scope.outer.a = 120;
 ```
@@ -695,13 +867,13 @@ scope.outer.a = 120;
 
 `debug` is provided for debugging purposes.
 
-It is a simple import of the package `debug`.
+It is a simple import of the package `debug` .
 
-Its usage is of the same to the package `debug`, go [debug](https://github.com/visionmedia/debug) for detailed info.
+Its usage is of the same to the package `debug` , go [debug](https://github.com/visionmedia/debug) for detailed info.
 
 Here is a simple example.
 
-```ts
+``` ts
 async (req, res, scope) => {
   const { debug } = scope;
   const logger = debug("aex:scope");
@@ -711,7 +883,7 @@ async (req, res, scope) => {
 
 ## all these build-in attribute are readonly
 
-```ts
+``` ts
 // scope.outer = {};  // Wrong operation!
 // scope.inner = {};   // Wrong operation!
 // scope.time = {};    // Wrong operation!
@@ -730,7 +902,7 @@ Aex provide a way for express middlewares to be translated into Aex middlewares.
 
 You need just a simple call to `toAsyncMiddleware` to generate Aex's async middleware.
 
-```ts
+``` ts
 const oldMiddleware = (_req: any, _res: any, next: any) => {
   // ...
   next();
@@ -745,21 +917,22 @@ aex.use(pOld);
 
 # Tests
 
-```
+``` 
 npm install
 npm test
 ```
 
-
 # No semver
+
 Semver has been ruined node.js npm for a long time, aex will not follow it. Aex will warn every user to keep aex version fixed and take care whenever update to anew version. 
 Aex follows a general versioning called [Effective Versioning](https://github.com/calidion/effective-versioning).
 
-
 # No callbacks in middleware
+
 aex is anti-koa which is wrong and misleading just like semver.
 
 # All lives matter
+
 aex is an anti BLM project and a protector of law and order.
 
 # Lincense
