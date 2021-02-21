@@ -49,9 +49,10 @@ It can be breifly describe as the following diagram:
 5. [Usage with no decorators](#usage-with-no-decorators)
 6. [Middlewares](#middlewares)
 7. [Scope](#scope)
-8. [Express Middleware Integration](#use-middlewares-from-expressjs)
-9. [Get the web server](#accessable-members)
-10. [Websocket support](#websocket-support)
+8. [Helper](#helper)
+9. [Express Middleware Integration](#use-middlewares-from-expressjs)
+10. [Get the web server](#accessable-members)
+11. [Websocket support](#websocket-support)
 
 ## Shortcuts for decorators
 
@@ -63,6 +64,10 @@ It can be breifly describe as the following diagram:
 5. [Data filtering and validation decorators](#5-data-filtering-and-validation-decorators) ( `@filter`)
 6. [Error definition decorators](#6-error-definition-decorators) (`@error`)
 7. [Custome middleware decorators](#7-custome-middleware-decorators) (`@inject`)
+
+## Shortcuts for helpers
+
+1. [pagination with `paginate` function](#paginate)
 
 # Install
 
@@ -895,6 +900,72 @@ async (req, res, scope) => {
 // scope.time.started = {};  // Wrong operation!
 // scope.time.passed = {};   // Wrong operation!
 ```
+
+# Helpers
+
+Helpers are special middlewares with parameters to ease some fixed pattern with web development.
+
+They must work with decorator `@inject`.
+
+The first aviable helper is `paginate`.
+
+## paginate
+
+Helper `paginate` can help with your pagination data parsing and filtering. It gets the correct value for you, so you can save your code parsing and correcting the pagination data before using them.
+
+### paramters
+
+`paginate` is function takes two parameter:
+
+1. `limit` is the default value of limitation for pagination, if the request is not specified. This function defaults it to `20`, so you your request doesn't specific a value to `limit`, it will be assigned `20`.
+
+2. `type` is the type data you use for pagination, it can be `body`, `params`, `query`. `query` is the default one. Before use `paginate`, you must parsed your data. For if you use `body` for pagination, normally your reuqest handlers should be deocrated with `@body`. Becuase params are parsed internally, using params needs no docrator.
+   The data to be parsed must contain two parameters which should be named with : `page`, `limit`.
+   for type `query`, pagination data can be : `list?page=2&limit=30`;
+
+### use
+
+after parsing, `scope` will be added a attribute `pagination`, which is a object have three attribute: `page`, `limit`, `offset`. so you can simply extract them with
+
+```ts
+const {
+  pagination: { page, limit, offset },
+} = scope;
+```
+
+Here is how to use helper `paginate`.
+
+```ts
+class Paginator {
+  @http('/page/query')
+  @query()
+  @inject(paginate(10, 'query'))
+  async public pageWithQuery(req, res, scope) {
+    const {pagination: {page, limit, offset}} = scope;
+
+    ...
+  }
+
+  @http('/page/body')
+  @body()
+  @inject(paginate(10, 'body'))
+  async public pageWithBody(req, res, scope) {
+    const {pagination: {page, limit, offset}} = scope;
+
+    ...
+  }
+
+  @http('/page/params/:page/:limit')
+  @body()
+  @inject(paginate(10, 'body'))
+  async public pageWithParams(req, res, scope) {
+    const {pagination: {page, limit, offset}} = scope;
+
+    ...
+  }
+}
+```
+
 
 # Use middlewares from expressjs
 
