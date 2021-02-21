@@ -1,7 +1,13 @@
 // import * as express from 'express';
 // tslint:disable-next-line:no-duplicate-imports
 
-import { Aex, One } from "../../src/index";
+import {
+  Aex,
+  One,
+  paginate,
+  parseStringToNumber,
+  query,
+} from "../../src/index";
 import { body } from "../../src/index";
 import { http } from "../../src/index";
 import { inject } from "../../src/index";
@@ -13,6 +19,8 @@ class Inject {
   public fallbacked = false;
 
   @http("post", "/user/login")
+  @query()
+  @inject(paginate())
   @body()
   // tslint:disable-next-line: variable-name
   @inject(async function (this: any, _req, _res, scope) {
@@ -26,6 +34,9 @@ class Inject {
     }
   })
   public async login(req: any, res: any, scope: any) {
+    expect(scope.query.page === 1);
+    expect(scope.query.limit === 20);
+    expect(scope.query.offset === 0);
     expect(this.name === "inject");
     expect(req.body.username === "aaaa");
     expect(req.body.password === "sosodddso");
@@ -56,9 +67,14 @@ class Inject {
     res.end("Inject All!");
   }
   @http("post", "/user/nofallback")
+  @query()
+  @inject(paginate(22, "query"))
   @body()
   // tslint:disable-next-line: variable-name
-  @inject(async function (this: Inject, _req, res) {
+  @inject(async function (this: Inject, _req, res, scope: any) {
+    expect(scope.query.page === 1);
+    expect(scope.query.limit === 22);
+    expect(scope.query.offset === 0);
     expect(this.name === "inject");
     res.end("No Fallback!");
     return false;
@@ -124,6 +140,8 @@ test("Should fall with out fallback", async () => {
     "fallback"
   );
   expect(instance.fallback).toBeTruthy();
+
+  expect(parseStringToNumber("10") === 10).toBeTruthy();
 });
 
 afterAll(async () => {

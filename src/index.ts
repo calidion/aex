@@ -21,4 +21,5 @@ export * from "./decorators/error";
 export * from "./decorators/formdata";
 export * from "./decorators/serve";
 export * from "./decorators/session";
+export * from "./helpers/paginator";
 export * from "./util/request";
