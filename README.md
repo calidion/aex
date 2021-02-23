@@ -994,9 +994,11 @@ aex.use(pOld);
 > You should be cautious to use express middlewares.
 > Full testing is appreciated.
 
+# [Upgrade from Expressjs](./docs/upgrade%20from%20expressjs.md)
+
 # Tests
 
-```
+```sh
 npm install
 npm test
 ```
