@@ -55,7 +55,6 @@ It can be breifly describe as the following diagram:
 11. [Websocket support](#websocket-support)
 12. [Upgrade from Expressjs](./docs/upgrade%20from%20expressjs.md)
 
-
 ## Shortcuts for decorators
 
 1. [HTTP method decorators](#1-http-method-decorators) (`@http`, `@get`, `@post`)
@@ -259,7 +258,7 @@ They are `@formdata` , `@query` , `@body` .
 
 ### `@formdata`
 
-Decorator `@formdata` is a simplified version of node package [ `busboy` ](https://github.com/mscdex/busboy) for `aex` , only the `headers` options will be auto replaced by `aex` . So you can parse valid options when necesary.
+Decorator `@formdata` is a simplified version of node package [`busboy`](https://github.com/mscdex/busboy) for `aex` , only the `headers` options will be auto replaced by `aex` . So you can parse valid options when necesary.
 All uploaded files are in array format, and it parses body as well.
 
 ```ts
