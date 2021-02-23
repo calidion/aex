@@ -53,6 +53,8 @@ It can be breifly describe as the following diagram:
 9. [Express Middleware Integration](#use-middlewares-from-expressjs)
 10. [Get the web server](#accessable-members)
 11. [Websocket support](#websocket-support)
+12. [Upgrade from Expressjs](./docs/upgrade%20from%20expressjs.md)
+
 
 ## Shortcuts for decorators
 
@@ -993,8 +995,6 @@ aex.use(pOld);
 
 > You should be cautious to use express middlewares.
 > Full testing is appreciated.
-
-# [Upgrade from Expressjs](./docs/upgrade%20from%20expressjs.md)
 
 # Tests
 
