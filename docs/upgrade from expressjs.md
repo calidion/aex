@@ -1,18 +1,18 @@
-# How to upgrade from expressjs?
+The following content is trying to tell you how to upgrade to [aex](https://github.com/calidion/aex) from expressjs, If you feel comfortable with aex new features. 
 
-## When your would upgrade from expressjs?
+# When your would upgrade from expressjs?
 
 1. Use async/await directly.
 2. Simplify your code with decorator, helper.
 3. Programming web in the object oriented way.
 4. Avoid callback function `next` in your code, even when async/await is introduced.
 5. Make you compatible with native node.js http server.
-6. To have a buildin error processing system.
-7. To have a buildin data filtering system.
+6. To have a builtin error processing system.
+7. To have a builtin data filtering system.
 8. Don't want to write too much duplicated code.
 9. Want to focus your business logic.
 
-## What is the main diffrences between aex and expressjs?
+# What is the main differences between aex and expressjs?
 
 1. Aex is an upgrade in syntax with Typescript and ESNext.
 2. Aex extended the expressjs by replacing the callback function`next` with the data carrier `scope`.
@@ -30,7 +30,7 @@ class UserLoginHandler {
 }
 ```
 
-## How to translate?
+# How to translate?
 
 ## Route translate
 
@@ -51,9 +51,9 @@ class Handler {
 
 Most express middlewares should be workable with aex by converting to aex middlewares with function `toAsyncMiddleware`.
 
-Aex provides one function `use` and one decorator `@inject` to use middlewares through the web developement process.
+Aex provides one function `use` and one decorator `@inject` to use middlewares through the web development process.
 
-It use the same fuction `use` as express to take middleware.
+It use the same function `use` as express to take middleware.
 
 ```ts
 const aex = new Aex();
@@ -122,4 +122,8 @@ const aex = new Aex();
 aex.prepare().start();
 ```
 
-Click the links to know more about [start](../README.md#start) and [aex](../README.md);
+Click the links to know more about [start](https://github.com/calidion/aex/README.md#start) and [aex](https://github.com/calidion/aex);
+
+# Final Statement
+
+Aex is still on itS early stage. You're risk at your own:)
