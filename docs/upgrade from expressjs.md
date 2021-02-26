@@ -1,6 +1,10 @@
-The following content is trying to tell you how to upgrade to [aex](https://github.com/calidion/aex) from expressjs, If you feel comfortable with aex new features. 
+# Upgrade to Aex From Expressjs
 
-# When your would upgrade from expressjs?
+The following content is trying to tell you how to upgrade to [aex](https://github.com/calidion/aex) from expressjs, If you feel comfortable with aex new features.
+
+## When your would upgrade from expressjs?
+
+If you want to :
 
 1. Use async/await directly.
 2. Simplify your code with decorator, helper.
@@ -12,7 +16,7 @@ The following content is trying to tell you how to upgrade to [aex](https://gith
 8. Don't want to write too much duplicated code.
 9. Want to focus your business logic.
 
-# What is the main differences between aex and expressjs?
+## What is the main differences between aex and expressjs?
 
 1. Aex is an upgrade in syntax with Typescript and ESNext.
 2. Aex extended the expressjs by replacing the callback function`next` with the data carrier `scope`.
@@ -30,9 +34,9 @@ class UserLoginHandler {
 }
 ```
 
-# How to translate?
+## How to translate?
 
-## Route translate
+### Route translate
 
 For express code:
 
@@ -47,7 +51,7 @@ class Handler {
 
 > All cascaded routes must be absolutized.
 
-## Middleware migration
+### Middleware migration
 
 Most express middlewares should be workable with aex by converting to aex middlewares with function `toAsyncMiddleware`.
 
@@ -67,7 +71,7 @@ const aex = new Aex();
 aex.use(toAsyncMiddleware(yourMiddleware));
 ```
 
-## Simplify your process with decorators and helpers
+### Simplify your process with decorators and helpers
 
 Web handler can be secured, accelerated and simplified with decorators and helpers.
 
@@ -90,8 +94,8 @@ class UserLoginHandler {
       },
     },
     fallbacks: {
-      body: errorInput
-    }
+      body: errorInput,
+    },
   })
   public async login(req, res, scope) {
     const { username, password } = scope.body;
@@ -101,19 +105,23 @@ class UserLoginHandler {
   @session()
   @inject(logined, NotLoginFallback)
   public async login(req, res, scope) {
-    const { session: {user} } = scope;
+    const {
+      session: { user },
+    } = scope;
   }
 
   @get("/users")
   @query()
   @inject(paginate)
   public async login(req, res, scope) {
-    const { pagination: {page, limit, offset} } = scope;
+    const {
+      pagination: { page, limit, offset },
+    } = scope;
   }
 }
 ```
 
-## Boot up
+### Boot up
 
 Boot up is one step more than express.
 
@@ -124,6 +132,6 @@ aex.prepare().start();
 
 Click the links to know more about [start](https://github.com/calidion/aex/README.md#start) and [aex](https://github.com/calidion/aex);
 
-# Final Statement
+## Disclaimer
 
-Aex is still on itS early stage. You're risk at your own:)
+Aex is still on its early stage. You're risk at your own.

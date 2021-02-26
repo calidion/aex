@@ -1,3 +1,5 @@
+# AEX
+
 [![Build Status](https://travis-ci.com/calidion/aex.svg?branch=master)](https://travis-ci.com/calidion/aex)
 [![Coverage Status](https://coveralls.io/repos/github/calidion/aex/badge.svg?branch=master)](https://coveralls.io/github/calidion/aex?branch=master)
 [![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
@@ -6,8 +8,6 @@
 [![Downloads][downloads-image]][npm-url]
 [![Downloads][downloads-image-month]][npm-url]
 [![Dependency Status][daviddm-image]][daviddm-url]
-
-# AEX
 
 A simple, easy to use, decorated, scoped, object-oriented web server, with async linear middlewares and no more callbacks in middlewares.
 
@@ -22,7 +22,7 @@ It is also an example:
 
 3. To pass some vairiables through middlewares and to the final handler.
 
-# Philosophy
+## Philosophy
 
 1. Keep in mind to separate web logic from business logic, and only develope for web logic.
 2. Focus soly on web flow.
@@ -30,7 +30,7 @@ It is also an example:
 4. Consider web interactions as phrased straight lines, which we call it Web Straight Line.
 5. No MVC, soly focusing on architecture which is the web logic.
 
-# What is Web Straight Line?
+## What is Web Straight Line?
 
 Web Straight Line is used to describe the phrases of the processes on the http/web request.
 
@@ -38,9 +38,9 @@ It can be breifly describe as the following diagram:
 
 > The Web Staight Line
 
-![](./docs/Web_Straight_Line-1.png)
+![The Web Staight Line](./docs/Web_Straight_Line.png)
 
-# Content
+## Content
 
 1. [Install](#install)
 2. [Quick Start](#quick-start)
@@ -70,7 +70,7 @@ It can be breifly describe as the following diagram:
 
 1. [pagination with `paginate` function](#paginate)
 
-# Install
+## Install
 
 if you use npm
 
@@ -84,7 +84,7 @@ or if you use yarn
 yarn add @aex/core
 ```
 
-# Quick Start
+## Quick Start
 
 1. Use `@http` to enable a class with web ability
 
@@ -130,7 +130,7 @@ yarn add @aex/core
    await aex.start(8080);
    ```
 
-# Framework functions
+## Framework functions
 
 The aex object has many functions for middlewares and classes.
 
@@ -141,11 +141,11 @@ They are:
 3. [prepare](#prepare) prepare the server
 4. [start](#start) start the server
 
-## use
+### use
 
 Add middlewares to aex, see detailed explanations in [middlewares](#middlewares). These middlewares will be global to all http requests.
 
-## push
+### push
 
 push a controller class to aex, it takes on parameter and other arguments:
 
@@ -159,7 +159,7 @@ aex.push(HelloAex, parameter1, parameter2, ..., parameterN);
 // will be invoked as `new HelloAlex(parameter1, parameter2, ..., parameterN)`
 ```
 
-## prepare
+### prepare
 
 `prepare` is used here to init middlewares and business controllers if controllers are pushed into the `aex` instance. It takes no parameter and return the `aex` instance. so you can invoke the `start` function of aex.
 Aex itself has no mvc concepts, aex has the Web Straight Line concept that process all things on the line for each request.
@@ -175,7 +175,7 @@ aex
   });
 ```
 
-## start
+### start
 
 `start` function is used to bootstrap the server with cerntain port. It takes three parameters:
 
@@ -183,7 +183,7 @@ aex
 2. `ip` the ip address where the port bind to, default to localhost
 3. `prepare` prepare middlewares or not, used when middlewares are not previously prepared
 
-# Decorators
+## Decorators
 
 Aex is simplified by decorators, so you should be familiar with decorators to full utilize aex.
 
@@ -198,12 +198,12 @@ Decorators will be enriched over time. Currently aex provides the following deco
 6. [Error definition decorators](#6-error-definition-decorators) (`@error`)
 7. [Custome middleware decorators](#7-custome-middleware-decorators) (`@inject`)
 
-## 1. HTTP method decorators
+### 1. HTTP method decorators
 
 This decorators are the most basic decorators, all decorators should follow them. They are
 `@http` , `@get` , `@post` .
 
-### `@http` , `@get` , `@post`
+#### `@http` , `@get` , `@post`
 
 `@http` is the generic http method decorator. `@get` , `@post` are the shortcuts for `@http` ;
 
@@ -247,7 +247,7 @@ class User {
 }
 ```
 
-## 2. Data parsing decorators
+### 2. Data parsing decorators
 
 These decorators will parse all data passed thought the HTTP protocol.
 They are `@formdata` , `@query` , `@body` .
@@ -256,7 +256,7 @@ They are `@formdata` , `@query` , `@body` .
 2. `@query` can parse url query into `scope.query`.
 3. `@body` can parse some simple formdata into `scope.body`.
 
-### `@formdata`
+#### `@formdata`
 
 Decorator `@formdata` is a simplified version of node package [`busboy`](https://github.com/mscdex/busboy) for `aex` , only the `headers` options will be auto replaced by `aex` . So you can parse valid options when necesary.
 All uploaded files are in array format, and it parses body as well.
@@ -290,7 +290,7 @@ class Formdata {
 }
 ```
 
-### `@body`
+#### `@body`
 
 Decorator @body provides a simple way to process data with body parser. It a is a simplified version of node package [body-parser](https://github.com/expressjs/body-parser).
 
@@ -329,7 +329,7 @@ class User {
 }
 ```
 
-### `@query`
+#### `@query`
 
 Decorator @query will parse query for you. After decorated with `@query` you will have `scope.query` to use. `req.query` is available for compatible reasion, but it is discouraged.
 
@@ -345,11 +345,11 @@ class Query {
 }
 ```
 
-## 3. Static file serving decorators
+### 3. Static file serving decorators
 
 Aex provides `@serve` decorator for static file serving.
 
-### `@serve`
+#### `@serve`
 
 Decorator `@serve` provides a simple way to serve static files. It a is a simplified version of node package [serve-staticserve-static](https://github.com/expressjs/serve-static).
 
@@ -373,12 +373,12 @@ class StaticFileServer {
 }
 ```
 
-## 4. Session management decorators
+### 4. Session management decorators
 
 Aex provides `@session` decorator for default cookie based session management.
 Session in other format can be realized with decorator `@inject` .
 
-### `@session`
+#### `@session`
 
 Decorator `@session` takes a store as the parameter. It is an object derived from the abstract class ISessionStore. which is defined like this:
 
@@ -432,11 +432,11 @@ class Session {
 
 > Share only one store object over requests.
 
-## 5. Data filtering and validation decorators
+### 5. Data filtering and validation decorators
 
 Aex provides `@filter` to filter and validate data for you.
 
-### `@filter`
+#### `@filter`
 
 Decorator `@filter` will filter `body` , `params` and `query` data for you, and provide fallbacks respectively for each invalid data processing.
 
@@ -503,11 +503,11 @@ class User {
 }
 ```
 
-## 6. Error definition decorators
+### 6. Error definition decorators
 
 Aex provides `@error` decorator for error definition
 
-## @error
+#### @error
 
 Decorator `@error` will generate errors for you.
 
@@ -545,7 +545,7 @@ class User {
 }
 ```
 
-## 7. Custome middleware decorators
+### 7. Custome middleware decorators
 
 Aex provides `@inject` decorator for middleware injection.
 
@@ -591,7 +591,7 @@ class User {
 }
 ```
 
-# Usage with no decorators
+## Usage with no decorators
 
 1. Create an Aex instance
 
@@ -632,9 +632,9 @@ class User {
    // server === aex.server
    ```
 
-# Websocket support
+## Websocket support
 
-## Simple example
+### Simple example
 
 1. Create a `WebSocketServer` instance
 
@@ -711,7 +711,7 @@ class User {
    });
    ```
 
-# Middlewares
+## Middlewares
 
 Middlewares are defined like this:
 
@@ -725,7 +725,7 @@ export type IAsyncMiddleware = (
 
 They return promise. so they must be called with `await` or `.then()`.
 
-## Global middlewares
+### Global middlewares
 
 Global middlewares are effective all over the http request process.
 
@@ -753,7 +753,7 @@ aex.use(async () => {
 > Return `false` in middlewares will cancel the whole http request processing  
 > It normally happens after a `res.end`
 
-## Handler specific middlewares
+### Handler specific middlewares
 
 Handler specific middlewares are effective only to the specific handler.
 
@@ -787,7 +787,7 @@ router.get(
 );
 ```
 
-## Websocket middlewares
+### Websocket middlewares
 
 Websocket middlewares are of the same to the above middlewares except that the parameters are of different.
 
@@ -807,9 +807,9 @@ The Websocket Middlewares are defined as `IWebSocketAsyncMiddleware` , they pass
 
 THe middlewares can stop websocket from further execution by return `false`
 
-# Accessable members
+## Accessable members
 
-## server
+### server
 
 The node system `http.Server` .
 
@@ -822,7 +822,7 @@ expect(server === aex.server).toBeTruthy();
 server.close();
 ```
 
-# Scope
+## Scope
 
 Aex provides scoped data for global and local usage.
 
@@ -848,23 +848,23 @@ The `params` attribute is to store http params.
 The `error` attribute is to store scoped errors.
 The `debug` attribute is to provide handlers the debugging ability.
 
-## `time`
+### `time`
 
-### Get the requesting time
+#### Get the requesting time
 
 ```ts
 scope.time.started;
 // 2019-12-12T09:01:49.543Z
 ```
 
-### Get the passed time
+#### Get the passed time
 
 ```ts
 scope.time.passed;
 // 2019-12-12T09:01:49.543Z
 ```
 
-## `outer` and `inner`
+### `outer` and `inner`
 
 The `outer` and `inner` variables are objects used to store data for different purposes.
 
@@ -875,7 +875,7 @@ scope.inner.a = 100;
 scope.outer.a = 120;
 ```
 
-## `debug`
+### `debug`
 
 `debug` is provided for debugging purposes.
 
@@ -908,7 +908,7 @@ async () => {
 // scope.time.passed = {};   // Wrong operation!
 ```
 
-# Helpers
+## Helpers
 
 Helpers are special middlewares with parameters to ease some fixed pattern with web development.
 
@@ -916,11 +916,11 @@ They must work with decorator `@inject`.
 
 The first aviable helper is `paginate`.
 
-## paginate
+### paginate
 
 Helper `paginate` can help with your pagination data parsing and filtering. It gets the correct value for you, so you can save your code parsing and correcting the pagination data before using them.
 
-### paramters
+#### paramters
 
 `paginate` is function takes two parameter:
 
@@ -930,9 +930,9 @@ Helper `paginate` can help with your pagination data parsing and filtering. It g
    The data to be parsed must contain two parameters which should be named with : `page`, `limit`.
    for type `query`, pagination data can be : `list?page=2&limit=30`;
 
-### use
+#### usage
 
-after parsing, `scope` will be added a attribute `pagination`, which is a object have three attribute: `page`, `limit`, `offset`. so you can simply extract them with
+After parsing, `scope` will be added a attribute `pagination`, which is a object have three attribute: `page`, `limit`, `offset`. so you can simply extract them with
 
 ```ts
 const {
@@ -976,7 +976,7 @@ class Paginator {
 }
 ```
 
-# Use middlewares from expressjs
+## Use middlewares from expressjs
 
 Aex provide a way for express middlewares to be translated into Aex middlewares.
 
@@ -995,27 +995,27 @@ aex.use(pOld);
 > You should be cautious to use express middlewares.
 > Full testing is appreciated.
 
-# Tests
+## Tests
 
 ```sh
 npm install
 npm test
 ```
 
-# No semver
+## No semver
 
 Semver has been ruined node.js npm for a long time, aex will not follow it. Aex will warn every user to keep aex version fixed and take care whenever update to anew version.
 Aex follows a general versioning called [Effective Versioning](https://github.com/calidion/effective-versioning).
 
-# No callbacks in middleware
+## No callbacks in middleware
 
 aex is anti-koa which is wrong and misleading just like semver.
 
-# All lives matter
+## All lives matter
 
 aex is an anti BLM project and a protector of law and order.
 
-# Lincense
+## Lincense
 
 MIT
 
