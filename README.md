@@ -129,6 +129,14 @@ yarn add @aex/core
    // or
    await aex.start(8080);
    ```
+   
+### A quick starter for javascript users.
+Aex is written in typescript, but it can be very well used with javascript.
+
+You can click [here](https://github.com/aex-ts-node/aex-babel-node-js-starter) to get the starter for javascript developers.
+
+it is located at: https://github.com/aex-ts-node/aex-babel-node-js-starter; You can refer it very time your want to create a new aex project.
+
 
 ## Framework functions
 
