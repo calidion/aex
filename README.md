@@ -144,10 +144,10 @@ The aex object has many functions for middlewares and classes.
 
 They are:
 
-1. [use](#use) add a middleware
-2. [push](#push) push a class
-3. [prepare](#prepare) prepare the server
-4. [start](#start) start the server
+1. [use](#use)  To add a middleware
+2. [push](#push)  To push a class
+3. [prepare](#prepare) To prepare the server
+4. [start](#start) To start the server
 
 ### use
 
