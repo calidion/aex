@@ -523,10 +523,14 @@ Reference [errorable](!https://github.com/calidion/errorable) for detailed usage
 
 `@error` take two parameters exactly what function `Generator.generate` takes.
 
+Besides you can add `lang` attribut to `@error` to default the language, this feature will be automatically removed by `aex` when generate errors.
+With the lang attribute, you can new errors without specifying a language every time throw/create an error;
+
 ```ts
 class User {
   @http("post", "/error")
   @error({
+    lang: "zh-CN",
     I: {
       Love: {
         You: {
@@ -546,8 +550,9 @@ class User {
     const [, , scope] = arguments;
     const { error: e } = scope;
     const { ILoveYou } = e;
-    // throw new ILoveYou('en-US');
-    // throw new ILoveYou('zh-CN');
+    throw new ILoveYou('en-US');
+    throw new ILoveYou('zh-CN');
+    throw new ILoveYou();   // You can ignore language becuase you are now use the default language.
     res.end("User Error!");
   }
 }
