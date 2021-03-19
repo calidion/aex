@@ -1017,16 +1017,16 @@ npm test
 
 ## No semver
 
-Semver has been ruined node.js npm for a long time, aex will not follow it. Aex will warn every user to keep aex version fixed and take care whenever update to anew version.
+Semver has been posioning node.js npm for a long time, aex will not follow it. Aex will warn every user to keep aex version fixed and take care whenever update to a new version.
 Aex follows a general versioning called [Effective Versioning](https://github.com/calidion/effective-versioning).
 
 ## No callbacks in middleware
 
-aex is anti-koa which is wrong and misleading just like semver.
+Aex is anti-koa which is wrong and misleading just like semver.
 
 ## All lives matter
 
-aex is an anti BLM project and a protector of law and order.
+aex is an anti BLM project, a protector of human equality for all, and a protector of law and order.
 
 ## Lincense
 
