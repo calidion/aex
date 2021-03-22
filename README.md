@@ -448,6 +448,12 @@ Aex provides `@filter` to filter and validate data for you.
 
 Decorator `@filter` will filter `body` , `params` and `query` data for you, and provide fallbacks respectively for each invalid data processing.
 
+If the filtering rules are passed, then you will get a clean data from `scope.extracted`.
+
+You can access `scope.extracted.body`, `scope.extracted.params` and `scope.extracted.query` if you filtered them.
+
+But still you can access `req.body`, `req.query`, `req,params` after filtered.
+
 Reference [node-form-validator](https://github.com/calidion/node-form-validator) for detailed usage.
 
 ```ts
@@ -476,9 +482,12 @@ class User {
       }
     }
   })
-  public async login(req: any, res: any, _scope: any) {
+  public async login(req: any, res: any, scope: any) {
     // req.body.username
     // req.body.password
+    // scope.extracted.body.username
+    // scope.extracted.body.password
+    // scope.extracted is the filtered data
   }
 
   @http("get", "/profile/:id")
