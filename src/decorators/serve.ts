@@ -9,6 +9,7 @@ import { lookup } from "mime-types";
 import { join } from "path";
 import { One } from "../one";
 import { Scope } from "../scope";
+import BadRequest from "../status/400";
 import NotFound from "../status/404";
 
 /**
@@ -39,9 +40,10 @@ export function serve(url: string) {
 
       const { params } = scope;
       const file = (params["0"] as unknown) as string;
-
+      if (/\.\./.test(file)) {
+        return BadRequest(res);
+      }
       const filePath = join(realPath, file);
-
       if (!existsSync(filePath)) {
         return NotFound(res);
       }

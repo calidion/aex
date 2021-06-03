@@ -59,7 +59,11 @@ describe("serve", () => {
     await GetText(port, "", "/alias/subdir/subsubdir/bbb");
   });
 
-  test("Should access files", async () => {
+  test("Should 400 files", async () => {
+    await GetStatus(port, "/assets/subdir/../bbb.txt", 400);
+  });
+
+  test("Should 404 files", async () => {
     await GetStatus(port, "/assets/subdir/subdir/bbb.txt", 404);
   });
 

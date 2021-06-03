@@ -20,8 +20,7 @@ export function body(
   const bodyTypes = ["urlencoded", "raw", "text", "json"];
 
   if (bodyTypes.indexOf(type) === -1) {
-    // tslint:disable-next-line: only-arrow-functions
-    return function () {};
+    return function placeHolder() {};
   }
   const parser: any = bodyParser;
   const cb = parser[type](options);
