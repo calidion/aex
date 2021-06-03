@@ -42,7 +42,7 @@ export function error(
         const func = generated[key];
 
         filtered[key] = ((l1) => {
-          return function (l2: string) {
+          return function errorize(l2: string) {
             return new func(l2 ? l2 : l1);
           };
         })(lang);
