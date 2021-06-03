@@ -12,9 +12,13 @@ class Error {
 
   @http("post", "/user/login")
   @error({
+    lang: "zh-CN",
     Hello: {
       code: 100,
-      messages: {},
+      messages: {
+        "en-US": "Hello!",
+        "zh-CN": "你好！",
+      },
     },
     I: {
       Love: {
@@ -40,6 +44,11 @@ class Error {
     expect(scope.error.HELLO === undefined).toBeTruthy();
     expect(scope.error.I_LOVE_YOU === undefined).toBeTruthy();
     expect(scope.error.ME_LOVE_YOU === undefined).toBeTruthy();
+    const { Hello } = scope.error;
+    const hello = new Hello();
+    const hello1 = new Hello("en-US");
+    expect(hello.message === "你好！");
+    expect(hello1.message === "Hello!");
     res.end("Error All!");
   }
 

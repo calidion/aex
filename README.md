@@ -129,6 +129,14 @@ yarn add @aex/core
    // or
    await aex.start(8080);
    ```
+   
+### A quick starter for javascript users.
+Aex is written in typescript, but it can be very well used with javascript.
+
+You can click [here](https://github.com/aex-ts-node/aex-babel-node-js-starter) to get the starter for javascript developers.
+
+it is located at: https://github.com/aex-ts-node/aex-babel-node-js-starter; You can refer it every time your want to create a new aex project.
+
 
 ## Framework functions
 
@@ -136,10 +144,10 @@ The aex object has many functions for middlewares and classes.
 
 They are:
 
-1. [use](#use) add a middleware
-2. [push](#push) push a class
-3. [prepare](#prepare) prepare the server
-4. [start](#start) start the server
+1. [use](#use)  To add a middleware
+2. [push](#push)  To push a class
+3. [prepare](#prepare) To prepare the server
+4. [start](#start) To start the server
 
 ### use
 
@@ -446,6 +454,12 @@ Aex provides `@filter` to filter and validate data for you.
 
 Decorator `@filter` will filter `body` , `params` and `query` data for you, and provide fallbacks respectively for each invalid data processing.
 
+If the filtering rules are passed, then you will get a clean data from `scope.extracted`.
+
+You can access `scope.extracted.body`, `scope.extracted.params` and `scope.extracted.query` if you filtered them.
+
+But still you can access `req.body`, `req.query`, `req,params` after filtered.
+
 Reference [node-form-validator](https://github.com/calidion/node-form-validator) for detailed usage.
 
 ```ts
@@ -474,9 +488,12 @@ class User {
       }
     }
   })
-  public async login(req: any, res: any, _scope: any) {
+  public async login(req: any, res: any, scope: any) {
     // req.body.username
     // req.body.password
+    // scope.extracted.body.username
+    // scope.extracted.body.password
+    // scope.extracted is the filtered data
   }
 
   @http("get", "/profile/:id")
@@ -521,10 +538,14 @@ Reference [errorable](!https://github.com/calidion/errorable) for detailed usage
 
 `@error` take two parameters exactly what function `Generator.generate` takes.
 
+Besides you can add `lang` attribut to `@error` to default the language, this feature will be automatically removed by `aex` when generate errors.
+With the lang attribute, you can new errors without specifying a language every time throw/create an error;
+
 ```ts
 class User {
   @http("post", "/error")
   @error({
+    lang: "zh-CN",
     I: {
       Love: {
         You: {
@@ -544,8 +565,9 @@ class User {
     const [, , scope] = arguments;
     const { error: e } = scope;
     const { ILoveYou } = e;
-    // throw new ILoveYou('en-US');
-    // throw new ILoveYou('zh-CN');
+    throw new ILoveYou('en-US');
+    throw new ILoveYou('zh-CN');
+    throw new ILoveYou();   // You can ignore language becuase you are now use the default language.
     res.end("User Error!");
   }
 }
@@ -1010,16 +1032,16 @@ npm test
 
 ## No semver
 
-Semver has been ruined node.js npm for a long time, aex will not follow it. Aex will warn every user to keep aex version fixed and take care whenever update to anew version.
+Semver has been posioning node.js npm for a long time, aex will not follow it. Aex will warn every user to keep aex version fixed and take care whenever update to a new version.
 Aex follows a general versioning called [Effective Versioning](https://github.com/calidion/effective-versioning).
 
 ## No callbacks in middleware
 
-aex is anti-koa which is wrong and misleading just like semver.
+Aex is anti-koa which is wrong and misleading just like semver.
 
 ## All lives matter
 
-aex is an anti BLM project and a protector of law and order.
+aex is an anti BLM project, a protector of human equality for all, and a protector of law and order.
 
 ## Lincense
 
