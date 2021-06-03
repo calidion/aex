@@ -3,14 +3,19 @@
 
 import { resolve } from "path";
 
-import { initRandomPort } from "../../src/util/request";
-import { Aex, GetText, serve } from "../../src";
+import { GetStatus, initRandomPort } from "../../src/util/request";
+import { Aex, GetText, serve, assets } from "../../src";
 
 class StaticFileServer {
   protected name = "formdata";
 
   @serve("/assets")
   public async upload() {
+    return resolve(__dirname, "./fixtures");
+  }
+
+  @assets("/alias")
+  public async ass() {
     return resolve(__dirname, "./fixtures");
   }
 }
@@ -36,6 +41,26 @@ describe("serve", () => {
 
   test("Should access files", async () => {
     await GetText(port, "CCC", "/assets/ccc.txt");
+  });
+
+  test("Should access files", async () => {
+    await GetText(port, "SUBAAA", "/assets/subdir/aaa.txt");
+  });
+
+  test("Should access files", async () => {
+    await GetText(port, "SUBSUBAAA", "/assets/subdir/subsubdir/aaa.txt");
+  });
+
+  test("Should access files", async () => {
+    await GetText(port, "", "/assets/subdir/subsubdir/bbb");
+  });
+
+  test("Should access files", async () => {
+    await GetText(port, "", "/alias/subdir/subsubdir/bbb");
+  });
+
+  test("Should access files", async () => {
+    await GetStatus(port, "/assets/subdir/subdir/bbb.txt", 404);
   });
 
   afterAll(async () => {

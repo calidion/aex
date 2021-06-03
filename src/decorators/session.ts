@@ -14,6 +14,7 @@ const memoryStore = new MemoryStore();
 export function session(parser?: ISessionStore) {
   // tslint:disable-next-line: only-arrow-functions
   return function (
+    // tslint:disable-next-line: variable-name
     _target: any,
     // tslint:disable-next-line: variable-name
     _propertyKey: string,

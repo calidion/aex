@@ -3,12 +3,13 @@
  * Copyright(c) 2020- calidion<calidion@gmail.com>
  * MIT Licensed
  */
-import * as finalhandler from "finalhandler";
+import { createReadStream, existsSync, statSync } from "fs";
 import { IncomingMessage, ServerResponse } from "http";
-import * as staticServer from "serve-static";
-
+import { lookup } from "mime-types";
+import { join } from "path";
 import { One } from "../one";
 import { Scope } from "../scope";
+import NotFound from "../status/404";
 
 /**
  * serve static files
@@ -16,7 +17,7 @@ import { Scope } from "../scope";
  * @param options options are of the same options used by the server-static package
  */
 
-export function serve(url: string, options?: staticServer.ServeStaticOptions) {
+export function serve(url: string) {
   // tslint:disable-next-line: only-arrow-functions
   return function (
     target: any,
@@ -26,7 +27,7 @@ export function serve(url: string, options?: staticServer.ServeStaticOptions) {
     const origin = descriptor.value;
 
     const cache = One.cache;
-    cache.push([target, propertyKey, ["get", "head"], url + "/:file"]);
+    cache.push([target, propertyKey, ["get", "head"], url + "/(.*)"]);
 
     // // tslint:disable-next-line: only-arrow-functions
     descriptor.value = async function (
@@ -37,14 +38,27 @@ export function serve(url: string, options?: staticServer.ServeStaticOptions) {
       const realPath = await origin.apply(this, [req, res, scope]);
 
       const { params } = scope;
-      const { file } = params;
-      req.url = (file as unknown) as string;
-      staticServer(realPath, options)(
-        req,
-        res,
-        finalhandler(req, res) as () => {}
-      );
+      const file = (params["0"] as unknown) as string;
+
+      const filePath = join(realPath, file);
+
+      if (!existsSync(filePath)) {
+        return NotFound(res);
+      }
+      const stat = statSync(filePath);
+
+      let ct = lookup(filePath);
+      ct = ct ? ct : "text/plain";
+
+      res.writeHead(200, {
+        "content-length": String(stat.size),
+        "content-type": ct,
+      });
+
+      const readStream = createReadStream(filePath);
+      readStream.pipe(res);
     };
     return descriptor;
   };
 }
+export const assets = serve;

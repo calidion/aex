@@ -347,18 +347,17 @@ class Query {
 
 ### 3. Static file serving decorators
 
-Aex provides `@serve` decorator for static file serving.
+Aex provides `@serve` decorator and its alias `@assets` for static file serving.
 
-#### `@serve`
+> Due to `static` is taken as a reserved word for javascript, `static` is not supported.
 
-Decorator `@serve` provides a simple way to serve static files. It a is a simplified version of node package [serve-staticserve-static](https://github.com/expressjs/serve-static).
+#### `@serve` and `@assets`
 
-It takes two parameters:
+They take only one parameter:
 
 1. url: the base url for your served files.
-2. options: exact options package `serve-static` takes.
 
-then inside the member function you should return the absolute path of of the root of the static files.
+It is recursive, so place used with caution, don't put your senstive files under that folder.
 
 ```ts
 import { serve } from "@aex/core";
@@ -368,6 +367,13 @@ class StaticFileServer {
 
   @serve("/assets")
   public async upload() {
+    // All your files and subdirectories are available for accessing.
+    return resolve(__dirname, "./fixtures");
+  }
+
+  @assets("/assets1")
+  public async upload() {
+    // All your files and subdirectories are available for accessing.
     return resolve(__dirname, "./fixtures");
   }
 }

@@ -27,7 +27,7 @@ export async function parseFormData(
   return new Promise((resolve, reject) => {
     busboy.on(
       "file",
-      function (
+      function uploading(
         fieldname: string,
         stream: any,
         filename: string,
@@ -39,13 +39,13 @@ export async function parseFormData(
         }
 
         const temp = {
-          temp: "",
-          filename,
           encoding,
+          filename,
           mimetype,
+          temp: "",
         };
 
-        stream.on("data", function (data: any) {
+        stream.on("data", function onData(data: any) {
           const folder = mkdtempSync(join(tmpdir(), "aex-"));
           const tmpfilename =
             pathResolve(folder, "./" + v4()) + extname(filename);
@@ -56,16 +56,20 @@ export async function parseFormData(
         stream.on("error", reject);
       }
     );
-    busboy.on("field", function (fieldname: string, val: any) {
+    busboy.on("field", function onField(fieldname: string, val: any) {
       body[fieldname] = val;
     });
-    busboy.on("finish", function () {
+    busboy.on("finish", function onFinish() {
       // scope.body = body;
       for (const key in body) {
-        scope.body[key] = body[key];
+        if (typeof key === "string") {
+          scope.body[key] = body[key];
+        }
       }
       for (const field in files) {
-        scope.files[field] = files[field];
+        if (typeof field === "string") {
+          scope.files[field] = files[field];
+        }
       }
       resolve(true);
     });
@@ -81,7 +85,9 @@ export async function parseFormData(
 export function formdata(options: busboy.BusboyConfig = {}) {
   // tslint:disable-next-line: only-arrow-functions
   return function (
+    // tslint:disable-next-line: variable-name
     _target: any,
+    // tslint:disable-next-line: variable-name
     _propertyKey: string,
     descriptor: PropertyDescriptor
   ) {

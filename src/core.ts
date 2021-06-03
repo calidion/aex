@@ -25,15 +25,15 @@ export class Aex {
   }
 
   get instances() {
-    return this._controllerInstances;
+    return this.controllerInstances;
   }
 
   protected middlewares: IAsyncMiddleware[] = [];
   protected scope = new Scope();
   // tslint:disable-next-line:variable-name
   private _server?: Server;
-  private _classes: any[] = [];
-  private _controllerInstances: any[] = [];
+  private classes: any[] = [];
+  private controllerInstances: any[] = [];
 
   public use(cb: IAsyncMiddleware) {
     this.middlewares.push(cb);
@@ -44,12 +44,12 @@ export class Aex {
    * @param aClass
    */
   public push(aClass: any, ...options: any[]) {
-    for (const one of this._classes) {
+    for (const one of this.classes) {
       if (aClass === one[0]) {
         throw new Error("Duplicated class found!");
       }
     }
-    this._classes.push([aClass, options]);
+    this.classes.push([aClass, options]);
   }
 
   public findMethods(aClass: any) {
@@ -117,7 +117,7 @@ export class Aex {
    */
   public prepare() {
     // prepare handlers
-    for (const classPair of this._classes) {
+    for (const classPair of this.classes) {
       const controller = classPair[0];
       const options = classPair[1];
       const methods = this.findMethods(controller);
@@ -130,7 +130,7 @@ export class Aex {
         );
         this.bindInstance(instance, method, methods[method]);
       }
-      this._controllerInstances.push(instance);
+      this.controllerInstances.push(instance);
     }
     // prepare middlewares
     const router = One.instance();

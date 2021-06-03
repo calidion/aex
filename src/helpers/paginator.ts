@@ -3,7 +3,7 @@ import { Scope } from "../scope";
 import { IAsyncMiddleware } from "../types";
 
 export function parseStringToNumber(id: string, value: number = 1) {
-  const parsed = parseInt(id);
+  const parsed = parseInt(id, 10);
   if (isNaN(parsed)) {
     return value;
   }
@@ -14,8 +14,10 @@ export function paginate(
   limitFallback = 20,
   type: "query" | "params" | "body" = "query"
 ): IAsyncMiddleware {
-  return async function (
+  return async function paging(
+    // tslint:disable-next-line: variable-name
     _req: IncomingMessage,
+    // tslint:disable-next-line: variable-name
     _res: ServerResponse,
     scope?: Scope
   ) {
@@ -26,8 +28,8 @@ export function paginate(
 
     const pagination = {
       limit,
-      page,
       offset,
+      page,
     };
 
     (scope as any).pagination = pagination;
