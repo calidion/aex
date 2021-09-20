@@ -1,6 +1,6 @@
 /**
- * aex
- * Copyright(c) 2020- calidion<calidion@gmail.com>
+ * Copyright(c) 2020-
+ * Author: calidion<calidion@gmail.com>
  * MIT Licensed
  */
 import { Generator } from "errorable";

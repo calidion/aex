@@ -1,8 +1,9 @@
 /**
- * aex
- * Copyright(c) 2020- calidion<calidion@gmail.com>
+ * Copyright(c) 2020-
+ * Author: calidion<calidion@gmail.com>
  * MIT Licensed
  */
+
 import * as validator from "node-form-validator";
 import { One } from "../one";
 import { Scope } from "../scope";

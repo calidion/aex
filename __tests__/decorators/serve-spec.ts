@@ -9,7 +9,7 @@ import { Aex, GetText, serve, assets } from "../../src";
 class StaticFileServer {
   protected name = "formdata";
 
-  @serve("/assets")
+  @serve("/assets", true)
   public async upload() {
     return resolve(__dirname, "./fixtures");
   }
@@ -44,6 +44,14 @@ describe("serve", () => {
   });
 
   test("Should access files", async () => {
+    await GetStatus(port, "/assets/", 200);
+  });
+
+  test("Should access files", async () => {
+    await GetStatus(port, "/assets/subdir/", 200);
+  });
+
+  test("Should access files", async () => {
     await GetText(port, "SUBAAA", "/assets/subdir/aaa.txt");
   });
 
@@ -57,6 +65,14 @@ describe("serve", () => {
 
   test("Should access files", async () => {
     await GetText(port, "", "/alias/subdir/subsubdir/bbb");
+  });
+
+  test("Should access files", async () => {
+    await GetStatus(port, "/alias/", 403);
+  });
+
+  test("Should access files", async () => {
+    await GetStatus(port, "/alias/subdir/", 403);
   });
 
   test("Should 400 files", async () => {
