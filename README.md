@@ -9,18 +9,9 @@
 [![Downloads][downloads-image-month]][npm-url]
 [![Dependency Status][daviddm-image]][daviddm-url]
 
-A simple, easy to use, decorated, scoped, object-oriented micro web server, with async linear middlewares and no more callbacks in middlewares.
+A simple, easy to use, decorated, scoped, object-oriented web server, with async linear middlewares and no more callbacks in middlewares.
 
 It is a web framework for typescript and nodejs.
-
-It is also an example:
-
-1. To show that callbacks in middlewares are not needed with promise/async/await.
-2. To ensure that middlewares should be used in a linear way instead of stacked way which is insecure and false.
-
-   > For the stacked middleware model will carry response back to the top most so called middleware pushed, where every middleware can access to the body returned. It will cause possible system information leak whenever a middleware is used.
-
-3. To enable data carrier for middlewares to the final handler.
 
 ## Philosophy
 
@@ -1045,7 +1036,7 @@ Aex is anti-koa which is wrong and misleading just like semver.
 
 ## All lives matter
 
-aex is an anti BLM project, a protector of human equality for all, and a protector of law and order.
+Aex supports human equality in law of rights only, and supports human diversity in other area. Humans will never be equal in most area which is the law of nature.
 
 ## Lincense
 
