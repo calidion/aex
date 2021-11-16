@@ -1025,18 +1025,13 @@ npm install
 npm test
 ```
 
-## No semver
+## Effective Versioning
 
-Semver has been posioning node.js npm for a long time, aex will not follow it. Aex will warn every user to keep aex version fixed and take care whenever update to a new version.
 Aex follows a general versioning called [Effective Versioning](https://github.com/calidion/effective-versioning).
-
-## No callbacks in middleware
-
-Aex is anti-koa which is wrong and misleading just like semver.
 
 ## All lives matter
 
-Aex supports human equality in law of rights only, and supports human diversity in other area. Humans will never be equal in most area which is the law of nature.
+Aex supports human equality in law of rights only and supports human diversity in other area. Humans will never be equal in most area which is law of nature.
 
 ## Lincense
 
