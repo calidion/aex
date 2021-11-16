@@ -33,7 +33,7 @@ It can be breifly describe as the following diagram:
 
 Web Straight Line is a true web server thoery for the web framework (comparing to the MVC thoery which is more suitable for desktop applications), which solves only the problems caused by web (namely the HTTP protocol) itself.
 
-It can be trimmed as a micro service web server, and can also be a full-fledged web server by docrating enough constraints using docrators.
+It can be trimmed as a micro service web server or a full-fledged web server by docrating enough constraints using docrators, it is logic scalable by decorators/middlewares.
 
 ## Content
 
