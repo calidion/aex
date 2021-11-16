@@ -9,18 +9,18 @@
 [![Downloads][downloads-image-month]][npm-url]
 [![Dependency Status][daviddm-image]][daviddm-url]
 
-A simple, easy to use, decorated, scoped, object-oriented web server, with async linear middlewares and no more callbacks in middlewares.
+A simple, easy to use, decorated, scoped, object-oriented micro web server, with async linear middlewares and no more callbacks in middlewares.
 
 It is a web framework for typescript and nodejs.
 
 It is also an example:
 
-1. To show that callbacks are not needed with promise/async/await.
-2. To use middlewares in a linear way instead of stacked way which is insecure.
+1. To show that callbacks in middlewares are not needed with promise/async/await.
+2. To ensure that middlewares should be used in a linear way instead of stacked way which is insecure and false.
 
-   > For the stacked middleware model will carry response back to the top most so called middleware pushed, where every middleware can access to the body returned.
+   > For the stacked middleware model will carry response back to the top most so called middleware pushed, where every middleware can access to the body returned. It will cause possible system information leak whenever a middleware is used.
 
-3. To pass some vairiables through middlewares and to the final handler.
+3. To enable data carrier for middlewares to the final handler.
 
 ## Philosophy
 
@@ -39,6 +39,10 @@ It can be breifly describe as the following diagram:
 > The Web Staight Line
 
 ![The Web Staight Line](./docs/Web_Straight_Line.png)
+
+Web Straight Line is a true web server thoery for the web framework (comparing to the MVC thoery which is more suitable for desktop applications), which solves only the problems caused by web (namely the HTTP protocol) itself.
+
+It can be trimmed as a micro service web server, and can also be a full-fledged web server by docrating enough constraints using docrators.
 
 ## Content
 
