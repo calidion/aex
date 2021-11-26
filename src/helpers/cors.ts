@@ -7,8 +7,7 @@ export function cors(
   headers = "X-Requested-With,content-type",
   credentials = "true"
 ): IAsyncMiddleware {
-  return async function (req: IncomingMessage, res: ServerResponse) {
-    console.log(req.headers);
+  return async function corsHelper(req: IncomingMessage, res: ServerResponse) {
     let ao = origin;
     if (origin === "*") {
       if (!req.headers.refer) {

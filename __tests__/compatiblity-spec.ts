@@ -1,4 +1,3 @@
-import * as session from "express-session";
 import { Aex } from "../src/index";
 
 import { Router } from "../src/index";
@@ -16,12 +15,6 @@ test("Should compatible with express middlewares", async () => {
   const pOld = toAsyncMiddleware(oldMiddleware);
   aex.use(pOld);
 
-  const asession = session({
-    secret: "keyboard cat",
-  });
-  const psession = toAsyncMiddleware(asession);
-  aex.use(psession);
-
   const router = new Router();
 
   router.handle({
@@ -30,11 +23,10 @@ test("Should compatible with express middlewares", async () => {
     // tslint:disable-next-line:object-literal-sort-keys
     handler: async (
       // tslint:disable-next-line:variable-name
-      req: any,
+      _req: any,
       res: any
     ) => {
       expect(oldInvoke).toBeTruthy();
-      expect(req.session).toBeTruthy();
       res.end("Hello Aex!");
     },
   });

@@ -1,6 +1,6 @@
 {
   "name": "@aex/core",
-  "version": "0.14.1",
+  "version": "0.15.0",
   "description": "aex",
   "license": "MIT",
   "repository": "calidion/aex",
@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "@aex/session": "^0.2.0",
+    "@types/body-parser": "^1.19.2",
     "@types/busboy": "^0.2.3",
     "@types/finalhandler": "^1.1.0",
     "@types/mime-types": "^2.1.0",
@@ -50,13 +51,11 @@
   "devDependencies": {
     "@types/cors": "^2.8.9",
     "@types/debug": "^4.1.5",
-    "@types/express-session": "^1.17.3",
     "@types/jest": "^26.0.20",
     "@types/request": "^2.48.5",
     "@types/supertest": "^2.0.10",
     "cors": "^2.8.5",
     "coveralls": "^3.1.0",
-    "express-session": "^1.17.1",
     "jest": "^26.6.3",
     "prettier": "^2.2.1",
     "rimraf": "^3.0.2",

@@ -26,11 +26,11 @@ function readDir(dir: string) {
     const subdir = resolve(dir, filename);
     const stat = statSync(subdir);
     result.push({
+      created: stat.ctime,
       filename,
       isDir: stat.isDirectory(),
-      created: stat.ctime,
-      size: stat.size,
       mode: stat.mode,
+      size: stat.size,
     });
     return stat;
   });
