@@ -11,7 +11,9 @@
 
 A simple, easy to use, decorated, scoped, object-oriented web server, with async linear middlewares and no more callbacks in middlewares.
 
-It is a web framework for typescript and nodejs.
+It can be used as a micro service server and a very large scalable enterprise web server with official or customized decorators plugged-in.
+
+It is a web framework based on typescript and nodejs.
 
 ## Philosophy
 
