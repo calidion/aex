@@ -7,7 +7,6 @@
 [![NPM version][npm-image]][npm-url]
 [![Downloads][downloads-image]][npm-url]
 [![Downloads][downloads-image-month]][npm-url]
-[![Dependency Status][daviddm-image]][daviddm-url]
 
 
 ## An Object-Oriented Web Framework needs no MVC
