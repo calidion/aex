@@ -10,7 +10,7 @@
 [![Dependency Status][daviddm-image]][daviddm-url]
 
 
-## A Object-Oriented Web Framework needs no MVC
+## An Object-Oriented Web Framework needs no MVC
 
 ```
 import { Aex, http } from "@aex/core";
