@@ -11,7 +11,7 @@
 
 ## An Object-Oriented Web Framework needs no MVC
 
-```
+```ts
 import { Aex, http } from "@aex/core";
 
 class Helloworld {
