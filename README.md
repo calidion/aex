@@ -9,6 +9,30 @@
 [![Downloads][downloads-image-month]][npm-url]
 [![Dependency Status][daviddm-image]][daviddm-url]
 
+
+## A Object-Oriented Web Framework needs no MVC
+
+```
+import { Aex, http } from "@aex/core";
+
+class Helloworld {
+  public message: string;
+  constructor() {
+    this.message = "Hello world!";
+  }
+  @http("/")
+  public async all(req: any, res: any) {
+    res.end(this.message);
+  }
+}
+
+const aex = new Aex();
+aex.push(Helloworld);
+aex.prepare().start(8086);
+```
+
+## Intro
+
 A simple, easy to use, decorated, scoped, object-oriented web server, with async linear middlewares and no more callbacks in middlewares.
 
 It can be used as a micro service server and a very large scalable enterprise web server with official or customized decorators plugged-in.
