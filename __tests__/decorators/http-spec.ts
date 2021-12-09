@@ -56,6 +56,18 @@ class Http {
     res.end("Http Get!");
   }
 
+  @get("/http/method")
+  public async getmethod(_req: any, res: any, _scope: any) {
+    expect(this.name === "hello").toBeTruthy();
+    res.end("Http Get!");
+  }
+
+  @post("/http/method")
+  public async postmethod(_req: any, res: any, _scope: any) {
+    expect(this.name === "hello").toBeTruthy();
+    res.end("Http Post!");
+  }
+
   @post("/http/post")
   public async rawpost(_req: any, res: any, _scope: any) {
     expect(this.name === "hello").toBeTruthy();
@@ -171,6 +183,11 @@ test("Should decorate methods with default method", async () => {
 
 test("Should decorate methods with default method", async () => {
   await GetText(port, "Http Get!", "/http/get");
+});
+
+test("Should decorate methods with both get/post method", async () => {
+  await GetText(port, "Http Get!", "/http/method");
+  await PostText(port, {}, "Http Post!", "/http/method");
 });
 
 test("Should decorate methods with default method", async () => {

@@ -21,7 +21,7 @@ export function body(
   const bodyTypes = ["urlencoded", "raw", "text", "json"];
 
   if (bodyTypes.indexOf(type) === -1) {
-    return function placeHolder() {};
+    return () => undefined;
   }
   const parser: any = bodyParser;
   const cb = parser[type](options);

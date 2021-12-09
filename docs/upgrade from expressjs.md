@@ -78,7 +78,7 @@ Web handler can be secured, accelerated and simplified with decorators and helpe
 Here is an example:
 
 ```ts
-class UserLoginHandler {
+class User {
   @post("/user/login")
   @body()
   @filter({
@@ -127,6 +127,8 @@ Boot up is one step more than express.
 
 ```ts
 const aex = new Aex();
+
+aex.push(User);
 aex.prepare().start();
 ```
 

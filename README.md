@@ -7,20 +7,36 @@
 [![NPM version][npm-image]][npm-url]
 [![Downloads][downloads-image]][npm-url]
 [![Downloads][downloads-image-month]][npm-url]
-[![Dependency Status][daviddm-image]][daviddm-url]
+
+
+## An Object-Oriented Web Framework needs no MVC
+
+```ts
+import { Aex, http } from "@aex/core";
+
+class Helloworld {
+  public message: string;
+  constructor() {
+    this.message = "Hello world!";
+  }
+  @http("/")
+  public async all(req: any, res: any) {
+    res.end(this.message);
+  }
+}
+
+const aex = new Aex();
+aex.push(Helloworld);
+aex.prepare().start(8086);
+```
+
+## Intro
 
 A simple, easy to use, decorated, scoped, object-oriented web server, with async linear middlewares and no more callbacks in middlewares.
 
-It is a web framework for typescript and nodejs.
+It can be used as a micro service server and a very large scalable enterprise web server with official or customized decorators plugged-in.
 
-It is also an example:
-
-1. To show that callbacks are not needed with promise/async/await.
-2. To use middlewares in a linear way instead of stacked way which is insecure.
-
-   > For the stacked middleware model will carry response back to the top most so called middleware pushed, where every middleware can access to the body returned.
-
-3. To pass some vairiables through middlewares and to the final handler.
+It is a web framework based on typescript and nodejs.
 
 ## Philosophy
 
@@ -39,6 +55,10 @@ It can be breifly describe as the following diagram:
 > The Web Staight Line
 
 ![The Web Staight Line](./docs/Web_Straight_Line.png)
+
+Web Straight Line is a true web server thoery for the web framework (comparing to the MVC thoery which is more suitable for desktop applications), which solves only the problems caused by web (namely the HTTP protocol) itself.
+
+It can be trimmed as a micro service web server or a full-fledged web server by docrating enough constraints using docrators, it is logic scalable by decorators/middlewares.
 
 ## Content
 
@@ -155,7 +175,7 @@ Add middlewares to aex, see detailed explanations in [middlewares](#middlewares)
 
 ### push
 
-push a controller class to aex, it takes on parameter and other arguments:
+push a controller class to aex, it takes at lease a class and its constructor's parameters followed by the class.
 
 1. aClass: a class prototype.
 2. args: takes the rest arguments for the class constructor
@@ -169,8 +189,10 @@ aex.push(HelloAex, parameter1, parameter2, ..., parameterN);
 
 ### prepare
 
-`prepare` is used here to init middlewares and business controllers if controllers are pushed into the `aex` instance. It takes no parameter and return the `aex` instance. so you can invoke the `start` function of aex.
-Aex itself has no mvc concepts, aex has the Web Straight Line concept that process all things on the line for each request.
+`prepare` is used here to init middlewares and request handlers written within use classes after these classes pushed to the `aex` instance. It takes no parameter and return the `aex` instance. so you can invoke the `start` function.
+
+Aex introduces no MVC but the Web Straight Line to relect the flows how http requests are processed.
+
 
 ```ts
 await aex.prepare().start();
@@ -187,18 +209,17 @@ aex
 
 `start` function is used to bootstrap the server with cerntain port. It takes three parameters:
 
-1. `port` the port taken by the web server, default to 3000
-2. `ip` the ip address where the port bind to, default to localhost
-3. `prepare` prepare middlewares or not, used when middlewares are not previously prepared
+1. `port`     the port taken by the web server, defaults to 3000
+2. `ip`       the ip address where the port binds to, defaults to localhost
+3. `prepare`  prepare middlewares or not, used when middlewares are not previously prepared
 
 ## Decorators
 
-Aex is simplified by decorators, so you should be familiar with decorators to full utilize aex.
+Aex is simplified by decorators, so you should be familiar with decorators to fully utilize aex.
 
 Decorators will be enriched over time. Currently aex provides the following decorators:
 
 1. [HTTP method decorators](#1-http-method-decorators) (`@http`, `@get`, `@post`)
-
 2. [Data parsing decorators](#2-data-parsing-decorators) (`@formdata`, `@query`, `@body`)
 3. [Static file serving decorators](#3-static-file-serving-decorators) (`@serve`)
 4. [Session management decorators](#4-session-management-decorators) (`@session`)
@@ -1030,18 +1051,13 @@ npm install
 npm test
 ```
 
-## No semver
+## Effective Versioning
 
-Semver has been posioning node.js npm for a long time, aex will not follow it. Aex will warn every user to keep aex version fixed and take care whenever update to a new version.
 Aex follows a general versioning called [Effective Versioning](https://github.com/calidion/effective-versioning).
-
-## No callbacks in middleware
-
-Aex is anti-koa which is wrong and misleading just like semver.
 
 ## All lives matter
 
-aex is an anti BLM project, a protector of human equality for all, and a protector of law and order.
+Aex supports human equality in law of rights only and supports human diversity in other area. Humans will never be equal in most area which is law of nature.
 
 ## Lincense
 
