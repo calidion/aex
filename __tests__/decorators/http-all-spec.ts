@@ -15,7 +15,11 @@ import {
 class HttpAll {
   public static message = "HttpAll Aex!";
   @http("*", "*")
-  public async all(_req: any, res: any, _scope: any) {
+  public async all(req: any, res: any, scope: any) {
+    const self = this as any;
+    expect(self.ctx.req).toBe(req);
+    expect(self.ctx.res).toBe(res);
+    expect(self.ctx.scope).toBe(scope);
     res.end(HttpAll.message);
   }
 }

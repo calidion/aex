@@ -78,6 +78,11 @@ export class Aex {
       assert(Array.isArray(urls));
       for (const u of urls) {
         router[m.toLowerCase()](u, async (...args: any[]) => {
+          instance.ctx = {
+            req: args[0],
+            res: args[1],
+            scope: args[2]
+          };
           await func.apply(instance, args);
         });
       }
