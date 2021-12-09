@@ -35,7 +35,6 @@ export function POST(options: any, body: any): Promise<IncomingMessage> {
     // This module is being mocked in __mocks__/request.js
 
     const postData = qs.stringify(body);
-    // console.log(postData);
     if (!options.headers) {
       options.headers = {};
     }

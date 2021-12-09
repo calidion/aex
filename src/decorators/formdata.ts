@@ -13,6 +13,7 @@ import { tmpdir } from "os";
 import { extname, join, resolve as pathResolve } from "path";
 
 import { v4 } from "uuid";
+import { copyByKey } from "../util/kv";
 
 export async function parseFormData(
   options: busboy.BusboyConfig,
@@ -61,17 +62,8 @@ export async function parseFormData(
       body[fieldname] = val;
     });
     busboy.on("finish", function onFinish() {
-      // scope.body = body;
-      for (const key in body) {
-        if (typeof key === "string") {
-          scope.body[key] = body[key];
-        }
-      }
-      for (const field in files) {
-        if (typeof field === "string") {
-          scope.files[field] = files[field];
-        }
-      }
+      copyByKey(body, scope.body);
+      copyByKey(files, scope.files);
       resolve(true);
     });
     req.pipe(busboy);

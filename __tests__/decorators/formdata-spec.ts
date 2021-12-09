@@ -8,6 +8,7 @@ import { http } from "../../src/index";
 import * as request from "request";
 
 import { initRandomPort } from "../../src/util/request";
+import { copyByKey } from "../../src/util/kv";
 
 class Formdata {
   protected name = "formdata";
@@ -28,6 +29,8 @@ class Formdata {
     const ccc = files["file"][2];
     expect(String(readFileSync(ccc.temp)) === "CCC").toBeTruthy();
     res.end("File Uploaded!");
+
+    copyByKey({ 1: {} }, {});
   }
 }
 

@@ -17,9 +17,9 @@ class HttpAll {
   @http("*", "*")
   public async all(req: any, res: any, scope: any) {
     const self = this as any;
-    expect(self.ctx.req).toBe(req);
-    expect(self.ctx.res).toBe(res);
-    expect(self.ctx.scope).toBe(scope);
+    expect(self.req).toBe(req);
+    expect(self.res).toBe(res);
+    expect(self.scope).toBe(scope);
     res.end(HttpAll.message);
   }
 }

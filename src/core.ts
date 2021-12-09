@@ -14,6 +14,7 @@ import {
 } from "http";
 import { One } from "./one";
 import { redirect } from "./response/redirect";
+import { Router } from "./router";
 import { Scope } from "./scope";
 import NotFound from "./status/404";
 import { IAsyncMiddleware } from "./types";
@@ -68,26 +69,6 @@ export class Aex {
     const router = One.instance();
     const func = instance[method];
 
-    function addUrl(m: string, urls: string | string[]) {
-      if (typeof urls === "string") {
-        router[m.toLowerCase()](urls, async (...args: any[]) => {
-          await func.apply(instance, args);
-        });
-        return;
-      }
-      assert(Array.isArray(urls));
-      for (const u of urls) {
-        router[m.toLowerCase()](u, async (...args: any[]) => {
-          instance.ctx = {
-            req: args[0],
-            res: args[1],
-            scope: args[2]
-          };
-          await func.apply(instance, args);
-        });
-      }
-    }
-
     if (!url) {
       url = name;
       name = "get";
@@ -96,14 +77,14 @@ export class Aex {
     if (typeof name === "string") {
       if (name === "*") {
         for (const m1 of METHODS) {
-          addUrl(m1, url);
+          this.addUrl(instance, func, router, m1, url);
         }
         return;
       }
 
       if (METHODS.indexOf(name.toUpperCase()) !== -1) {
         name = name.toLowerCase();
-        addUrl(name, url);
+        this.addUrl(instance, func, router, name, url);
       }
       return;
     }
@@ -112,7 +93,7 @@ export class Aex {
 
     for (const item of name) {
       if (METHODS.indexOf(item.toUpperCase()) !== -1) {
-        addUrl(item, url);
+        this.addUrl(instance, func, router, item, url);
       }
     }
   }
@@ -194,6 +175,27 @@ export class Aex {
 
   protected enhanceRes(res: ServerResponse) {
     redirect(res);
+  }
+
+  private addUrl(
+    instance: any,
+    func: any,
+    router: Router,
+    m: string,
+    urls: string | string[]
+  ) {
+    if (typeof urls === "string") {
+      urls = [urls];
+    }
+    assert(Array.isArray(urls));
+    for (const u of urls) {
+      router[m.toLowerCase()](u, async (...args: any[]) => {
+        instance.req = args[0];
+        instance.res = args[1];
+        instance.scope = args[2];
+        await func.apply(instance, args);
+      });
+    }
   }
 }
 export default Aex;

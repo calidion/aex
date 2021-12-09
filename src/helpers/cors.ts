@@ -1,5 +1,18 @@
-import { IncomingMessage, ServerResponse } from "http";
+import { IncomingHttpHeaders, IncomingMessage, ServerResponse } from "http";
 import { IAsyncMiddleware } from "../types";
+
+export function getAllowOrigin(origin: string, headers: IncomingHttpHeaders) {
+  if (origin === "*") {
+    if (!headers.refer) {
+      return headers.origin ? headers.origin : origin;
+    } else {
+      return typeof headers.refer === "string"
+        ? headers.refer
+        : headers.refer[0];
+    }
+  }
+  return origin;
+}
 
 export function cors(
   origin: string = "*",
@@ -8,17 +21,7 @@ export function cors(
   credentials = "true"
 ): IAsyncMiddleware {
   return async function corsHelper(req: IncomingMessage, res: ServerResponse) {
-    let ao = origin;
-    if (origin === "*") {
-      if (!req.headers.refer) {
-        ao = req.headers.origin ? req.headers.origin : origin;
-      } else {
-        ao =
-          typeof req.headers.refer === "string"
-            ? req.headers.refer
-            : req.headers.refer[0];
-      }
-    }
+    const ao = getAllowOrigin(origin, req.headers);
 
     // Website you wish to allow to connect
     res.setHeader("Access-Control-Allow-Origin", ao);

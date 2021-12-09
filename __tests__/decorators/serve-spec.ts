@@ -14,7 +14,7 @@ class StaticFileServer {
     return resolve(__dirname, "./fixtures");
   }
 
-  @assets("/alias")
+  @assets("/alias", true)
   public async ass() {
     return resolve(__dirname, "./fixtures");
   }
@@ -57,6 +57,18 @@ describe("serve", () => {
 
   test("Should access files", async () => {
     await GetText(port, "", "/alias/subdir/subsubdir/bbb");
+  });
+
+  test("Should access dir", async () => {
+    await GetStatus(port, "/alias/subdir", 200);
+  });
+
+  test("Should access dir", async () => {
+    await GetStatus(port, "/alias/subdir/", 200);
+  });
+
+  test("Should not access dir", async () => {
+    await GetStatus(port, "/assets/subdir", 403);
   });
 
   test("Should 400 files", async () => {

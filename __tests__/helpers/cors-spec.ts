@@ -1,7 +1,7 @@
 // import * as express from 'express';
 // tslint:disable-next-line:no-duplicate-imports
 
-import { Aex, http, inject, cors } from "../../src/index";
+import { Aex, http, inject, cors, getAllowOrigin } from "../../src/index";
 
 import { GetText, initRandomPort } from "../../src/index";
 
@@ -38,6 +38,9 @@ beforeAll(async () => {
 test("Should decorate methods with single http method name", async () => {
   const res = await GetText(port, "Hello Local!", "/", "localhost");
   expect(res.headers["access-control-allow-origin"]).toBe("*");
+
+  getAllowOrigin("*", { refer: ["aaa", "dbbb"] });
+  getAllowOrigin("*", { refer: "aaa" });
 });
 
 test("Should decorate methods with single http method name", async () => {
