@@ -1,3 +1,5 @@
+![logo](./assets/aex.png)
+
 # AEX
 
 [![Build Status](https://travis-ci.com/calidion/aex.svg?branch=master)](https://travis-ci.com/calidion/aex)
@@ -7,7 +9,6 @@
 [![NPM version][npm-image]][npm-url]
 [![Downloads][downloads-image]][npm-url]
 [![Downloads][downloads-image-month]][npm-url]
-
 
 ## An Object-Oriented Web Framework needs no MVC
 
@@ -81,10 +82,13 @@ It can be trimmed as a micro service web server or a full-fledged web server by 
 
 2. [Data parsing decorators](#2-data-parsing-decorators) (`@formdata`, `@query`, `@body`)
 3. [Static file serving decorators](#3-static-file-serving-decorators) (`@serve`)
-4. [Session management decorators](#4-session-management-decorators) (`@session`)
-5. [Data filtering and validation decorators](#5-data-filtering-and-validation-decorators) ( `@filter`)
-6. [Error definition decorators](#6-error-definition-decorators) (`@error`)
-7. [Custome middleware decorators](#7-custome-middleware-decorators) (`@inject`)
+
+4. [Template decorators](#4-template-decorators) (`@template`)
+
+5. [Session management decorators](#5-session-management-decorators) (`@session`)
+6. [Data filtering and validation decorators](#6-data-filtering-and-validation-decorators) ( `@filter`)
+7. [Error definition decorators](#7-error-definition-decorators) (`@error`)
+8. [Custome middleware decorators](#8-custome-middleware-decorators) (`@inject`)
 
 ## Shortcuts for helpers
 
@@ -149,14 +153,14 @@ yarn add @aex/core
    // or
    await aex.start(8080);
    ```
-   
+
 ### A quick starter for javascript users.
+
 Aex is written in typescript, but it can be very well used with javascript.
 
 You can click [here](https://github.com/aex-ts-node/aex-babel-node-js-starter) to get the starter for javascript developers.
 
 it is located at: https://github.com/aex-ts-node/aex-babel-node-js-starter; You can refer it every time your want to create a new aex project.
-
 
 ## Framework functions
 
@@ -164,8 +168,8 @@ The aex object has many functions for middlewares and classes.
 
 They are:
 
-1. [use](#use)  To add a middleware
-2. [push](#push)  To push a class
+1. [use](#use) To add a middleware
+2. [push](#push) To push a class
 3. [prepare](#prepare) To prepare the server
 4. [start](#start) To start the server
 
@@ -193,7 +197,6 @@ aex.push(HelloAex, parameter1, parameter2, ..., parameterN);
 
 Aex introduces no MVC but the Web Straight Line to relect the flows how http requests are processed.
 
-
 ```ts
 await aex.prepare().start();
 // or
@@ -209,9 +212,9 @@ aex
 
 `start` function is used to bootstrap the server with cerntain port. It takes three parameters:
 
-1. `port`     the port taken by the web server, defaults to 3000
-2. `ip`       the ip address where the port binds to, defaults to localhost
-3. `prepare`  prepare middlewares or not, used when middlewares are not previously prepared
+1. `port` the port taken by the web server, defaults to 3000
+2. `ip` the ip address where the port binds to, defaults to localhost
+3. `prepare` prepare middlewares or not, used when middlewares are not previously prepared
 
 ## Decorators
 
@@ -222,10 +225,11 @@ Decorators will be enriched over time. Currently aex provides the following deco
 1. [HTTP method decorators](#1-http-method-decorators) (`@http`, `@get`, `@post`)
 2. [Data parsing decorators](#2-data-parsing-decorators) (`@formdata`, `@query`, `@body`)
 3. [Static file serving decorators](#3-static-file-serving-decorators) (`@serve`)
-4. [Session management decorators](#4-session-management-decorators) (`@session`)
-5. [Data filtering and validation decorators](#5-data-filtering-and-validation-decorators) ( `@filter`)
-6. [Error definition decorators](#6-error-definition-decorators) (`@error`)
-7. [Custome middleware decorators](#7-custome-middleware-decorators) (`@inject`)
+4. [Template decorators](#4-template-decorators) (`@template`)
+5. [Session management decorators](#5-session-management-decorators) (`@session`)
+6. [Data filtering and validation decorators](#6-data-filtering-and-validation-decorators) ( `@filter`)
+7. [Error definition decorators](#7-error-definition-decorators) (`@error`)
+8. [Custome middleware decorators](#8-custome-middleware-decorators) (`@inject`)
 
 ### 1. HTTP method decorators
 
@@ -408,7 +412,137 @@ class StaticFileServer {
 }
 ```
 
-### 4. Session management decorators
+### 4. Template decorators
+
+Aex provides `@template` decorator for you to customize your template engine.
+
+with `@template` decorator, you can use multiple template engines within one class.
+
+### `@template`
+
+Decorator `@template` takes four parameters:
+
+1. init
+   template initializing function that returns an template engine
+2. path
+   where the templates are located
+3. ext
+   file extension if necessary, defaults to html
+4. options
+   options if necessary
+
+Function `init` should return an template engine that has the `render` function.
+the `render` function then can be used by the `res` object passed by the middleware.
+If the engine has no render function or the parameters are vary from the required `IInitFunction` interface, you should return a new engine with a compatible `render` function.
+
+When the engine is returned, it will be added to `scope`, so you can access it when necessary.
+
+Hence we have two ways to render a template file:
+
+1. use `res.render`
+2. use `scope.engine`
+
+The following is an example on how to use `@template` decorator:
+
+#### Access using `res.render`
+
+1. Template name `nunjucks`
+2. with compatible `render` function
+
+```typescript
+class Template {
+  @http("/one")
+  @template((path) => {
+    const loader = new nunjucks.FileSystemLoader([path], {});
+    const env = new nunjucks.Environment(loader, {
+      autoescape: false,
+    });
+    return env;
+  }, resolve(__dirname, "./views"))
+  public async name(_: any, res: any) {
+    // access using res.render
+    res.render("index.html", { hello: "Hello" });
+  }
+}
+```
+
+#### access using scope.engine
+
+1. Template name: `pug`
+2. with `render` function rewritten
+
+```typescript
+class Template {
+  @http("/pug")
+  @template((path) => {
+    const engine: any = {};
+
+    // engine render function rewrite
+    engine.render = function (name: string, data: any) {
+      let file = name;
+      if (!existsSync(name)) {
+        if (!existsSync(resolve(path, name))) {
+          throw new Error("File Not Found: " + resolve(path, name));
+        } else {
+          file = resolve(path, name);
+        }
+      }
+      return pug.renderFile(file, data);
+    };
+    return engine;
+  }, resolve(__dirname, "./views"))
+  public async name2(_: any, res: any, scope: any) {
+    // access using scope.engine
+    res.end(scope.engine.render("index.pug", { hello: "Hello3" }));
+  }
+}
+```
+
+> Be sure to remember when using `scope.engine`, you need `res.end` too.
+
+Due to the flexibility aex provides, you can mix then with one class with ease.
+
+```ts
+class Template {
+  @http("/one")
+  @template((path) => {
+    const loader = new nunjucks.FileSystemLoader([path], {});
+    const env = new nunjucks.Environment(loader, {
+      autoescape: false,
+    });
+    return env;
+  }, resolve(__dirname, "./views"))
+  public async name(_: any, res: any) {
+    // access using res.render
+    res.render("index.html", { hello: "Hello" });
+  }
+
+  @http("/pug")
+  @template((path) => {
+    const engine: any = {};
+
+    // engine render function rewrite
+    engine.render = function (name: string, data: any) {
+      let file = name;
+      if (!existsSync(name)) {
+        if (!existsSync(resolve(path, name))) {
+          throw new Error("File Not Found: " + resolve(path, name));
+        } else {
+          file = resolve(path, name);
+        }
+      }
+      return pug.renderFile(file, data);
+    };
+    return engine;
+  }, resolve(__dirname, "./views"))
+  public async name2(_: any, res: any, scope: any) {
+    // access using scope.engine
+    res.end(scope.engine.render("index.pug", { hello: "Hello3" }));
+  }
+}
+```
+
+### 5. Session management decorators
 
 Aex provides `@session` decorator for default cookie based session management.
 Session in other format can be realized with decorator `@inject` .
@@ -467,7 +601,7 @@ class Session {
 
 > Share only one store object over requests.
 
-### 5. Data filtering and validation decorators
+### 6. Data filtering and validation decorators
 
 Aex provides `@filter` to filter and validate data for you.
 
@@ -547,7 +681,7 @@ class User {
 }
 ```
 
-### 6. Error definition decorators
+### 7. Error definition decorators
 
 Aex provides `@error` decorator for error definition
 
@@ -586,15 +720,15 @@ class User {
     const [, , scope] = arguments;
     const { error: e } = scope;
     const { ILoveYou } = e;
-    throw new ILoveYou('en-US');
-    throw new ILoveYou('zh-CN');
-    throw new ILoveYou();   // You can ignore language becuase you are now use the default language.
+    throw new ILoveYou("en-US");
+    throw new ILoveYou("zh-CN");
+    throw new ILoveYou(); // You can ignore language becuase you are now use the default language.
     res.end("User Error!");
   }
 }
 ```
 
-### 7. Custome middleware decorators
+### 8. Custome middleware decorators
 
 Aex provides `@inject` decorator for middleware injection.
 

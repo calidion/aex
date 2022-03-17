@@ -27,6 +27,16 @@ export class Scope {
   private _params: { [x: string]: object } = {};
   // tslint:disable-next-line:variable-name
   private _files: { [x: string]: object } = {};
+  // tslint:disable-next-line:variable-name
+  private _engine: { [x: string]: object } = {};
+
+  get engine() {
+    return this._engine;
+  }
+
+  set engine(value) {
+    this._engine = value;
+  }
 
   get time() {
     return this._timer;
@@ -74,6 +84,7 @@ export class Scope {
     this._error = {};
     this._files = {};
     this._timer.reset();
+    this._engine = {};
   }
 
   get debug() {
