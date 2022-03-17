@@ -4,19 +4,17 @@
  * MIT Licensed
  */
 
+export interface IInitFunction {
+  render: (name: string, data: any) => void;
+}
 
- export interface IInitFunction  {
-   render: (name: string, data: any) => void
- }
-
-
- /**
-  * 
-  * @param init template initializing function that returns an template engine
-  * @param path path where the templates are located
-  * @param ext file extension if necessary, defaults to html
-  * @param options options if necessary
-  */
+/**
+ *
+ * @param init template initializing function that returns an template engine
+ * @param path path where the templates are located
+ * @param ext file extension if necessary, defaults to html
+ * @param options options if necessary
+ */
 
 export function template(
   init: (path: string, ext: string, options: any) => IInitFunction,
@@ -39,7 +37,7 @@ export function template(
       const res = args[1];
       const scope = args[2];
       const engine = init(path, ext, options);
-      res.render = function (name: string, data: any) {
+      res.render = (name: string, data: any) => {
         res.end(engine.render(name, data));
       };
       scope.engine = engine;
