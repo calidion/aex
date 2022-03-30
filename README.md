@@ -28,7 +28,8 @@ class Helloworld {
 
 const aex = new Aex();
 aex.push(Helloworld);
-aex.prepare().start(8086);
+// aex.prepare().start(8086).then();
+await aex.prepare().start(8086);
 ```
 
 ## Intro
