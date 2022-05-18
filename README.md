@@ -38,7 +38,16 @@ A simple, easy to use, decorated, scoped, object-oriented web server, with async
 
 It can be used as a micro service server and a very large scalable enterprise web server with official or customized decorators plugged-in.
 
-It is a web framework based on typescript and nodejs.
+It is a web framework based on decorators for `node.js`.
+
+So you should enable `decorators` to use it.
+
+### Enable decorators
+
+1. JavaScript users please refer [https://babeljs.io/docs/en/babel-plugin-proposal-decorators](https://babeljs.io/docs/en/babel-plugin-proposal-decorators) for detailed information. Or simply clone [this starter](https://github.com/aex-ts-node/aex-babel-node-js-starter) to start a new aex project: https://github.com/aex-ts-node/aex-babel-node-js-starter
+2. TypeScript users please refer [https://www.typescriptlang.org/docs/handbook/decorators.html](https://www.typescriptlang.org/docs/handbook/decorators.html) for more infomation.
+
+
 
 ## Philosophy
 
