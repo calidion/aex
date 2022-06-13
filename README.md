@@ -1,6 +1,6 @@
 ![logo](./assets/aex.png)
 
-# AEX
+# AEX  - Next Generation Web Framework for node.js
 
 [![Build Status](https://travis-ci.com/calidion/aex.svg?branch=master)](https://travis-ci.com/calidion/aex)
 [![Coverage Status](https://coveralls.io/repos/github/calidion/aex/badge.svg?branch=master)](https://coveralls.io/github/calidion/aex?branch=master)
