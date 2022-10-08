@@ -611,6 +611,14 @@ class Session {
 
 > Share only one store object over requests.
 
+Use the following code if you encouter session cycle lags/deadth in some environment:
+
+```ts
+    if (scope.session.save) {
+      await scope.session.save();
+    }
+```
+
 ### 6. Data filtering and validation decorators
 
 Aex provides `@filter` to filter and validate data for you.
