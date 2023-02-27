@@ -1,6 +1,6 @@
 ![logo](./assets/aex.png)
 
-# AEX  - Next Generation Web Framework for node.js
+# AEX - Next Generation Web Framework for node.js
 
 [![Build Status](https://travis-ci.com/calidion/aex.svg?branch=master)](https://travis-ci.com/calidion/aex)
 [![Coverage Status](https://coveralls.io/repos/github/calidion/aex/badge.svg?branch=master)](https://coveralls.io/github/calidion/aex?branch=master)
@@ -46,8 +46,6 @@ So you should enable `decorators` to use it.
 
 1. JavaScript users please refer [https://babeljs.io/docs/en/babel-plugin-proposal-decorators](https://babeljs.io/docs/en/babel-plugin-proposal-decorators) for detailed information. Or simply clone [this starter](https://github.com/aex-ts-node/aex-babel-node-js-starter) to start a new aex project: https://github.com/aex-ts-node/aex-babel-node-js-starter
 2. TypeScript users please refer [https://www.typescriptlang.org/docs/handbook/decorators.html](https://www.typescriptlang.org/docs/handbook/decorators.html) for more infomation.
-
-
 
 ## Philosophy
 
@@ -614,9 +612,9 @@ class Session {
 Use the following code if you encouter session cycle lags/deadth in some environment:
 
 ```ts
-    if (scope.session.save) {
-      await scope.session.save();
-    }
+if (scope.session.save) {
+  await scope.session.save();
+}
 ```
 
 ### 6. Data filtering and validation decorators
@@ -1201,6 +1199,42 @@ aex.use(pOld);
 ```sh
 npm install
 npm test
+```
+
+## Integration with others libraries
+
+You can every easyly integrate other libraries into aex. You can use global or local middlewares to add them to aex.
+
+### prisma
+
+```ts
+const aex = new Aex();
+
+prisma = new PrismaClient();
+await prisma.$connect();
+
+// Construct a middleware to add prisma to aex's middleware carrier, the scope variable.
+//
+
+
+const prismaAttachMiddleware = async function (req, res, scope) {
+  Object.defineProperty(scope, "prisma", {
+    value: prisma,
+  });
+};
+
+
+// The Global Way
+aex.use(prismaAttachMiddleware);
+
+// The Local Way
+class Hello() {
+  @http("/")
+  @inject(prismaAttachMiddleware)
+  public async index() {
+
+  }
+}
 ```
 
 ## Effective Versioning
