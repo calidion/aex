@@ -1203,7 +1203,7 @@ npm test
 
 ## Integration with others libraries
 
-You can every easyly integrate other libraries into aex. You can use global or local middlewares to add them to aex.
+You can very easily integrate other libraries into aex. You can use global or local middlewares to add them to aex.
 
 ### prisma
 
@@ -1214,10 +1214,7 @@ prisma = new PrismaClient();
 await prisma.$connect();
 
 // Construct a middleware to add prisma to aex's middleware carrier, the scope variable.
-//
-
-
-const prismaAttachMiddleware = async function (req, res, scope) {
+const prismaAttachingMiddleware = async function (req, res, scope) {
   Object.defineProperty(scope, "prisma", {
     value: prisma,
   });
@@ -1225,12 +1222,12 @@ const prismaAttachMiddleware = async function (req, res, scope) {
 
 
 // The Global Way
-aex.use(prismaAttachMiddleware);
+aex.use(prismaAttachingMiddleware);
 
 // The Local Way
 class Hello() {
   @http("/")
-  @inject(prismaAttachMiddleware)
+  @inject(prismaAttachingMiddleware)
   public async index() {
 
   }
