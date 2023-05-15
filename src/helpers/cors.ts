@@ -1,5 +1,5 @@
-import { IncomingHttpHeaders, IncomingMessage, ServerResponse } from "http";
-import { IAsyncMiddleware } from "../types";
+import { IncomingHttpHeaders } from "http";
+import { IAsyncMiddleware, IRequest, IResponse } from "../types";
 
 export function getAllowOrigin(origin: string, headers: IncomingHttpHeaders) {
   if (origin === "*") {
@@ -20,7 +20,7 @@ export function cors(
   headers = "X-Requested-With,content-type",
   credentials = "true"
 ): IAsyncMiddleware {
-  return async function corsHelper(req: IncomingMessage, res: ServerResponse) {
+  return async function corsHelper(req: IRequest, res: IResponse) {
     const ao = getAllowOrigin(origin, req.headers);
 
     // Website you wish to allow to connect

@@ -4,10 +4,10 @@
  * MIT Licensed
  */
 
-import { ServerResponse } from "http";
+import { IResponse } from "../types";
 
 // tslint:disable-next-line:variable-name
-export function InternalServerError(res: ServerResponse) {
+export function InternalServerError(res: IResponse) {
   res.statusCode = 500;
 
   const html = `

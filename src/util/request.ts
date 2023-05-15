@@ -4,18 +4,19 @@
  * MIT Licensed
  */
 
-import { get, IncomingMessage, request } from "http";
+import { get, request } from "http";
 import * as qs from "querystring";
 import Aex from "../core";
+import { IRequest } from "../types";
 
-export function GET(options: any): Promise<IncomingMessage> {
+export function GET(options: any): Promise<IRequest> {
   return new Promise((resolve) => {
     // This is an example of an http request, for example to fetch
     // user data from an API.
     // This module is being mocked in __mocks__/request.js
-    get(options, (response: IncomingMessage) => {
+    get(options, (response: IRequest) => {
       const data: any[] = [];
-      response.on("data", (chunk) => data.push(chunk));
+      response.on("data", (chunk: any) => data.push(chunk));
       response.on("end", () => {
         const value = String(data.join(""));
         Object.defineProperty(response, "text", {
@@ -28,7 +29,7 @@ export function GET(options: any): Promise<IncomingMessage> {
   });
 }
 
-export function POST(options: any, body: any): Promise<IncomingMessage> {
+export function POST(options: any, body: any): Promise<IRequest> {
   return new Promise((resolve) => {
     // This is an example of an http request, for example to fetch
     // user data from an API.
@@ -44,9 +45,9 @@ export function POST(options: any, body: any): Promise<IncomingMessage> {
       "Content-Length": Buffer.byteLength(postData),
     });
     options.body = postData;
-    const req = request(options, (response: IncomingMessage) => {
+    const req = request(options, (response: IRequest) => {
       const data: any[] = [];
-      response.on("data", (chunk) => data.push(chunk));
+      response.on("data", (chunk: any) => data.push(chunk));
       response.on("end", () => {
         const value = String(data.join(""));
         Object.defineProperty(response, "text", {

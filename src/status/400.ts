@@ -4,10 +4,10 @@
  * MIT Licensed
  */
 
-import { ServerResponse } from "http";
+import { IResponse } from "../types";
 
 // tslint:disable-next-line:variable-name
-export function BadRequest(res: ServerResponse) {
+export function BadRequest(res: IResponse) {
   res.statusCode = 400;
 
   const html = `

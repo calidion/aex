@@ -4,10 +4,10 @@
  * MIT Licensed
  */
 
-import { IncomingMessage, ServerResponse } from "http";
 import { promisify } from "util";
 import * as WebSocket from "ws";
 import { Scope } from "./scope";
+import { IRequest, IResponse } from "./types";
 import {
   IAsyncMiddleware,
   IMiddeleWare,
@@ -15,15 +15,15 @@ import {
 } from "./types";
 
 export function toAsyncMiddleware(cb: IMiddeleWare): IAsyncMiddleware {
-  return async (req: IncomingMessage, res: ServerResponse) => {
+  return async (req: IRequest, res: IResponse) => {
     const promisified = promisify(cb);
     await promisified(req, res);
   };
 }
 
 export async function processMiddleware(
-  req: IncomingMessage,
-  res: ServerResponse,
+  req: IRequest,
+  res: IResponse,
   middlewares: IAsyncMiddleware[],
   scope?: Scope
 ): Promise<boolean> {
@@ -39,7 +39,7 @@ export async function processMiddleware(
 
 export async function processWebSocketMiddleware(
   middlewares: IWebSocketAsyncMiddleware[],
-  req: IncomingMessage,
+  req: IRequest,
   socket: WebSocket,
   scope?: Scope
 ): Promise<boolean> {

@@ -5,10 +5,9 @@
  */
 
 import { EventEmitter } from "events";
-import { IncomingMessage } from "http";
 import * as WebSocket from "ws";
 import { Scope } from "../scope";
-import { IServer, IWebSocketAsyncMiddleware } from "../types";
+import { IRequest, IServer, IWebSocketAsyncMiddleware } from "../types";
 import { processWebSocketMiddleware } from "../util";
 import { MessageHandler } from "./handler";
 
@@ -26,7 +25,7 @@ export class WebSocketServer extends EventEmitter {
     this.server = new WebSocket.Server({ server });
     this.server.on(
       WebSocketServer.CONNECTION,
-      async (ws: WebSocket, req: IncomingMessage) => {
+      async (ws: WebSocket, req: IRequest) => {
         const scope: Scope = new Scope();
         scope.time.reset();
         scope.outer.ws = ws;

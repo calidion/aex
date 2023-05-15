@@ -4,8 +4,8 @@
  * calidion<calidion@gmail.com>
  * MIT Licensed
  */
-import { IncomingMessage, ServerResponse } from "http";
 import { Scope } from "../scope";
+import { IRequest, IResponse } from "../types";
 
 import * as Busboy from "busboy";
 import { mkdtempSync, writeFileSync } from "fs";
@@ -17,7 +17,7 @@ import { copyByKey } from "../util/kv";
 
 export async function parseFormData(
   options: busboy.BusboyConfig,
-  req: IncomingMessage,
+  req: IRequest,
   scope: Scope
 ) {
   options.headers = req.headers;
@@ -88,8 +88,8 @@ export function formdata(options: busboy.BusboyConfig = {}) {
 
     // tslint:disable-next-line: only-arrow-functions
     descriptor.value = async function (
-      req: IncomingMessage,
-      res: ServerResponse,
+      req: IRequest,
+      res: IResponse,
       scope: Scope
     ) {
       await parseFormData(options, req, scope);

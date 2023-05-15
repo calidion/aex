@@ -5,14 +5,14 @@
  */
 
 import { assert } from "console";
-import { IncomingMessage, METHODS, ServerResponse } from "http";
+import { METHODS } from "http";
 import { One } from "./one";
 import { redirect } from "./response/redirect";
 import { Router } from "./router";
 import { Scope } from "./scope";
 import { start } from "./server";
 import NotFound from "./status/404";
-import { IAsyncMiddleware, IServer } from "./types";
+import { IAsyncMiddleware, IRequest, IResponse, IServer } from "./types";
 import { processMiddleware } from "./util";
 
 export class Aex {
@@ -137,7 +137,7 @@ export class Aex {
     }
 
     this._server = await start(
-      (req: IncomingMessage, res: ServerResponse) => {
+      (req: IRequest, res: IResponse) => {
         this.routing(req, res).then();
       },
       port,
@@ -147,7 +147,7 @@ export class Aex {
     return this._server;
   }
 
-  protected async routing(req: IncomingMessage, res: ServerResponse) {
+  protected async routing(req: IRequest, res: IResponse) {
     const scope: Scope = Object.create(this.scope);
     scope.reset();
 
@@ -161,7 +161,7 @@ export class Aex {
     }
   }
 
-  protected enhanceRes(res: ServerResponse) {
+  protected enhanceRes(res: IResponse) {
     redirect(res);
   }
 

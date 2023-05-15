@@ -4,8 +4,8 @@
  * MIT Licensed
  */
 import { Cookie, MemoryStore, Store } from "@aex/session";
-import { IncomingMessage, ServerResponse } from "http";
 import { Scope } from "../scope";
+import { IRequest, IResponse } from "../types";
 
 export type ISessionStore = Store;
 
@@ -30,8 +30,8 @@ export function session(parser?: ISessionStore) {
 
     // tslint:disable-next-line: only-arrow-functions
     descriptor.value = async function (
-      req: IncomingMessage,
-      res: ServerResponse,
+      req: IRequest,
+      res: IResponse,
       scope: Scope
     ) {
       await cookie.parse(req, res, scope);

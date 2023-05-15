@@ -9,11 +9,9 @@ import * as WebSocket from "ws";
 import { Scope } from "./scope";
 
 export type ICallback = (error: Error) => void;
-export type Request = IncomingMessage;
-export type Response = ServerResponse;
 
-export type IRequest = Request | null;
-export type IResponse = Response | null;
+export type IRequest = IncomingMessage | any;
+export type IResponse = ServerResponse | any;
 export type IServer = Server | any;
 
 export type IMiddeleWare = (

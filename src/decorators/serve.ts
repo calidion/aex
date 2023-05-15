@@ -5,13 +5,13 @@
  * MIT Licensed
  */
 import { createReadStream, existsSync, readdirSync, statSync } from "fs";
-import { IncomingMessage, ServerResponse } from "http";
 import { lookup } from "mime-types";
 import { join, resolve } from "path";
 import { One } from "../one";
 import { Scope } from "../scope";
 import BadRequest from "../status/400";
 import NotFound from "../status/404";
+import { IRequest, IResponse } from "../types";
 
 /**
  * serve static files
@@ -51,8 +51,8 @@ export function serve(url: string, enableDir: boolean = false) {
 
     // // tslint:disable-next-line: only-arrow-functions
     descriptor.value = async function (
-      req: IncomingMessage,
-      res: ServerResponse,
+      req: IRequest,
+      res: IResponse,
       scope: Scope
     ) {
       const realPath = await origin.apply(this, [req, res, scope]);

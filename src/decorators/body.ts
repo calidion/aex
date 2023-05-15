@@ -5,8 +5,8 @@
  */
 
 import * as bodyParser from "body-parser";
-import { IncomingMessage, ServerResponse } from "http";
 import { Scope } from "../scope";
+import { IRequest, IResponse } from "../types";
 import { toAsyncMiddleware } from "../util";
 
 /**
@@ -40,7 +40,7 @@ export function body(
     descriptor.value = async function (...args: any[]) {
       await asyncCB.apply(
         asyncCB,
-        args as [IncomingMessage, ServerResponse, (Scope | undefined)?]
+        args as [IRequest, IResponse, (Scope | undefined)?]
       );
       const req: any = args[0];
       const scope: Scope = args[2];

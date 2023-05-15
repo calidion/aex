@@ -3,9 +3,9 @@
  * Copyright(c) 2020- calidion<calidion@gmail.com>
  * MIT Licensed
  */
-import { IncomingMessage, ServerResponse } from "http";
 import { One } from "../one";
 import { Scope } from "../scope";
+import { IRequest, IResponse } from "../types";
 import { IAsyncMiddleware } from "../types";
 
 /**
@@ -27,8 +27,8 @@ export function inject(
 
     // tslint:disable-next-line: only-arrow-functions
     descriptor.value = async function (
-      req: IncomingMessage,
-      res: ServerResponse,
+      req: IRequest,
+      res: IResponse,
       scope?: Scope
     ) {
       const instance = One.getInstance(target.constructor.name, propertyKey);

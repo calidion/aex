@@ -4,7 +4,7 @@
  * MIT Licensed
  */
 
-import { IncomingMessage, METHODS, ServerResponse } from "http";
+import { METHODS } from "http";
 import { match } from "path-to-regexp";
 import { Scope } from "./scope";
 import NotFound from "./status/404";
@@ -12,6 +12,8 @@ import {
   IAsyncHandler,
   IAsyncMiddleware,
   IOptions,
+  IRequest,
+  IResponse,
   IRoute,
   IRouteItem,
 } from "./types";
@@ -85,12 +87,12 @@ export class Router {
 
   public toMiddleware() {
     this.prepare();
-    return async (req: IncomingMessage, res: ServerResponse, scope?: Scope) => {
+    return async (req: IRequest, res: IResponse, scope?: Scope) => {
       this.run(req, res, scope);
     };
   }
 
-  public async run(req: IncomingMessage, res: ServerResponse, scope?: Scope) {
+  public async run(req: IRequest, res: IResponse, scope?: Scope) {
     let url = req.url as string;
     url = url.split("?")[0];
     const method = req.method;
@@ -129,11 +131,7 @@ export class Router {
     return;
   }
 
-  protected enhanceRequest(
-    params: object,
-    req: IncomingMessage,
-    scope?: Scope
-  ) {
+  protected enhanceRequest(params: object, req: IRequest, scope?: Scope) {
     Object.defineProperty(req, "params", {
       enumerable: true,
       get: () => {
@@ -144,8 +142,8 @@ export class Router {
   }
 
   protected async requestHandling(
-    req: IncomingMessage,
-    res: ServerResponse,
+    req: IRequest,
+    res: IResponse,
     handler: IRouteItem,
     scope?: Scope
   ) {

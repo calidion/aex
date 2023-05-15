@@ -4,10 +4,10 @@
  * MIT Licensed
  */
 
-import { ServerResponse } from "http";
+import { IResponse } from "../types";
 
 // tslint:disable-next-line:variable-name
-export function NotFound(res: ServerResponse) {
+export function NotFound(res: IResponse) {
   res.statusCode = 404;
 
   const html = `
