@@ -5,10 +5,10 @@
  */
 
 import { EventEmitter } from "events";
-import { IncomingMessage, Server } from "http";
+import { IncomingMessage } from "http";
 import * as WebSocket from "ws";
 import { Scope } from "../scope";
-import { IWebSocketAsyncMiddleware } from "../types";
+import { IServer, IWebSocketAsyncMiddleware } from "../types";
 import { processWebSocketMiddleware } from "../util";
 import { MessageHandler } from "./handler";
 
@@ -21,7 +21,7 @@ export class WebSocketServer extends EventEmitter {
 
   private middlewares: IWebSocketAsyncMiddleware[] = [];
 
-  constructor(server: Server) {
+  constructor(server: IServer) {
     super();
     this.server = new WebSocket.Server({ server });
     this.server.on(

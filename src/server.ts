@@ -1,10 +1,11 @@
-import { createServer, RequestListener, Server } from "http";
+import { createServer, RequestListener } from "http";
+import { IServer } from "./types";
 
 export async function start(
   serveringCallback: RequestListener,
   port: number,
   ip: string
-): Promise<Server> {
+): Promise<IServer> {
   return new Promise((resolve, reject) => {
     const server = createServer(serveringCallback);
 

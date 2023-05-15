@@ -4,7 +4,7 @@
  * MIT Licensed
  */
 
-import { IncomingMessage, ServerResponse } from "http";
+import { IncomingMessage, Server, ServerResponse } from "http";
 import * as WebSocket from "ws";
 import { Scope } from "./scope";
 
@@ -14,6 +14,7 @@ export type Response = ServerResponse;
 
 export type IRequest = Request | null;
 export type IResponse = Response | null;
+export type IServer = Server | any;
 
 export type IMiddeleWare = (
   req: Request | any,

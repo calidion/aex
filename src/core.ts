@@ -5,14 +5,14 @@
  */
 
 import { assert } from "console";
-import { IncomingMessage, METHODS, Server, ServerResponse } from "http";
+import { IncomingMessage, METHODS, ServerResponse } from "http";
 import { One } from "./one";
 import { redirect } from "./response/redirect";
 import { Router } from "./router";
 import { Scope } from "./scope";
 import { start } from "./server";
 import NotFound from "./status/404";
-import { IAsyncMiddleware } from "./types";
+import { IAsyncMiddleware, IServer } from "./types";
 import { processMiddleware } from "./util";
 
 export class Aex {
@@ -27,7 +27,7 @@ export class Aex {
   protected middlewares: IAsyncMiddleware[] = [];
   protected scope = new Scope();
   // tslint:disable-next-line:variable-name
-  private _server?: Server;
+  private _server?: IServer;
   private classes: any[] = [];
   private controllerInstances: any[] = [];
 
@@ -131,7 +131,7 @@ export class Aex {
     port: number = 3000,
     ip: string = "localhost",
     prepare: boolean = false
-  ): Promise<Server> {
+  ): Promise<IServer> {
     if (prepare) {
       this.prepare();
     }
@@ -145,24 +145,6 @@ export class Aex {
     );
 
     return this._server;
-
-    // return new Promise((resolve, reject) => {
-    //   const server = createServer(
-    //     (req: IncomingMessage, res: ServerResponse) => {
-    //       this.routing(req, res).then();
-    //     }
-    //   );
-
-    //   server.listen(port, ip);
-    //   server.on("error", (error: Error) => {
-    //     reject(error);
-    //   });
-
-    //   server.on("listening", () => {
-    //     this._server = server;
-    //     resolve(server);
-    //   });
-    // });
   }
 
   protected async routing(req: IncomingMessage, res: ServerResponse) {
