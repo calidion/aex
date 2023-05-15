@@ -4,13 +4,13 @@
  * MIT Licensed
  */
 
-import { METHODS } from "http";
 import { match } from "path-to-regexp";
 import { Scope } from "./scope";
 import NotFound from "./status/404";
 import {
   IAsyncHandler,
   IAsyncMiddleware,
+  IHTTPMethods,
   IOptions,
   IRequest,
   IResponse,
@@ -32,7 +32,7 @@ export class Router {
   [x: string]: any;
 
   constructor() {
-    for (const method of METHODS) {
+    for (const method of IHTTPMethods) {
       Object.defineProperty(this, method.toLowerCase(), {
         enumerable: true,
         value: (
@@ -54,7 +54,7 @@ export class Router {
 
   public handle(options: IOptions) {
     const method = options.method.toUpperCase();
-    if (METHODS.indexOf(method) === -1) {
+    if (IHTTPMethods.indexOf(method) === -1) {
       throw new Error(
         "wrong method: " + options.method + " with url: " + options.url
       );

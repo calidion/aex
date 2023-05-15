@@ -5,14 +5,19 @@
  */
 
 import { assert } from "console";
-import { METHODS } from "http";
 import { One } from "./one";
 import { redirect } from "./response/redirect";
 import { Router } from "./router";
 import { Scope } from "./scope";
 import { start } from "./server";
 import NotFound from "./status/404";
-import { IAsyncMiddleware, IRequest, IResponse, IServer } from "./types";
+import {
+  IAsyncMiddleware,
+  IHTTPMethods,
+  IRequest,
+  IResponse,
+  IServer,
+} from "./types";
 import { processMiddleware } from "./util";
 
 export class Aex {
@@ -71,13 +76,13 @@ export class Aex {
 
     if (typeof name === "string") {
       if (name === "*") {
-        for (const m1 of METHODS) {
+        for (const m1 of IHTTPMethods) {
           this.addUrl(instance, func, router, m1, url);
         }
         return;
       }
 
-      if (METHODS.indexOf(name.toUpperCase()) !== -1) {
+      if (IHTTPMethods.indexOf(name.toUpperCase()) !== -1) {
         name = name.toLowerCase();
         this.addUrl(instance, func, router, name, url);
       }
@@ -87,7 +92,7 @@ export class Aex {
     assert(Array.isArray(name));
 
     for (const item of name) {
-      if (METHODS.indexOf(item.toUpperCase()) !== -1) {
+      if (IHTTPMethods.indexOf(item.toUpperCase()) !== -1) {
         this.addUrl(instance, func, router, item, url);
       }
     }

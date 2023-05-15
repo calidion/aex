@@ -1,7 +1,6 @@
-import { IncomingHttpHeaders } from "http";
-import { IAsyncMiddleware, IRequest, IResponse } from "../types";
+import { IAsyncMiddleware, IHTTPHeaders, IRequest, IResponse } from "../types";
 
-export function getAllowOrigin(origin: string, headers: IncomingHttpHeaders) {
+export function getAllowOrigin(origin: string, headers: IHTTPHeaders) {
   if (origin === "*") {
     if (!headers.refer) {
       return headers.origin ? headers.origin : origin;

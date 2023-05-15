@@ -4,37 +4,52 @@
  * MIT Licensed
  */
 
-import { IncomingMessage, Server, ServerResponse } from "http";
+import {
+  IncomingHttpHeaders,
+  IncomingMessage,
+  METHODS,
+  Server,
+  ServerResponse,
+} from "http";
 import * as WebSocket from "ws";
 import { Scope } from "./scope";
 
+// Constants
+export const IHTTPMethods = METHODS;
+
 export type ICallback = (error: Error) => void;
 
+// Generalized HTTP Related Types
 export type IRequest = IncomingMessage | any;
 export type IResponse = ServerResponse | any;
+export type IHTTPHeaders = IncomingHttpHeaders | any;
 export type IServer = Server | any;
 
+// Aex Framework Types
+
+//    1. Middleware Types
 export type IMiddeleWare = (
-  req: Request | any,
-  res: Response | any,
+  req: IRequest,
+  res: IResponse,
   next: ICallback | any
 ) => void;
 
 export type IAsyncMiddleware = (
-  req: Request,
-  res: Response,
+  req: IRequest,
+  res: IResponse,
   scope?: Scope
 ) => Promise<boolean | undefined | null | void>;
 
 export type IAsyncFilterMiddleware = (
   error: any,
-  req: Request,
-  res: Response,
+  req: IRequest,
+  res: IResponse,
   scope?: Scope
 ) => Promise<boolean | undefined | null | void>;
 
 export type IAsyncHandler = IAsyncMiddleware;
 
+// 2. Router Types
 export interface IRouteItem {
   handler: IAsyncHandler;
   middlewares?: IAsyncMiddleware[];
@@ -51,9 +66,9 @@ export interface IOptions {
   middlewares?: IAsyncMiddleware[];
 }
 
-// Websocket
+// 1. Websocket Types
 export type IWebSocketAsyncMiddleware = (
-  req: Request,
+  req: IRequest,
   socket: WebSocket,
   scope?: Scope
 ) => Promise<boolean | undefined | null | void>;
