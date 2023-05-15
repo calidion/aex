@@ -5,17 +5,12 @@
  */
 
 import { assert } from "console";
-import {
-  createServer,
-  IncomingMessage,
-  METHODS,
-  Server,
-  ServerResponse,
-} from "http";
+import { IncomingMessage, METHODS, Server, ServerResponse } from "http";
 import { One } from "./one";
 import { redirect } from "./response/redirect";
 import { Router } from "./router";
 import { Scope } from "./scope";
+import { start } from "./server";
 import NotFound from "./status/404";
 import { IAsyncMiddleware } from "./types";
 import { processMiddleware } from "./util";
@@ -140,23 +135,34 @@ export class Aex {
     if (prepare) {
       this.prepare();
     }
-    return new Promise((resolve, reject) => {
-      const server = createServer(
-        (req: IncomingMessage, res: ServerResponse) => {
-          this.routing(req, res).then();
-        }
-      );
 
-      server.listen(port, ip);
-      server.on("error", (error: Error) => {
-        reject(error);
-      });
+    this._server = await start(
+      (req: IncomingMessage, res: ServerResponse) => {
+        this.routing(req, res).then();
+      },
+      port,
+      ip
+    );
 
-      server.on("listening", () => {
-        this._server = server;
-        resolve(server);
-      });
-    });
+    return this._server;
+
+    // return new Promise((resolve, reject) => {
+    //   const server = createServer(
+    //     (req: IncomingMessage, res: ServerResponse) => {
+    //       this.routing(req, res).then();
+    //     }
+    //   );
+
+    //   server.listen(port, ip);
+    //   server.on("error", (error: Error) => {
+    //     reject(error);
+    //   });
+
+    //   server.on("listening", () => {
+    //     this._server = server;
+    //     resolve(server);
+    //   });
+    // });
   }
 
   protected async routing(req: IncomingMessage, res: ServerResponse) {

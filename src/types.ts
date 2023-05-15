@@ -12,6 +12,9 @@ export type ICallback = (error: Error) => void;
 export type Request = IncomingMessage;
 export type Response = ServerResponse;
 
+export type IRequest = Request | null;
+export type IResponse = Response | null;
+
 export type IMiddeleWare = (
   req: Request | any,
   res: Response | any,
