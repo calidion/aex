@@ -1228,8 +1228,9 @@ aex.use(prismaAttachingMiddleware);
 class Hello() {
   @http("/")
   @inject(prismaAttachingMiddleware)
-  public async index() {
-
+  public async index(req, res, scope) {
+    // Access prisma from scope
+    let orm = scope.prisma;
   }
 }
 ```

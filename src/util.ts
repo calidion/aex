@@ -7,10 +7,11 @@
 import { promisify } from "util";
 import * as WebSocket from "ws";
 import { Scope } from "./scope";
-import { IRequest, IResponse } from "./types";
 import {
   IAsyncMiddleware,
   IMiddeleWare,
+  IRequest,
+  IResponse,
   IWebSocketAsyncMiddleware,
 } from "./types";
 

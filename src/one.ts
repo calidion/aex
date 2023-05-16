@@ -1,7 +1,8 @@
 /**
- * aex
  * Copyright(c) 2020- calidion<calidion@gmail.com>
  * MIT Licensed
+ * Class One is used to store global information that decorators need which is
+ * information about decorated classes, methods and members.
  */
 import { Router } from "./router";
 

@@ -8,6 +8,7 @@ import {
   IncomingHttpHeaders,
   IncomingMessage,
   METHODS,
+  RequestListener,
   Server,
   ServerResponse,
 } from "http";
@@ -24,6 +25,13 @@ export type IRequest = IncomingMessage | any;
 export type IResponse = ServerResponse | any;
 export type IHTTPHeaders = IncomingHttpHeaders | any;
 export type IServer = Server | any;
+export type ICreateServer = (
+  options?: any,
+  requestListener?: RequestListener
+) => IServer;
+export interface IServerCreator {
+  createServer(options?: any, requestListener?: RequestListener): IServer;
+}
 
 // Aex Framework Types
 

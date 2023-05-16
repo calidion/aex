@@ -5,8 +5,7 @@
  */
 import { One } from "../one";
 import { Scope } from "../scope";
-import { IRequest, IResponse } from "../types";
-import { IAsyncMiddleware } from "../types";
+import { IAsyncMiddleware, IRequest, IResponse } from "../types";
 
 /**
  *
