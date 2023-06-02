@@ -45,29 +45,29 @@ So you should enable `decorators` to use it.
 ### Enable decorators
 
 1. JavaScript users please refer [https://babeljs.io/docs/en/babel-plugin-proposal-decorators](https://babeljs.io/docs/en/babel-plugin-proposal-decorators) for detailed information. Or simply clone [this starter](https://github.com/aex-ts-node/aex-babel-node-js-starter) to start a new aex project: https://github.com/aex-ts-node/aex-babel-node-js-starter
-2. TypeScript users please refer [https://www.typescriptlang.org/docs/handbook/decorators.html](https://www.typescriptlang.org/docs/handbook/decorators.html) for more infomation.
+2. TypeScript users please refer [https://www.typescriptlang.org/docs/handbook/decorators.html](https://www.typescriptlang.org/docs/handbook/decorators.html) for more information.
 
 ## Philosophy
 
-1. Keep in mind to separate web logic from business logic, and only develope for web logic.
-2. Focus soly on web flow.
-3. Simplify the way to make good web projects.
-4. Consider web interactions as phrased straight lines, which we call it Web Straight Line.
-5. No MVC, soly focusing on architecture which is the web logic.
+1. Keep in mind to separate the web logic from the business logic and  develope only for the web logic.
+2. Focus exclusively on web flow.
+3. Simplify the way to create good web projects.
+4. Think of web interactions as phrased straight lines, which we call the Web Straight Line.
+5. No MVC, but focus on the architecture that is the web logic.
 
-## What is Web Straight Line?
+## What is the Web Straight Line?
 
 Web Straight Line is used to describe the phrases of the processes on the http/web request.
 
-It can be breifly describe as the following diagram:
+It can be breifly described as the following diagram:
 
-> The Web Staight Line
+> The Web Straight Line
 
-![The Web Staight Line](./docs/Web_Straight_Line.png)
+![the Web Straight Line](./docs/Web_Straight_Line.png)
 
-Web Straight Line is a true web server thoery for the web framework (comparing to the MVC thoery which is more suitable for desktop applications), which solves only the problems caused by web (namely the HTTP protocol) itself.
+Web Straight Line is a true web server theory for the web framework (as opposed to MVC thoery which is more appropriate for desktop applications) that solves only the problems caused by the web (namely the HTTP protocol) itself.
 
-It can be trimmed as a micro service web server or a full-fledged web server by docrating enough constraints using docrators, it is logic scalable by decorators/middlewares.
+It can be trimmed as a micro service web server or a full-fledged web server by documenting enough constraints using docrators, it is logically scalable using decorators/middlewares.
 
 ## Content
 
