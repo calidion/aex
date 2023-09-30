@@ -38,9 +38,11 @@ export class Router {
         value: (
           url: string | string[],
           handler: IAsyncHandler,
-          middlewares?: IAsyncMiddleware[]
+          middlewares?: IAsyncMiddleware[],
+          compacted?: boolean
         ) => {
           const options: IOptions = {
+            compacted,
             handler,
             method,
             middlewares,
@@ -70,6 +72,7 @@ export class Router {
       }
       if (typeof options.url === "string") {
         this.buildins.routes[options.method][options.url] = {
+          compacted: options.compacted,
           handler: options.handler,
           middlewares: options.middlewares,
         };
@@ -77,6 +80,7 @@ export class Router {
       if (options.url instanceof Array) {
         for (const url of options.url) {
           this.buildins.routes[options.method][url] = {
+            compacted: options.compacted,
             handler: options.handler,
             middlewares: options.middlewares,
           };
@@ -158,8 +162,16 @@ export class Router {
         return true;
       }
     }
-
-    await handler.handler(req, res, scope);
+    // console.log("compacted", handler.compacted);
+    if (handler.compacted) {
+      await (handler.handler as any)({
+        req,
+        res,
+        scope,
+      });
+    } else {
+      await handler.handler(req, res, scope);
+    }
     return false;
   }
 }

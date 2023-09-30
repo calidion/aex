@@ -58,16 +58,17 @@ export class Aex {
     const cache = One.cache;
     for (const pair of cache) {
       if (pair[0] === aClass.prototype) {
-        methods[pair[1]] = [pair[2], pair[3]];
+        methods[pair[1]] = [pair[2], pair[3], pair[4]];
       }
     }
     return methods;
   }
 
-  public bindInstance(instance: any, method: string, options: any[2]) {
-    let [name, url] = options;
+  public bindInstance(instance: any, method: string, options: any[3]) {
+    let [name, url, compacted] = options;
     const router = One.instance();
     const func = instance[method];
+    compacted = compacted === true ? true : false;
 
     if (!url) {
       url = name;
@@ -77,14 +78,14 @@ export class Aex {
     if (typeof name === "string") {
       if (name === "*") {
         for (const m1 of IHTTPMethods) {
-          this.addUrl(instance, func, router, m1, url);
+          this.addUrl(compacted, instance, func, router, m1, url);
         }
         return;
       }
 
       if (IHTTPMethods.indexOf(name.toUpperCase()) !== -1) {
         name = name.toLowerCase();
-        this.addUrl(instance, func, router, name, url);
+        this.addUrl(compacted, instance, func, router, name, url);
       }
       return;
     }
@@ -93,7 +94,7 @@ export class Aex {
 
     for (const item of name) {
       if (IHTTPMethods.indexOf(item.toUpperCase()) !== -1) {
-        this.addUrl(instance, func, router, item, url);
+        this.addUrl(compacted, instance, func, router, item, url);
       }
     }
   }
@@ -171,6 +172,7 @@ export class Aex {
   }
 
   private addUrl(
+    compacted: boolean,
     instance: any,
     func: any,
     router: Router,
@@ -182,12 +184,14 @@ export class Aex {
     }
     assert(Array.isArray(urls));
     for (const u of urls) {
-      router[m.toLowerCase()](u, async (...args: any[]) => {
-        instance.req = args[0];
-        instance.res = args[1];
-        instance.scope = args[2];
-        await func.apply(instance, args);
-      });
+      router[m.toLowerCase()](
+        u,
+        async (...args: any[]) => {
+          return func.apply(instance, args);
+        },
+        undefined,
+        compacted
+      );
     }
   }
 }

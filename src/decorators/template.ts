@@ -4,6 +4,8 @@
  * MIT Licensed
  */
 
+import { getMiddleArgs } from "../util";
+
 export interface IInitFunction {
   render: (name: string, data: any) => void;
 }
@@ -34,8 +36,8 @@ export function template(
 
     // tslint:disable-next-line: only-arrow-functions
     descriptor.value = async function (...args: any[]) {
-      const res = args[1];
-      const scope = args[2];
+      const newArgs = getMiddleArgs(args);
+      const [, res, scope] = newArgs;
       const engine = init(path, ext, options);
       res.render = (name: string, data: any) => {
         res.end(engine.render(name, data));

@@ -9,6 +9,7 @@ import { One } from "../one";
 import { Scope } from "../scope";
 import BadRequest from "../status/400";
 import { IAsyncFilterMiddleware } from "../types";
+import { getMiddleArgs } from "../util";
 
 export interface IFilterFallback {
   params?: IAsyncFilterMiddleware;
@@ -58,8 +59,8 @@ export function filter(options: IFilterOptions) {
     }
 
     descriptor.value = async function temp(...args: any[]) {
-      const req = args[0];
-      const scope = args[2];
+      const newArgs = getMiddleArgs(args);
+      const [req, , scope] = newArgs;
       scope.extracted = {};
       let passed;
       const instance = One.getInstance(target.constructor.name, propertyKey);
@@ -72,13 +73,12 @@ export function filter(options: IFilterOptions) {
           const fallbacks = options.fallbacks as any;
           const handler: any = fallbacks ? fallbacks[key] : null;
           if (handler) {
-            const newArgs = [error].concat(args);
-            return handler.apply(instance, newArgs);
+            return handler.apply(instance, [error].concat(newArgs));
           }
           const { debug } = scope;
           const printer = debug("aex:filter");
           printer("Bad Request!");
-          BadRequest(args[1]);
+          BadRequest(newArgs[1]);
           return;
         }
 

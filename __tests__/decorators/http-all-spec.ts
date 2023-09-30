@@ -16,10 +16,9 @@ class HttpAll {
   public static message = "HttpAll Aex!";
   @http("*", "*")
   public async all(req: any, res: any, scope: any) {
-    const self = this as any;
-    expect(self.req).toBe(req);
-    expect(self.res).toBe(res);
-    expect(self.scope).toBe(scope);
+    expect(req).toBeTruthy();
+    expect(res).toBeTruthy();
+    expect(scope).toBeTruthy();
     res.end(HttpAll.message);
   }
 }

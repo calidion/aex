@@ -10,7 +10,11 @@ import { One } from "../one";
  * @param url route name or array
  */
 
-export function http(name: string | string[], url?: string | string[]) {
+export function http(
+  name: string | string[],
+  url?: string | string[],
+  isCompact?: boolean
+) {
   // tslint:disable-next-line: only-arrow-functions
   return function (
     target: any,
@@ -19,15 +23,19 @@ export function http(name: string | string[], url?: string | string[]) {
     descriptor: PropertyDescriptor
   ) {
     const cache = One.cache;
-    cache.push([target, _propertyKey, name, url]);
+    cache.push([target, _propertyKey, name, url, isCompact]);
     return descriptor;
   };
 }
 
-export function get(url?: string | string[]) {
-  return http("get", url);
+export function get(url?: string | string[], isCompact?: boolean) {
+  return http("get", url, isCompact);
 }
 
-export function post(url?: string | string[]) {
-  return http("post", url);
+export function post(url?: string | string[], isCompact?: boolean) {
+  return http("post", url, isCompact);
+}
+
+export function compact(name: string | string[], url?: string | string[]) {
+  return http(name, url, true);
 }

@@ -4,8 +4,8 @@
  * MIT Licensed
  */
 import { One } from "../one";
-import { Scope } from "../scope";
-import { IAsyncMiddleware, IRequest, IResponse } from "../types";
+import { IHandler } from "../types";
+import { getMiddleArgs } from "../util";
 
 /**
  *
@@ -13,8 +13,9 @@ import { IAsyncMiddleware, IRequest, IResponse } from "../types";
  * @param fallback optional fallback when the injector fails
  */
 export function inject(
-  injector: IAsyncMiddleware,
-  fallback?: IAsyncMiddleware
+  injector: IHandler,
+  fallback?: IHandler,
+  isCompact?: boolean
 ) {
   // tslint:disable-next-line: only-arrow-functions
   return function (
@@ -25,20 +26,23 @@ export function inject(
     const origin = descriptor.value;
 
     // tslint:disable-next-line: only-arrow-functions
-    descriptor.value = async function (
-      req: IRequest,
-      res: IResponse,
-      scope?: Scope
-    ) {
+    descriptor.value = async function (...args: any[]) {
+      const newArgs = getMiddleArgs(args);
+      const [req, res, scope] = newArgs;
       const instance = One.getInstance(target.constructor.name, propertyKey);
-      const result = await injector.apply(instance, [req, res, scope]);
+
+      let params = [req, res, scope] as any;
+      if (isCompact) {
+        params = [{ req, res, scope }] as any;
+      }
+      const result = await injector.apply(instance, params);
       if (result === false) {
         if (fallback) {
-          await fallback.apply(instance, [req, res, scope]);
+          await fallback.apply(instance, params);
         }
         return false;
       }
-      return origin.apply(instance, [req, res, scope]);
+      return origin.apply(instance, args);
     };
     return descriptor;
   };

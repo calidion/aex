@@ -4,8 +4,7 @@
  * MIT Licensed
  */
 import { Cookie, MemoryStore, Store } from "@aex/session";
-import { Scope } from "../scope";
-import { IRequest, IResponse } from "../types";
+import { getMiddleArgs } from "../util";
 
 export type ISessionStore = Store;
 
@@ -29,13 +28,12 @@ export function session(parser?: ISessionStore) {
     const cookie = new Cookie(parser);
 
     // tslint:disable-next-line: only-arrow-functions
-    descriptor.value = async function (
-      req: IRequest,
-      res: IResponse,
-      scope: Scope
-    ) {
+    descriptor.value = async function (...args: any[]) {
+      const newArgs = getMiddleArgs(args);
+      const [req, res, scope] = newArgs;
+
       await cookie.parse(req, res, scope);
-      await origin.apply(this, [req, res, scope]);
+      await origin.apply(this, args);
     };
     return descriptor;
   };

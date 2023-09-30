@@ -53,3 +53,10 @@ export async function processWebSocketMiddleware(
   }
   return false;
 }
+
+export function getMiddleArgs(args: any[]) {
+  if (args.length === 1) {
+    return [args[0].req, args[0].res, args[0].scope];
+  }
+  return args;
+}

@@ -24,6 +24,16 @@ class Helloworld {
   public async all(req: any, res: any) {
     res.end(this.message);
   }
+
+  @compact("/")
+  public async compactAll(ctx: any) {
+    ctx.res.end(this.message);
+  }
+
+  @http("*", "*", true)
+  public async httpCompactAll(ctx: any) {
+    ctx.res.end(this.message);
+  }
 }
 
 const aex = new Aex();
@@ -256,6 +266,7 @@ The member methods are of `IAsyncMiddleware` type.
 
 1. http method name(s)
 2. url(s);
+3. use Compact mode?
 
 You can just pass url(s) if you use http `GET` method only or you can use `@get` .
 
@@ -265,11 +276,16 @@ Here is how your define your handlers.
 import { http, get, post } from "@aex/core";
 
 class User {
-  @http("get", ["/profile", "/home"])
-  profile() {}
 
-  @http(["get", "post"], "/user/login")
-  login() {}
+  // Classic http parameters passing
+  @http("get", ["/profile", "/home"])
+  profile(req, res, scope) {}
+
+  // Compact Mode parameters passing
+  @http(["get", "post"], "/user/login", true)
+  login(ctx) {
+    const {req, res, scope} = ctx;
+  }
 
   @http("post", "/user/logout")
   logout() {}
@@ -751,7 +767,8 @@ Aex provides `@inject` decorator for middleware injection.
 `@inject` decrator takes two parameters:
 
 1. injector: the main injected middleware for data further processing or policy checking
-2. fallback: optional fallback when the injector fails and returned `false`
+2. fallback?: optional fallback when the injector fails and returned `false`
+3. useCompactMode?: `true` to use compact mode.
 
 ```ts
 class User {
@@ -773,6 +790,14 @@ class User {
         }
       };
   })
+  @inject(async function compactMode(this:User, ctx) {
+      this.name = "Peter";
+      ctx.req.session = {
+        user: {
+          name: "ok"
+        }
+      };
+  }, , true)
   @inject(async function(this:User, req, res, scope) => {
       this.name = "Peter";
       if (...) {
@@ -910,9 +935,11 @@ class User {
    });
    ```
 
-## Middlewares
+## Middlewares/Handlers
 
-Middlewares are defined like this:
+Middlewares/Handlers are defined like this:
+
+1. Classic one
 
 ```ts
 export type IAsyncMiddleware = (
@@ -922,7 +949,21 @@ export type IAsyncMiddleware = (
 ) => Promise<boolean | undefined | null | void>;
 ```
 
-They return promise. so they must be called with `await` or `.then()`.
+2. Compacted Mode
+
+```ts
+export interface IACompactedAsyncMiddeleWare {
+  req: IRequest;
+  res: IResponse;
+  scope?: Scope;
+}
+
+export type ICompactedAsyncMiddleware = (
+  context: IACompactedAsyncMiddeleWare
+) => Promise<boolean | undefined | null | void>;
+```
+
+They return promises, so they must be called with `await` or `.then()`.
 
 ### Global middlewares
 

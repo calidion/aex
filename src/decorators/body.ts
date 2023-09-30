@@ -5,9 +5,7 @@
  */
 
 import * as bodyParser from "body-parser";
-import { Scope } from "../scope";
-import { IRequest, IResponse } from "../types";
-import { toAsyncMiddleware } from "../util";
+import { getMiddleArgs, toAsyncMiddleware } from "../util";
 
 /**
  *
@@ -38,12 +36,9 @@ export function body(
 
     // tslint:disable-next-line: only-arrow-functions
     descriptor.value = async function (...args: any[]) {
-      await asyncCB.apply(
-        asyncCB,
-        args as [IRequest, IResponse, (Scope | undefined)?]
-      );
-      const req: any = args[0];
-      const scope: Scope = args[2];
+      const newArgs = getMiddleArgs(args);
+      const [req, , scope] = newArgs;
+      await asyncCB.apply(asyncCB, newArgs as any);
       Object.assign(scope.body, req.body);
       await origin.apply(this, args);
     };

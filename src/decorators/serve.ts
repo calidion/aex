@@ -8,10 +8,9 @@ import { createReadStream, existsSync, readdirSync, statSync } from "fs";
 import { lookup } from "mime-types";
 import { join, resolve } from "path";
 import { One } from "../one";
-import { Scope } from "../scope";
 import BadRequest from "../status/400";
 import NotFound from "../status/404";
-import { IRequest, IResponse } from "../types";
+import { getMiddleArgs } from "../util";
 
 /**
  * serve static files
@@ -50,12 +49,10 @@ export function serve(url: string, enableDir: boolean = false) {
     cache.push([target, propertyKey, ["get", "head"], url + "/(.*)"]);
 
     // // tslint:disable-next-line: only-arrow-functions
-    descriptor.value = async function (
-      req: IRequest,
-      res: IResponse,
-      scope: Scope
-    ) {
-      const realPath = await origin.apply(this, [req, res, scope]);
+    descriptor.value = async function (...args: any[]) {
+      const newArgs = getMiddleArgs(args);
+      const [, res, scope] = newArgs;
+      const realPath = await origin.apply(this, args);
 
       const { params } = scope;
       const file = (params["0"] as unknown) as string;

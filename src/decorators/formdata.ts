@@ -5,7 +5,7 @@
  * MIT Licensed
  */
 import { Scope } from "../scope";
-import { IRequest, IResponse } from "../types";
+import { IRequest } from "../types";
 
 import * as Busboy from "busboy";
 import { mkdtempSync, writeFileSync } from "fs";
@@ -13,6 +13,7 @@ import { tmpdir } from "os";
 import { extname, join, resolve as pathResolve } from "path";
 
 import { v4 } from "uuid";
+import { getMiddleArgs } from "../util";
 import { copyByKey } from "../util/kv";
 
 export async function parseFormData(
@@ -87,13 +88,11 @@ export function formdata(options: busboy.BusboyConfig = {}) {
     const origin = descriptor.value;
 
     // tslint:disable-next-line: only-arrow-functions
-    descriptor.value = async function (
-      req: IRequest,
-      res: IResponse,
-      scope: Scope
-    ) {
+    descriptor.value = async function (...args: any[]) {
+      const newArgs = getMiddleArgs(args);
+      const [req, , scope] = newArgs;
       await parseFormData(options, req, scope);
-      await origin.apply(this, [req, res, scope]);
+      await origin.apply(this, args);
     };
     return descriptor;
   };

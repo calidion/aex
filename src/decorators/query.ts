@@ -4,7 +4,7 @@
  * MIT Licensed
  */
 import * as qs from "querystring";
-import { Scope } from "../scope";
+import { getMiddleArgs } from "../util";
 
 export function query() {
   // tslint:disable-next-line: only-arrow-functions
@@ -19,14 +19,15 @@ export function query() {
 
     // tslint:disable-next-line: only-arrow-functions
     descriptor.value = async function (...args: any[]) {
-      const req = args[0];
+      const newArgs = getMiddleArgs(args);
+      const [req, , scope] = newArgs;
+      // const req = args[0];
 
       let splited: any = req.url as string;
       splited = splited.split("?");
       if (splited.length > 1) {
         req.query = qs.parse(splited[1]);
       }
-      const scope: Scope = args[2];
       Object.assign(scope.query, req.query);
       await origin.apply(this, args);
     };

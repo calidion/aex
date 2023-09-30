@@ -66,6 +66,34 @@ class Inject {
     expect(scope!.outer!.session!.user!.name === "ok");
     res.end("Inject All!");
   }
+
+  @http("post", "/user/fallback1")
+  @body()
+  // tslint:disable-next-line: variable-name
+  @inject(
+    async function (this: Inject, ctx: any) {
+      expect(ctx.req).toBeTruthy();
+      expect(ctx.res).toBeTruthy();
+      expect(ctx.scope).toBeTruthy();
+      expect(this.name === "inject");
+      return false;
+    },
+    async function (this: Inject, ctx: any) {
+      expect(this.name === "inject");
+      this.fallbacked = true;
+      ctx.res.end("Fallback!");
+      return false;
+    },
+    true
+  )
+  public async fallback1(req: any, res: any, scope: any) {
+    expect(this.name === "inject");
+    expect(req.body.username === "aaaa");
+    expect(req.body.password === "sosodddso");
+    expect(scope!.outer!.session!.user!.name === "ok");
+    res.end("Inject All!");
+  }
+
   @http("post", "/user/nofallback")
   @query()
   @inject(paginate(22, "query"))
@@ -122,6 +150,22 @@ test("Should inject with fallback", async () => {
   const instance = One.getInstance(
     Inject.prototype.constructor.name,
     "fallback"
+  );
+  expect(instance.fallback).toBeTruthy();
+});
+
+test("Should inject with fallback1", async () => {
+  await PostText(
+    port,
+    { username: "aaaa", password: "sosodddso" },
+    "Fallback!",
+    "/user/fallback1",
+    "localhost",
+    "POST"
+  );
+  const instance = One.getInstance(
+    Inject.prototype.constructor.name,
+    "fallback1"
   );
   expect(instance.fallback).toBeTruthy();
 });

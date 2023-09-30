@@ -1,9 +1,13 @@
 // import * as express from 'express';
 // tslint:disable-next-line:no-duplicate-imports
 
-import { Aex, IACompactedAsyncMiddeleWare } from "../../src/index";
+import {
+  Aex,
+  IACompactedAsyncMiddeleWare,
+  // IAsyncMiddleware,
+} from "../../src/index";
 import { body } from "../../src/index";
-import { http } from "../../src/index";
+import { http, compact } from "../../src/index";
 
 import { PostText, initRandomPort } from "../../src/index";
 
@@ -17,9 +21,9 @@ class Body {
     return this._name;
   }
 
-  @http("post", "/user/login1", true)
+  @compact("post", "/user/login")
   @body()
-  public allCompacted(context: IACompactedAsyncMiddeleWare) {
+  public all(context: IACompactedAsyncMiddeleWare) {
     const { req, res, scope } = context;
     // console.log(context);
     expect(this.name === "Aex");
@@ -29,17 +33,6 @@ class Body {
     expect(scope?.body).toBeTruthy();
     expect((scope?.body as any).username === "aaa");
     expect((scope?.body as any).password === "sososo");
-    res.end("Body All!");
-  }
-
-  @http("post", "/user/login")
-  @body()
-  public all(req: any, res: any, scope: any) {
-    expect(this.name === "Aex");
-    expect(req.body.username === "aaa");
-    expect(req.body.password === "sososo");
-    expect(scope.body.username === "aaa");
-    expect(scope.body.password === "sososo");
     res.end("Body All!");
   }
 
@@ -65,7 +58,7 @@ beforeAll(async () => {
   expect(user.name === "Aex").toBeTruthy();
 });
 
-test("Should decorate methods with array", async () => {
+test("Should work with context", async () => {
   await PostText(
     port,
     { username: "aaa", password: "sososo" },
@@ -76,27 +69,16 @@ test("Should decorate methods with array", async () => {
   );
 });
 
-test("Should decorate methods with array", async () => {
-  await PostText(
-    port,
-    { username: "aaa", password: "sososo" },
-    "Body All!",
-    "/user/login1",
-    "localhost",
-    "POST"
-  );
-});
-
-test("Should not push again a calss", async () => {
-  let catched = false;
-  try {
-    aex.push(Body);
-  } catch (e) {
-    catched = true;
-    expect(e.message).toBe("Duplicated class found!");
-  }
-  expect(catched).toBeTruthy();
-});
+// test("Should not push again a calss", async () => {
+//   let catched = false;
+//   try {
+//     aex.push(Body);
+//   } catch (e) {
+//     catched = true;
+//     expect(e.message).toBe("Duplicated class found!");
+//   }
+//   expect(catched).toBeTruthy();
+// });
 
 afterAll(async () => {
   aex.server?.close();

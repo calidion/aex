@@ -4,7 +4,7 @@
  * MIT Licensed
  */
 import { Generator } from "errorable";
-import { Scope } from "../scope";
+import { getMiddleArgs } from "../util";
 
 /**
  *
@@ -27,7 +27,8 @@ export function error(
 
     // tslint:disable-next-line: only-arrow-functions
     descriptor.value = async function (...args: any[]) {
-      const scope: Scope = args[2];
+      const newArgs = getMiddleArgs(args);
+      const [, , scope] = newArgs;
       const lang: string = errors.lang
         ? ((errors.lang as unknown) as string)
         : "en-US";
