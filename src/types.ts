@@ -36,30 +36,74 @@ export interface IServerCreator {
 // Aex Framework Types
 
 //    1. Middleware Types
-export type IMiddeleWare = (
+
+export interface IACompactedMiddeleWare {
+  req: IRequest;
+  res: IResponse;
+  next: ICallback | any;
+}
+
+export type ICompactedMiddeleWare = (context: IACompactedMiddeleWare) => void;
+
+export type IClassicMiddeleWare = (
   req: IRequest,
   res: IResponse,
   next: ICallback | any
 ) => void;
 
-export type IAsyncMiddleware = (
+// export type IMiddeleWare = ICompactedMiddeleWare | IClassicMiddeleWare;
+export type IMiddeleWare = IClassicMiddeleWare;
+
+export interface IACompactedAsyncMiddeleWare {
+  req: IRequest;
+  res: IResponse;
+  scope?: Scope;
+}
+
+export type ICompactedAsyncMiddleware = (
+  context: IACompactedAsyncMiddeleWare
+) => Promise<boolean | undefined | null | void>;
+
+export type IClassicAsyncMiddleware = (
   req: IRequest,
   res: IResponse,
   scope?: Scope
 ) => Promise<boolean | undefined | null | void>;
 
-export type IAsyncFilterMiddleware = (
+export type IAsyncMiddleware =
+  // | ICompactedAsyncMiddleware
+  IClassicAsyncMiddleware;
+
+export interface IACompactedAsyncFilterMiddeleWare {
+  error: any;
+  req: IRequest;
+  res: IResponse;
+  scope?: Scope;
+}
+
+export type ICompactedAsyncFilterMiddleware = (
+  context: IACompactedAsyncFilterMiddeleWare
+) => Promise<boolean | undefined | null | void>;
+
+export type IClassicAsyncFilterMiddleware = (
   error: any,
   req: IRequest,
   res: IResponse,
   scope?: Scope
 ) => Promise<boolean | undefined | null | void>;
 
+export type IAsyncFilterMiddleware =
+  // | ICompactedAsyncFilterMiddleware
+  IClassicAsyncFilterMiddleware;
+
 export type IAsyncHandler = IAsyncMiddleware;
+
+export type IHandler = IClassicAsyncMiddleware | ICompactedAsyncMiddleware;
 
 // 2. Router Types
 export interface IRouteItem {
-  handler: IAsyncHandler;
+  compacted?: boolean;
+  handler: IHandler;
   middlewares?: IAsyncMiddleware[];
 }
 
@@ -68,6 +112,7 @@ export interface IRoute {
 }
 
 export interface IOptions {
+  compacted?: boolean;
   method: string;
   url: string | string[];
   handler: IAsyncHandler;
