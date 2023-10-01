@@ -96,7 +96,7 @@ It can be trimmed as a micro service web server or a full-fledged web server by 
 
 ## Shortcuts for decorators
 
-1. [HTTP method decorators](#1-http-method-decorators) (`@http`, `@get`, `@post`)
+1. [HTTP method decorators](#1-http-method-decorators) (`@http`, `@get`, `@post`, `@compact`)
 
 2. [Data parsing decorators](#2-data-parsing-decorators) (`@formdata`, `@query`, `@body`)
 3. [Static file serving decorators](#3-static-file-serving-decorators) (`@serve`)
@@ -254,7 +254,7 @@ Decorators will be enriched over time. Currently aex provides the following deco
 This decorators are the most basic decorators, all decorators should follow them. They are
 `@http` , `@get` , `@post` .
 
-#### `@http` , `@get` , `@post`
+#### `@http` , `@get` , `@post`, `@compact
 
 `@http` is the generic http method decorator. `@get` , `@post` are the shortcuts for `@http` ;
 
@@ -268,7 +268,8 @@ The member methods are of `IAsyncMiddleware` type.
 2. url(s);
 3. use Compact mode?
 
-You can just pass url(s) if you use http `GET` method only or you can use `@get` .
+You can just pass url(s) if you use http `GET` or `POST` method only or you can use `@get` or `@post` .
+You can use `@compact` to simplify `@http` decorator without fill compact mode.
 
 Here is how your define your handlers.
 
@@ -283,6 +284,13 @@ class User {
 
   // Compact Mode parameters passing
   @http(["get", "post"], "/user/login", true)
+  login(ctx) {
+    const {req, res, scope} = ctx;
+  }
+
+
+  // Compact Mode using @compact
+  @compact(["get", "post"], "/user/login")
   login(ctx) {
     const {req, res, scope} = ctx;
   }
