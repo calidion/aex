@@ -117,13 +117,13 @@ It can be trimmed as a micro service web server or a full-fledged web server by 
 if you use npm
 
 ```sh
-npm install @aex/core # or npm i @aex/core
+npm install github:calidion/aex#v0.18.0
 ```
 
 or if you use yarn
 
 ```sh
-yarn add @aex/core
+yarn add github:calidion/aex#v0.18.0
 ```
 
 ## Quick Start
