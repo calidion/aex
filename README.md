@@ -249,6 +249,76 @@ Decorators will be enriched over time. Currently aex provides the following deco
 7. [Error definition decorators](#7-error-definition-decorators) (`@error`)
 8. [Custome middleware decorators](#8-custome-middleware-decorators) (`@inject`)
 
+
+### Function Parameter Mode Choices for Http Handlers
+
+#### The Classic Mode
+
+Classically, the node original library handles HTTP requests with a request and response separately.
+For async's sake, node also provide a callback to further processing the request. That is to say, node has the original http handler calllback function parameter mode like this.
+```js
+function classicHTTPHandler(req, res, next)
+```
+We can call this mode the classic mode. 
+This mode is a very basic parameter passing method, it can only passes the request, the response and the callback function when async is not promised.
+
+It has at leak two weakness:
+
+1. Not promis-based, not friendly with async/await functions.
+2. Don't have a proper place to carry generated data by middlewares when going through the Web Straight Line.
+
+#### The Onoin Mode (The Wrong Mode)
+On solve problem one, someone created a wrong mode: The Onoin Mode. Which turns lined lists with stacks. Its function parameter mode looks like this.
+```js
+async function onoinHTTPHandler(req, res, next)
+
+```
+It enabled promise and incorrectly kept the callback function `next`.
+
+And we can call this mode the onoin mode.
+
+As this project point out, the web processing patthen is called the web straight line. It goes every phrase one by one orderly and sequentially, not like a stack.
+
+This causes rewriting of every middleware ever created originally supporting the classic mode.
+
+It is obvious a waste of effort and discouragment for developers to maintain two copy middlewares for one purpose.
+Fortunately this wrong mode never dominates.
+
+By the time of this writing, this mode is still relatively small due to it's incorrectness.
+
+#### The promise based mode / the aex mode
+
+The correct way to asynchronize the classic mode is to remove the next callback. And in order to fixed weakness two, we can introduce a new parameter for data carriage. In aex, it introduces the function parameter mode like this.
+```js
+async function  aexHTTPHandler(req, res, scope) {
+  res.end()
+  scope.body
+  scope.inner
+}
+```
+Which we can call it the promis based mode or the aex mode, first introduced by the aex web framework project.
+
+But this mode is still some time inconvient when you don't have to use request , response.
+
+So to compact them into one variable may be more efficiently, then we have the compatc mode.
+
+#### The Compact Mode
+
+The compact mode is an optimization for some cases when you don't use the parameters in an ordered way. For example, you are writing a middleware only needs to process the scoped data. You don't need request, response to show up at all. then you can use this mode. Its function parameter mode looks like this.
+```js
+async function  compactHTTPHandler(ctx) {
+  // ctx.request
+  // ctx.response
+  ctx.scope
+}
+```
+So you can ignore the `req`, `res` parameters with compact mode when necessary. 
+
+The compact mode and the promise-based mode/ the aex mode are recommended mode in aex.
+
+
+
+
 ### 1. HTTP method decorators
 
 This decorators are the most basic decorators, all decorators should follow them. They are
