@@ -815,6 +815,15 @@ class User {
     // some fallback processing
     res.end("Fallback");
   })
+  @inject(async function compactedMiddleware(this:User, ctx) => {
+      this.name = "Peter";
+      if (...) {
+        return false
+      }
+  }, async function compactedFallback(this:User, ctx){
+    // some fallback processing
+    ctx.res.end("Fallback");
+  }, true)
   public async login(req: any, res: any, scope: any) {
     // req.session.user.name
     // ok
