@@ -262,9 +262,9 @@ function classicHTTPHandler(req, res, next)
 We can call this mode the classic mode. 
 This mode is a very basic parameter passing method, it can only passes the request, the response and the callback function when async is not promised.
 
-It has at leak two weakness:
+It has at least two weakness:
 
-1. Not promis-based, not friendly with async/await functions.
+1. Not promise-based, not friendly with async/await functions.
 2. Don't have a proper place to carry generated data by middlewares when going through the Web Straight Line.
 
 #### The Onoin Mode (The Wrong Mode)
