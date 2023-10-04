@@ -47,3 +47,7 @@ export function inject(
     return descriptor;
   };
 }
+
+export function hook(injector: IHandler, fallback?: IHandler) {
+  return inject(injector, fallback, true);
+}

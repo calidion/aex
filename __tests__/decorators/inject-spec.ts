@@ -10,7 +10,7 @@ import {
 } from "../../src/index";
 import { body } from "../../src/index";
 import { http } from "../../src/index";
-import { inject } from "../../src/index";
+import { inject, hook } from "../../src/index";
 
 import { PostText, initRandomPort } from "../../src/index";
 
@@ -94,6 +94,32 @@ class Inject {
     res.end("Inject All!");
   }
 
+  @http("post", "/user/fallback2")
+  @body()
+  // tslint:disable-next-line: variable-name
+  @hook(
+    async function (this: Inject, ctx: any) {
+      expect(ctx.req).toBeTruthy();
+      expect(ctx.res).toBeTruthy();
+      expect(ctx.scope).toBeTruthy();
+      expect(this.name === "inject");
+      return false;
+    },
+    async function (this: Inject, ctx: any) {
+      expect(this.name === "inject");
+      this.fallbacked = true;
+      ctx.res.end("Fallback!");
+      return false;
+    }
+  )
+  public async fallback2(req: any, res: any, scope: any) {
+    expect(this.name === "inject");
+    expect(req.body.username === "aaaa");
+    expect(req.body.password === "sosodddso");
+    expect(scope!.outer!.session!.user!.name === "ok");
+    res.end("Inject All!");
+  }
+
   @http("post", "/user/nofallback")
   @query()
   @inject(paginate(22, "query"))
@@ -154,7 +180,7 @@ test("Should inject with fallback", async () => {
   expect(instance.fallback).toBeTruthy();
 });
 
-test("Should inject with fallback1", async () => {
+test("Should inject with compact mode", async () => {
   await PostText(
     port,
     { username: "aaaa", password: "sosodddso" },
@@ -166,6 +192,22 @@ test("Should inject with fallback1", async () => {
   const instance = One.getInstance(
     Inject.prototype.constructor.name,
     "fallback1"
+  );
+  expect(instance.fallback).toBeTruthy();
+});
+
+test("Should hook with compact mode", async () => {
+  await PostText(
+    port,
+    { username: "aaaa", password: "sosodddso" },
+    "Fallback!",
+    "/user/fallback2",
+    "localhost",
+    "POST"
+  );
+  const instance = One.getInstance(
+    Inject.prototype.constructor.name,
+    "fallback2"
   );
   expect(instance.fallback).toBeTruthy();
 });
