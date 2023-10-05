@@ -130,6 +130,8 @@ test("Should allow in request middlewares", async () => {
       res.write(" world!");
       expect(scope.outer).toBeTruthy();
       expect(scope.inner).toBeTruthy();
+      expect(scope.global).toBeTruthy();
+      expect(scope.local).toBeTruthy();
       expect(scope.body).toBeTruthy();
       expect(scope.session).toBeTruthy();
       expect(scope.error).toBeTruthy();
@@ -140,6 +142,8 @@ test("Should allow in request middlewares", async () => {
       scope.session = {};
       expect(scope.inner.a === 100).toBeTruthy();
       expect(scope.outer.a === 120).toBeTruthy();
+      expect(scope.local.a === 100).toBeTruthy();
+      expect(scope.global.a === 120).toBeTruthy();
       let catched = false;
 
       const { debug } = scope;

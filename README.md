@@ -314,7 +314,7 @@ async function  compactHTTPHandler(ctx) {
 ```
 So you can ignore the `req`, `res` parameters with compact mode when necessary. 
 
-The compact mode and the promise-based mode/ the aex mode are recommended mode in aex.
+The compact mode and the promise-based mode/ the aex mode are the recommended modes in aex.
 
 
 
@@ -1164,16 +1164,16 @@ async () => {
 };
 ```
 
-the `scope` variable has 8 native attributes: `time` , `outer` , `inner` , `query` , `params` , `body` , `error` , `debug`
+the `scope` variable has 8 native attributes: `time` , `outer`/`global` , `inner`/`local` , `query` , `params` , `body` , `error` , `debug`
 
 The `time` attribute contains the started time and passed time of requests.
-The `outer` attribute is to store general or global data.
-The `inner` attribute is to store specific or local data.
+The `outer`/`global` attribute is to store general or global data.
+The `inner`/`local` attribute is to store specific or local data.
 The `query` attribute is to store http query.
 The `body` attribute is to store http body.
 The `params` attribute is to store http params.
 The `error` attribute is to store scoped errors.
-The `debug` attribute is to provide handlers the debugging ability.
+The `debug` attribute is to provide handlers with the debugging ability.
 
 ### `time`
 
@@ -1191,15 +1191,18 @@ scope.time.passed;
 // 2019-12-12T09:01:49.543Z
 ```
 
-### `outer` and `inner`
+### `outer`/`global` and `inner`/`local`
 
-The `outer` and `inner` variables are objects used to store data for different purposes.
+The `outer`/`global` and `inner`/`local` variables are objects used to store data for different purposes.
 
 You can simply assign them a new attribute with data;
 
 ```ts
 scope.inner.a = 100;
+scope.local.a = 100;
+
 scope.outer.a = 120;
+scope.global.a = 120;
 ```
 
 ### `debug`
@@ -1225,6 +1228,8 @@ async () => {
 ```ts
 // scope.outer = {};  // Wrong operation!
 // scope.inner = {};   // Wrong operation!
+// scope.global = {};  // Wrong operation!
+// scope.local = {};   // Wrong operation!
 // scope.time = {};    // Wrong operation!
 // scope.query = {};    // Wrong operation!
 // scope.params = {};    // Wrong operation!

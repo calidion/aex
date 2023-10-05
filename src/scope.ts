@@ -54,6 +54,14 @@ export class Scope {
     return this._error;
   }
 
+  get global() {
+    return this._outer;
+  }
+
+  get local() {
+    return this._inner;
+  }
+
   get body() {
     return this._body;
   }
