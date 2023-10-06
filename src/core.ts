@@ -6,6 +6,7 @@
 
 import { assert } from "console";
 import { One } from "./one";
+import { json } from "./response/json";
 import { redirect } from "./response/redirect";
 import { Router } from "./router";
 import { Scope } from "./scope";
@@ -169,6 +170,7 @@ export class Aex {
 
   protected enhanceRes(res: IResponse) {
     redirect(res);
+    json(res);
   }
 
   private addUrl(

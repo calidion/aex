@@ -8,7 +8,10 @@ import { Router } from "./router";
 
 export class One {
   public static cache: any[] = [];
-  public static instances: any = {};
+  public static instances: { [x: string]: any } = {};
+
+  public static routers: { [x: string]: Router } = {};
+
   public static instance() {
     if (One.router) {
       return One.router;
