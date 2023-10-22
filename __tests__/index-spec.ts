@@ -128,6 +128,8 @@ test("Should allow in request middlewares", async () => {
       scope: any
     ) => {
       res.write(" world!");
+      expect(scope.orm).toBeTruthy();
+      expect(scope.engine).toBeTruthy();
       expect(scope.outer).toBeTruthy();
       expect(scope.inner).toBeTruthy();
       expect(scope.global).toBeTruthy();

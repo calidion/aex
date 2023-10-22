@@ -27,8 +27,20 @@ export class Scope {
   private _params: { [x: string]: object } = {};
   // tslint:disable-next-line:variable-name
   private _files: { [x: string]: object } = {};
+
+  // For template engines
   // tslint:disable-next-line:variable-name
   private _engine: { [x: string]: object } = {};
+  // tslint:disable-next-line:variable-name
+  private _orm: { [x: string]: object } = {};
+
+  get orm() {
+    return this._orm;
+  }
+
+  set orm(value) {
+    this._orm = value;
+  }
 
   get engine() {
     return this._engine;

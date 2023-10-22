@@ -1164,8 +1164,10 @@ async () => {
 };
 ```
 
-the `scope` variable has 8 native attributes: `time` , `outer`/`global` , `inner`/`local` , `query` , `params` , `body` , `error` , `debug`
+the `scope` variable has 8 native attributes: `orm`, `engine`, `time` , `outer`/`global` , `inner`/`local` , `query` , `params` , `body` , `error` , `debug`
 
+The `orm` attribute contains the orm objects, such as prisma orm.
+The `engine` attribute contains the html/xml template objects, such as nunjunks .
 The `time` attribute contains the started time and passed time of requests.
 The `outer`/`global` attribute is to store general or global data.
 The `inner`/`local` attribute is to store specific or local data.
