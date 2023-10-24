@@ -90,7 +90,7 @@ export async function Post(
   options.hostname = domain;
   options.port = port;
   options.path = url;
-  options.method = "POST";
+  options.method = options.method;
   return POST(options, body);
 }
 
