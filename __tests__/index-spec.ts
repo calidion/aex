@@ -142,10 +142,13 @@ test("Should allow in request middlewares", async () => {
       scope.inner.a = 100;
       scope.outer.a = 120;
       scope.session = {};
+      scope.orm.prisma = true;
       expect(scope.inner.a === 100).toBeTruthy();
       expect(scope.outer.a === 120).toBeTruthy();
       expect(scope.local.a === 100).toBeTruthy();
       expect(scope.global.a === 120).toBeTruthy();
+      expect(scope.orm.prisma).toBeTruthy();
+      scope.orm = {};
       let catched = false;
 
       const { debug } = scope;

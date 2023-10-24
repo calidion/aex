@@ -27,7 +27,7 @@ export class Aex {
   }
 
   get instances() {
-    return this.controllerInstances;
+    return this.handlerInstances;
   }
 
   protected middlewares: IAsyncMiddleware[] = [];
@@ -35,7 +35,7 @@ export class Aex {
   // tslint:disable-next-line:variable-name
   private _server?: IServer;
   private classes: any[] = [];
-  private controllerInstances: any[] = [];
+  private handlerInstances: any[] = [];
 
   public use(cb: IAsyncMiddleware) {
     this.middlewares.push(cb);
@@ -118,7 +118,7 @@ export class Aex {
         );
         this.bindInstance(instance, method, methods[method]);
       }
-      this.controllerInstances.push(instance);
+      this.handlerInstances.push(instance);
     }
     // prepare middlewares
     const router = One.instance();
