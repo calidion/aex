@@ -4,6 +4,7 @@
  * MIT Licensed
  */
 import * as bodyParser from "body-parser";
+import { ServerResponse } from "http";
 import { One } from "../one";
 import { getMiddleArgs, toAsyncMiddleware } from "../util";
 /**
@@ -38,10 +39,10 @@ export function rest(url?: string | string[], restOptions?: IRestOptions) {
       !restOptions?.isCompact,
     ]);
     // // tslint:disable-next-line: only-arrow-functions
-    // const origin = descriptor.value;
+    const origin = descriptor.value;
     descriptor.value = async function (...args: any[]) {
       const newArgs = getMiddleArgs(args);
-      const [req, , scope] = newArgs;
+      const [req, res, scope] = newArgs;
       if (req.method.toLowerCase() !== "get") {
         const body = restOptions?.body || {};
         let type = body.type || "urlencoded";
@@ -62,7 +63,13 @@ export function rest(url?: string | string[], restOptions?: IRestOptions) {
       if (typeof func === "function") {
         await func.apply(this, args);
       } else {
-        throw Error("restful method " + req.method + " handler missing!");
+        if (req.method.toLowerCase() === "get") {
+          await origin.apply(this, args);
+        } else {
+          (res as ServerResponse).statusCode = 501;
+          res.statusMessage = "Method Not Implemented!";
+          res.end();
+        }
       }
     };
 

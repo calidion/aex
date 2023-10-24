@@ -44,7 +44,7 @@ class Rest1 {
     },
   })
   public road(ctx: any) {
-    ctx.res.end("Rest!");
+    ctx.res.end("get");
   }
 }
 
@@ -110,12 +110,13 @@ test("Should handle delete", async () => {
   );
 });
 
+test("Should default method", async () => {
+  await PostText(port, "", "get", "/users1", "localhost", "GET");
+});
+
 test("Should promote method missing", async () => {
-  try {
-    await PostText(port, "", "delete", "/users1", "localhost", "DELETE");
-  } catch (e) {
-    console.error(e);
-  }
+  const res = await PostText(port, "", "", "/users1", "localhost", "DELETE");
+  expect(res.statusCode).toBe(501);
 });
 
 afterAll(async () => {
