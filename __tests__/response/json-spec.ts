@@ -20,5 +20,5 @@ beforeAll(async () => {
 });
 test("Should turn object into json string", async () => {
   const res = await GetText(port, '{"sss":"aoaoa","b":1}', "/", "localhost");
-  console.log(res.text);
+  expect(res.text).toEqual('{"sss":"aoaoa","b":1}');
 });
