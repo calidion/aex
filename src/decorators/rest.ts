@@ -4,7 +4,6 @@
  * MIT Licensed
  */
 import * as bodyParser from "body-parser";
-import { ServerResponse } from "http";
 import { One } from "../one";
 import { getMiddleArgs, toAsyncMiddleware } from "../util";
 /**
@@ -66,9 +65,7 @@ export function rest(url?: string | string[], restOptions?: IRestOptions) {
         if (req.method.toLowerCase() === "get") {
           await origin.apply(this, args);
         } else {
-          (res as ServerResponse).statusCode = 501;
-          res.statusMessage = "Method Not Implemented!";
-          res.end();
+          res.status(501);
         }
       }
     };

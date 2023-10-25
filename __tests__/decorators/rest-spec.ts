@@ -115,7 +115,14 @@ test("Should default method", async () => {
 });
 
 test("Should promote method missing", async () => {
-  const res = await PostText(port, "", "", "/users1", "localhost", "DELETE");
+  const res = await PostText(
+    port,
+    "",
+    "Not Implemented",
+    "/users1",
+    "localhost",
+    "DELETE"
+  );
   expect(res.statusCode).toBe(501);
 });
 
