@@ -3,8 +3,8 @@
  * Copyright(c) 2020- calidion<calidion@gmail.com>
  * MIT Licensed
  */
-import * as qs from "querystring";
 import { getMiddleArgs } from "../util";
+import { parseQuery } from "../util/parseQuery";
 
 export function query() {
   // tslint:disable-next-line: only-arrow-functions
@@ -21,14 +21,13 @@ export function query() {
     descriptor.value = async function (...args: any[]) {
       const newArgs = getMiddleArgs(args);
       const [req, , scope] = newArgs;
-      // const req = args[0];
-
-      let splited: any = req.url as string;
-      splited = splited.split("?");
-      if (splited.length > 1) {
-        req.query = qs.parse(splited[1]);
-      }
-      Object.assign(scope.query, req.query);
+      parseQuery(req, scope);
+      // let splited: any = req.url as string;
+      // splited = splited.split("?");
+      // if (splited.length > 1) {
+      //   req.query = qs.parse(splited[1]);
+      // }
+      // Object.assign(scope.query, req.query);
       await origin.apply(this, args);
     };
     return descriptor;
