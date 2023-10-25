@@ -1,9 +1,11 @@
 // import * as express from 'express';
 // tslint:disable-next-line:no-duplicate-imports
 
+import { readFileSync } from "fs";
 import { Aex, post, http, get } from "../../src/index";
 
 import { GetText, PostText, initRandomPort } from "../../src/index";
+import { resolve } from "path";
 
 class Http {
   private name = "hello";
@@ -72,6 +74,19 @@ class Http {
   public async rawpost(_req: any, res: any, _scope: any) {
     expect(this.name === "hello").toBeTruthy();
     res.end("Http Post!");
+  }
+
+  @post("/http/status")
+  public async statuspost(_req: any, res: any, _scope: any) {
+    expect(this.name === "hello").toBeTruthy();
+    const file = resolve(__dirname, "./views/500.html");
+    res.status(200, file);
+  }
+
+  @post("/http/status1")
+  public async statuspost1(_req: any, res: any, _scope: any) {
+    expect(this.name === "hello").toBeTruthy();
+    res.status(800);
   }
 }
 
@@ -192,6 +207,16 @@ test("Should decorate methods with both get/post method", async () => {
 
 test("Should decorate methods with default method", async () => {
   await PostText(port, {}, "Http Post!", "/http/post");
+});
+
+test("Should decorate methods with default status", async () => {
+  const file = resolve(__dirname, "./views/500.html");
+  const content = String(readFileSync(file));
+  await PostText(port, {}, content, "/http/status");
+});
+
+test("Should decorate methods with default status", async () => {
+  await PostText(port, {}, "", "/http/status1");
 });
 
 afterAll(async () => {

@@ -7,7 +7,7 @@
 import * as validator from "node-form-validator";
 import { One } from "../one";
 import { Scope } from "../scope";
-import BadRequest from "../status/400";
+// import BadRequest from "../status/400";
 import { IAsyncFilterMiddleware } from "../types";
 import { getMiddleArgs } from "../util";
 
@@ -60,7 +60,7 @@ export function filter(options: IFilterOptions) {
 
     descriptor.value = async function temp(...args: any[]) {
       const newArgs = getMiddleArgs(args);
-      const [req, , scope] = newArgs;
+      const [req, res, scope] = newArgs;
       scope.extracted = {};
       let passed;
       const instance = One.getInstance(target.constructor.name, propertyKey);
@@ -78,7 +78,7 @@ export function filter(options: IFilterOptions) {
           const { debug } = scope;
           const printer = debug("aex:filter");
           printer("Bad Request!");
-          BadRequest(newArgs[1]);
+          res.status(400);
           return;
         }
 

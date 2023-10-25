@@ -8,10 +8,10 @@ import { assert } from "console";
 import { One } from "./one";
 import { json } from "./response/json";
 import { redirect } from "./response/redirect";
+import { status } from "./response/status";
 import { Router } from "./router";
 import { Scope } from "./scope";
 import { start } from "./server";
-import NotFound from "./status/404";
 import {
   IAsyncMiddleware,
   IHTTPMethods,
@@ -164,13 +164,14 @@ export class Aex {
     if (middlewares && middlewares.length) {
       await processMiddleware(req, res, middlewares, scope);
     } else {
-      await NotFound(res);
+      res.status(404);
     }
   }
 
   protected enhanceRes(res: IResponse) {
     redirect(res);
     json(res);
+    status(res);
   }
 
   private addUrl(

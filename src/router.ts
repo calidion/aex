@@ -6,7 +6,6 @@
 
 import { match } from "path-to-regexp";
 import { Scope } from "./scope";
-import NotFound from "./status/404";
 import {
   IAsyncHandler,
   IAsyncMiddleware,
@@ -103,7 +102,7 @@ export class Router {
 
     const router = this.getMatchedRouter(method as string, url as string);
     if (!router) {
-      await NotFound(res);
+      res.status(404);
       return;
     }
     if (router.matched && Object.keys(router.matched.params).length) {
@@ -162,7 +161,6 @@ export class Router {
         return true;
       }
     }
-    // console.log("compacted", handler.compacted);
     if (handler.compacted) {
       await (handler.handler as any)({
         req,
