@@ -108,6 +108,8 @@ It can be trimmed as a micro service web server or a full-fledged web server by 
 7. [Error definition decorators](#7-error-definition-decorators) (`@error`)
 8. [Custome middleware decorators](#8-custome-middleware-decorators) (`@inject`)
 
+9. [API development decorators](./docs/api.md) (`@rest @api`)
+
 ## Shortcuts for helpers
 
 1. [pagination with `paginate` function](#paginate)
@@ -248,6 +250,7 @@ Decorators will be enriched over time. Currently aex provides the following deco
 6. [Data filtering and validation decorators](#6-data-filtering-and-validation-decorators) ( `@filter`)
 7. [Error definition decorators](#7-error-definition-decorators) (`@error`)
 8. [Custome middleware decorators](#8-custome-middleware-decorators) (`@inject`)
+9. [API development decorators](./docs/api.md) (`@rest @api`)
 
 
 ### Function Parameter Mode Choices for Http Handlers
