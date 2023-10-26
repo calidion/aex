@@ -3,7 +3,7 @@
 
 import {
   Aex,
-  IACompactedAsyncMiddeleWare,
+  IContext,
   // IAsyncMiddleware,
 } from "../../src/index";
 import { body } from "../../src/index";
@@ -23,7 +23,7 @@ class Body {
 
   @compact("post", "/user/login")
   @body()
-  public all(context: IACompactedAsyncMiddeleWare) {
+  public all(context: IContext) {
     const { req, res, scope } = context;
     // console.log(context);
     expect(this.name === "Aex");

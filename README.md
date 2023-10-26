@@ -59,7 +59,7 @@ So you should enable `decorators` to use it.
 
 ## Philosophy
 
-1. Keep in mind to separate the web logic from the business logic and  develope only for the web logic.
+1. Keep in mind to separate the web logic from the business logic and develope only for the web logic.
 2. Focus exclusively on web flow.
 3. Simplify the way to create good web projects.
 4. Think of web interactions as phrased straight lines, which we call the Web Straight Line.
@@ -252,17 +252,18 @@ Decorators will be enriched over time. Currently aex provides the following deco
 8. [Custome middleware decorators](#8-custome-middleware-decorators) (`@inject`)
 9. [API development decorators](./docs/api.md) (`@rest @api`)
 
-
 ### Function Parameter Mode Choices for Http Handlers
 
 #### The Classic Mode
 
 Classically, the node original library handles HTTP requests with a request and response separately.
 For async's sake, node also provide a callback to further processing the request. That is to say, node has the original http handler calllback function parameter mode like this.
+
 ```js
 function classicHTTPHandler(req, res, next)
 ```
-We can call this mode the classic mode. 
+
+We can call this mode the classic mode.
 This mode is a very basic parameter passing method, it can only passes the request, the response and the callback function when async is not promised.
 
 It has at least two weakness:
@@ -271,11 +272,14 @@ It has at least two weakness:
 2. Don't have a proper place to carry generated data by middlewares when going through the Web Straight Line.
 
 #### The Onoin Mode (The Wrong Mode)
+
 On solve problem one, someone created a wrong mode: The Onoin Mode. Which turns lined lists with stacks. Its function parameter mode looks like this.
+
 ```js
 async function onoinHTTPHandler(req, res, next)
 
 ```
+
 It enabled promise and incorrectly kept the callback function `next`.
 
 And we can call this mode the onoin mode.
@@ -292,13 +296,15 @@ By the time of this writing, this mode is still relatively small due to it's inc
 #### The promise based mode / the aex mode
 
 The correct way to asynchronize the classic mode is to remove the next callback. And in order to fixed weakness two, we can introduce a new parameter for data carriage. In aex, it introduces the function parameter mode like this.
+
 ```js
-async function  aexHTTPHandler(req, res, scope) {
-  res.end()
-  scope.body
-  scope.inner
+async function aexHTTPHandler(req, res, scope) {
+  res.end();
+  scope.body;
+  scope.inner;
 }
 ```
+
 Which we can call it the promis based mode or the aex mode, first introduced by the aex web framework project.
 
 But this mode is still some time inconvient when you don't have to use request , response.
@@ -308,19 +314,18 @@ So to compact them into one variable may be more efficiently, then we have the c
 #### The Compact Mode
 
 The compact mode is an optimization for some cases when you don't use the parameters in an ordered way. For example, you are writing a middleware only needs to process the scoped data. You don't need request, response to show up at all. then you can use this mode. Its function parameter mode looks like this.
+
 ```js
-async function  compactHTTPHandler(ctx) {
+async function compactHTTPHandler(ctx) {
   // ctx.request
   // ctx.response
-  ctx.scope
+  ctx.scope;
 }
 ```
-So you can ignore the `req`, `res` parameters with compact mode when necessary. 
+
+So you can ignore the `req`, `res` parameters with compact mode when necessary.
 
 The compact mode and the promise-based mode/ the aex mode are the recommended modes in aex.
-
-
-
 
 ### 1. HTTP method decorators
 
@@ -350,7 +355,6 @@ Here is how your define your handlers.
 import { http, get, post } from "@aex/core";
 
 class User {
-
   // Classic http parameters passing
   @http("get", ["/profile", "/home"])
   profile(req, res, scope) {}
@@ -358,14 +362,13 @@ class User {
   // Compact Mode parameters passing
   @http(["get", "post"], "/user/login", true)
   login(ctx) {
-    const {req, res, scope} = ctx;
+    const { req, res, scope } = ctx;
   }
-
 
   // Compact Mode using @compact
   @compact(["get", "post"], "/user/login")
   login(ctx) {
-    const {req, res, scope} = ctx;
+    const { req, res, scope } = ctx;
   }
 
   @http("post", "/user/logout")

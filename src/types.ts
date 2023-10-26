@@ -59,6 +59,7 @@ export interface IACompactedAsyncMiddeleWare {
   res: IResponse;
   scope?: Scope;
 }
+export type IContext = IACompactedAsyncMiddeleWare;
 
 export type ICompactedAsyncMiddleware = (
   context: IACompactedAsyncMiddeleWare
