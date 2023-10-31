@@ -1,6 +1,6 @@
 ![logo](./assets/aex.png)
 
-# AEX - Next Generation Web Framework for node.js
+# AEX - Next Generation Web Framework for javascript backend
 
 [![Build Status](https://travis-ci.com/calidion/aex.svg?branch=master)](https://travis-ci.com/calidion/aex)
 [![Coverage Status](https://coveralls.io/repos/github/calidion/aex/badge.svg?branch=master)](https://coveralls.io/github/calidion/aex?branch=master)
@@ -9,6 +9,11 @@
 [![NPM version][npm-image]][npm-url]
 [![Downloads][downloads-image]][npm-url]
 [![Downloads][downloads-image-month]][npm-url]
+
+## Supported javascript runtime
+
+1. node.js
+2. bun.js
 
 ## An Object-Oriented Web Framework needs no MVC
 
@@ -48,7 +53,7 @@ A simple, easy to use, decorated, scoped, object-oriented web server, with async
 
 It can be used as a micro service server and a very large scalable enterprise web server with official or customized decorators plugged-in.
 
-It is a web framework based on decorators for `node.js`.
+It is a web framework based on decorators for javascript backend(node.js, bun.js).
 
 So you should enable `decorators` to use it.
 
