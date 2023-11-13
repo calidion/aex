@@ -5,6 +5,7 @@
  */
 
 import { assert } from "console";
+import { EventEmitter } from "events";
 import { One } from "./one";
 import { json } from "./response/json";
 import { redirect } from "./response/redirect";
@@ -30,12 +31,21 @@ export class Aex {
     return this.handlerInstances;
   }
 
+  protected emitter: EventEmitter = new EventEmitter();
+  protected scope: Scope;
   protected middlewares: IAsyncMiddleware[] = [];
-  protected scope = new Scope();
   // tslint:disable-next-line:variable-name
   private _server?: IServer;
   private classes: any[] = [];
   private handlerInstances: any[] = [];
+
+  constructor(emitter?: EventEmitter) {
+    if (!emitter) {
+      emitter = new EventEmitter();
+    }
+    this.emitter = emitter;
+    this.scope = new Scope(this.emitter);
+  }
 
   public use(cb: IAsyncMiddleware) {
     this.middlewares.push(cb);
@@ -63,6 +73,17 @@ export class Aex {
       }
     }
     return methods;
+  }
+
+  public findListeners(aClass: any) {
+    const listeners: { [x: string]: object } = {};
+    const listenersSaved = One.listeners;
+    for (const listener of listenersSaved) {
+      if (listener[0] === aClass.prototype) {
+        listeners[listener[1]] = [listener[2]];
+      }
+    }
+    return listeners;
   }
 
   public bindInstance(instance: any, method: string, options: any[3]) {
@@ -109,6 +130,7 @@ export class Aex {
       const controller = classPair[0];
       const options = classPair[1];
       const methods = this.findMethods(controller);
+      const listeners = this.findListeners(controller);
       const instance = new controller(...options);
       for (const method of Object.keys(methods)) {
         One.putInstance(
@@ -117,6 +139,22 @@ export class Aex {
           instance
         );
         this.bindInstance(instance, method, methods[method]);
+      }
+
+      for (const listener of Object.keys(listeners)) {
+        this.emitter.on(
+          listener,
+          ((self) => {
+            return function onEvent() {
+              const args: any[] = [];
+              args.push(self.emitter);
+              for (const item of arguments) {
+                args.push(item);
+              }
+              instance[listener].apply(instance, args);
+            };
+          })(this)
+        );
       }
       this.handlerInstances.push(instance);
     }
@@ -157,7 +195,6 @@ export class Aex {
   protected async routing(req: IRequest, res: IResponse) {
     const scope: Scope = Object.create(this.scope);
     scope.reset();
-
     this.enhanceRes(res);
 
     const middlewares = this.middlewares;

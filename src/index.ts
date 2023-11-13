@@ -24,6 +24,7 @@ export * from "./decorators/session";
 export * from "./decorators/template";
 export * from "./decorators/rest";
 export * from "./decorators/api";
+export * from "./decorators/listen";
 export * from "./helpers/paginator";
 export * from "./helpers/cors";
 export * from "./util/request";

@@ -5,6 +5,7 @@
  */
 
 import * as debug from "debug";
+import EventEmitter = require("events");
 import { Timer } from "./scoped/timer";
 
 export class Scope {
@@ -33,6 +34,8 @@ export class Scope {
   private _engine: { [x: string]: object } = {};
   // tslint:disable-next-line:variable-name
   private _orm: { [x: string]: object } = {};
+  // tslint:disable-next-line:variable-name
+  private _emitter: EventEmitter;
 
   get orm() {
     return this._orm;
@@ -40,6 +43,13 @@ export class Scope {
 
   set orm(value) {
     this._orm = value;
+  }
+  constructor(emitter: EventEmitter) {
+    this._emitter = emitter;
+  }
+
+  get emitter() {
+    return this._emitter;
   }
 
   get engine() {

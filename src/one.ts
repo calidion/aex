@@ -7,6 +7,7 @@
 import { Router } from "./router";
 
 export class One {
+  public static listeners: any[] = [];
   public static cache: any[] = [];
   public static instances: { [x: string]: any } = {};
 

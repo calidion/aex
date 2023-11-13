@@ -26,7 +26,7 @@ export class WebSocketServer extends EventEmitter {
     this.server.on(
       WebSocketServer.CONNECTION,
       async (ws: WebSocket, req: IRequest) => {
-        const scope: Scope = new Scope();
+        const scope: Scope = new Scope(this);
         scope.time.reset();
         scope.outer.ws = ws;
         scope.outer.req = req;

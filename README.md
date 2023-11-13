@@ -112,8 +112,8 @@ It can be trimmed as a micro service web server or a full-fledged web server by 
 6. [Data filtering and validation decorators](#6-data-filtering-and-validation-decorators) ( `@filter`)
 7. [Error definition decorators](#7-error-definition-decorators) (`@error`)
 8. [Custome middleware decorators](#8-custome-middleware-decorators) (`@inject`)
-
 9. [API development decorators](./docs/api.md) (`@rest @api`)
+10. [Event messaging decorators](#8-custome-middleware-decorators) (`@listen`)
 
 ## Shortcuts for helpers
 
@@ -256,6 +256,8 @@ Decorators will be enriched over time. Currently aex provides the following deco
 7. [Error definition decorators](#7-error-definition-decorators) (`@error`)
 8. [Custome middleware decorators](#8-custome-middleware-decorators) (`@inject`)
 9. [API development decorators](./docs/api.md) (`@rest @api`)
+10. [Event messaging decorators](#8-custome-middleware-decorators) (`@listen`)
+
 
 ### Function Parameter Mode Choices for Http Handlers
 
@@ -912,6 +914,65 @@ class User {
   }
 }
 ```
+
+### 9. Event Messaging decorators
+
+Aex can route messages between Objects with an Aex instance.
+You only need to prefix an member function with `@listen` and pass a `event` name to it， then you are listening to the event from all aex inner http handling class now.
+
+A simple example is like the following:
+
+```ts
+class Listen {
+  private name: string;
+  constructor(name?: string) {
+    this.name = name || "";
+  }
+  @listen("echo")
+  public echo(emitter: EventEmitter, ...messages: any[]) {
+    emitter.emit("echoed", messages[0]);
+  }
+
+  @get("/")
+  public async get(_req: any, res: any, scope: Scope) {
+    scope.emitter.on("echoed1", (mesasge) => {
+      res.end(mesasge + " from " + this.name);
+    });
+    scope.emitter.emit("echo1", "Hello");
+  }
+}
+
+class Listen1 {
+  @listen("echo1")
+  public echo1(emitter: EventEmitter, ...messages: any[]) {
+    emitter.emit("echoed1", "echoed1 " + messages[0]);
+  }
+}
+
+const emitter = new EventEmitter();
+const aex = new Aex(emitter);
+let port: number = 0;
+
+aex.push(Listen, "Nude");
+aex.push(Listen1);
+aex.prepare().start();
+```
+
+
+
+if we only need to send messages between objects,
+just use emitter to send messages:
+```ts
+  emitter.emit("echo", "Hello Aex!");
+```
+"echo" is the event name that aex objects listen.
+Event listeners of a class should not be http handlers of the class,
+because they process different things.
+
+In
+
+
+
 
 ## Usage with no decorators
 
