@@ -113,7 +113,7 @@ It can be trimmed as a micro service web server or a full-fledged web server by 
 7. [Error definition decorators](#7-error-definition-decorators) (`@error`)
 8. [Custome middleware decorators](#8-custome-middleware-decorators) (`@inject`)
 9. [API development decorators](./docs/api.md) (`@rest @api`)
-10. [Event messaging decorators](#8-custome-middleware-decorators) (`@listen`)
+10. [Event messaging decorators](#9-event-messaging-decorators) (`@listen`)
 
 ## Shortcuts for helpers
 
@@ -256,8 +256,7 @@ Decorators will be enriched over time. Currently aex provides the following deco
 7. [Error definition decorators](#7-error-definition-decorators) (`@error`)
 8. [Custome middleware decorators](#8-custome-middleware-decorators) (`@inject`)
 9. [API development decorators](./docs/api.md) (`@rest @api`)
-10. [Event messaging decorators](#8-custome-middleware-decorators) (`@listen`)
-
+10. [Event messaging decorators](#9-event-messaging-decorators) (`@listen`)
 
 ### Function Parameter Mode Choices for Http Handlers
 
@@ -567,13 +566,16 @@ The following is an example on how to use `@template` decorator:
 ```typescript
 class Template {
   @http("/one")
-  @template((path) => {
-    const loader = new nunjucks.FileSystemLoader([path], {});
-    const env = new nunjucks.Environment(loader, {
-      autoescape: false,
-    });
-    return env;
-  }, resolve(__dirname, "./views"))
+  @template(
+    (path) => {
+      const loader = new nunjucks.FileSystemLoader([path], {});
+      const env = new nunjucks.Environment(loader, {
+        autoescape: false,
+      });
+      return env;
+    },
+    resolve(__dirname, "./views"),
+  )
   public async name(_: any, res: any) {
     // access using res.render
     res.render("index.html", { hello: "Hello" });
@@ -589,23 +591,26 @@ class Template {
 ```typescript
 class Template {
   @http("/pug")
-  @template((path) => {
-    const engine: any = {};
+  @template(
+    (path) => {
+      const engine: any = {};
 
-    // engine render function rewrite
-    engine.render = function (name: string, data: any) {
-      let file = name;
-      if (!existsSync(name)) {
-        if (!existsSync(resolve(path, name))) {
-          throw new Error("File Not Found: " + resolve(path, name));
-        } else {
-          file = resolve(path, name);
+      // engine render function rewrite
+      engine.render = function (name: string, data: any) {
+        let file = name;
+        if (!existsSync(name)) {
+          if (!existsSync(resolve(path, name))) {
+            throw new Error("File Not Found: " + resolve(path, name));
+          } else {
+            file = resolve(path, name);
+          }
         }
-      }
-      return pug.renderFile(file, data);
-    };
-    return engine;
-  }, resolve(__dirname, "./views"))
+        return pug.renderFile(file, data);
+      };
+      return engine;
+    },
+    resolve(__dirname, "./views"),
+  )
   public async name2(_: any, res: any, scope: any) {
     // access using scope.engine
     res.end(scope.engine.render("index.pug", { hello: "Hello3" }));
@@ -620,36 +625,42 @@ Due to the flexibility aex provides, you can mix then with one class with ease.
 ```ts
 class Template {
   @http("/one")
-  @template((path) => {
-    const loader = new nunjucks.FileSystemLoader([path], {});
-    const env = new nunjucks.Environment(loader, {
-      autoescape: false,
-    });
-    return env;
-  }, resolve(__dirname, "./views"))
+  @template(
+    (path) => {
+      const loader = new nunjucks.FileSystemLoader([path], {});
+      const env = new nunjucks.Environment(loader, {
+        autoescape: false,
+      });
+      return env;
+    },
+    resolve(__dirname, "./views"),
+  )
   public async name(_: any, res: any) {
     // access using res.render
     res.render("index.html", { hello: "Hello" });
   }
 
   @http("/pug")
-  @template((path) => {
-    const engine: any = {};
+  @template(
+    (path) => {
+      const engine: any = {};
 
-    // engine render function rewrite
-    engine.render = function (name: string, data: any) {
-      let file = name;
-      if (!existsSync(name)) {
-        if (!existsSync(resolve(path, name))) {
-          throw new Error("File Not Found: " + resolve(path, name));
-        } else {
-          file = resolve(path, name);
+      // engine render function rewrite
+      engine.render = function (name: string, data: any) {
+        let file = name;
+        if (!existsSync(name)) {
+          if (!existsSync(resolve(path, name))) {
+            throw new Error("File Not Found: " + resolve(path, name));
+          } else {
+            file = resolve(path, name);
+          }
         }
-      }
-      return pug.renderFile(file, data);
-    };
-    return engine;
-  }, resolve(__dirname, "./views"))
+        return pug.renderFile(file, data);
+      };
+      return engine;
+    },
+    resolve(__dirname, "./views"),
+  )
   public async name2(_: any, res: any, scope: any) {
     // access using scope.engine
     res.end(scope.engine.render("index.pug", { hello: "Hello3" }));
@@ -958,20 +969,24 @@ aex.push(Listen1);
 aex.prepare().start();
 ```
 
+This example shows that
 
+1. The `Listen` class listens to an event called `echo`, within this handler, it sends a new event called `echoed`;if you listen to this event with the emitter, you will have notification for this event.
+2. The `Listen` class also can handle http request to url `/`, it then emit `echo1` event which will invoke `Listen1`'s listener after `Listen1` pushed to the same Aex object.
+3. The `Listen1` class listens to an event called `echo1`, within this handler, it emits a new event called `echoed1`; if you listen to this event with the emitter, you will have notification for this event.
 
 if we only need to send messages between objects,
 just use emitter to send messages:
+
 ```ts
-  emitter.emit("echo", "Hello Aex!");
+emitter.emit("echo", "Hello Aex!");
 ```
-"echo" is the event name that aex objects listen.
-Event listeners of a class should not be http handlers of the class,
+emitter is an Buildin object from node.
+
+Aex only simplifies this usage between classes, the behavior is not changed, you can refer node's EventEmitter for further information.
+
+> Event listeners of a class should not be http handlers of the class,
 because they process different things.
-
-In
-
-
 
 
 ## Usage with no decorators
@@ -1081,7 +1096,7 @@ In
          data: {
            message: "Hello world!",
          },
-       })
+       }),
      );
    });
    ```
@@ -1104,7 +1119,7 @@ Middlewares/Handlers are defined like this:
 export type IAsyncMiddleware = (
   req: Request,
   res: Response,
-  scope?: Scope
+  scope?: Scope,
 ) => Promise<boolean | undefined | null | void>;
 ```
 
@@ -1118,7 +1133,7 @@ export interface IACompactedAsyncMiddeleWare {
 }
 
 export type ICompactedAsyncMiddleware = (
-  context: IACompactedAsyncMiddeleWare
+  context: IACompactedAsyncMiddeleWare,
 ) => Promise<boolean | undefined | null | void>;
 ```
 
@@ -1182,7 +1197,7 @@ router.get(
       // process N
       // return false
     },
-  ]
+  ],
 );
 ```
 
@@ -1194,7 +1209,7 @@ Websocket middlewares are of the same to the above middlewares except that the p
 type IWebSocketAsyncMiddleware = (
   req: Request,
   socket: WebSocket,
-  scope?: Scope
+  scope?: Scope,
 ) => Promise<boolean | undefined | null | void>;
 ```
 
