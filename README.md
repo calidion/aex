@@ -1,6 +1,6 @@
 ![logo](./assets/aex.png)
 
-# AEX - Next Generation Web Framework for javascript backends, A Realiszation of `The Web Straight Line Theory` for web frameworks based on node.js/bun.js apis. And Backed by `The Web Straight Line Theory` for All Modern Web Frameworks
+# AEX - Next Generation Web Framework for javascript backends, A Realiszation of `The Web Straight Line Theory` for node.js/bun.js apis, where `The Web Straight Line Theory` is for All Modern Web Frameworks
 
 [![Build Status](https://travis-ci.com/calidion/aex.svg?branch=master)](https://travis-ci.com/calidion/aex)
 [![Coverage Status](https://coveralls.io/repos/github/calidion/aex/badge.svg?branch=master)](https://coveralls.io/github/calidion/aex?branch=master)
@@ -124,13 +124,13 @@ It can be trimmed as a micro service web server or a full-fledged web server by 
 if you use npm
 
 ```sh
-npm install github:calidion/aex#v0.18.0
+npm install @aex/core
 ```
 
 or if you use yarn
 
 ```sh
-yarn add github:calidion/aex#v0.18.0
+yarn add @aex/core
 ```
 
 ## Quick Start
