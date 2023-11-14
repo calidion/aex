@@ -1,6 +1,6 @@
 ![logo](./assets/aex.png)
 
-# AEX - Next Generation Web Framework for javascript backend
+# AEX - Next Generation Web Framework for javascript backends, A Realiszation of `The Web Straight Line Theory` for web frameworks based on node.js/bun.js apis. And Backed by `The Web Straight Line Theory` for All Modern Web Frameworks
 
 [![Build Status](https://travis-ci.com/calidion/aex.svg?branch=master)](https://travis-ci.com/calidion/aex)
 [![Coverage Status](https://coveralls.io/repos/github/calidion/aex/badge.svg?branch=master)](https://coveralls.io/github/calidion/aex?branch=master)
@@ -981,13 +981,13 @@ just use emitter to send messages:
 ```ts
 emitter.emit("echo", "Hello Aex!");
 ```
+
 emitter is an Buildin object from node.
 
 Aex only simplifies this usage between classes, the behavior is not changed, you can refer node's EventEmitter for further information.
 
 > Event listeners of a class should not be http handlers of the class,
-because they process different things.
-
+> because they process different things.
 
 ## Usage with no decorators
 
