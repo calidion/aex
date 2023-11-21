@@ -1,6 +1,6 @@
 ![logo](./assets/aex.png)
 
-# AEX - Next Generation Web Framework for javascript backends, A Realiszation of `The Web Straight Line Theory` for node.js/bun.js apis, where `The Web Straight Line Theory` is for All Modern Web Frameworks
+# AEX - Next Generation Web Framework for javascript backends, A Realisation of `The Web Straight Line Theory` for node.js/bun.js apis, where `The Web Straight Line Theory` is for All Modern Web Frameworks
 
 [![Build Status](https://travis-ci.com/calidion/aex.svg?branch=master)](https://travis-ci.com/calidion/aex)
 [![Coverage Status](https://coveralls.io/repos/github/calidion/aex/badge.svg?branch=master)](https://coveralls.io/github/calidion/aex?branch=master)
