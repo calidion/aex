@@ -32,7 +32,7 @@ currently only five http methods(`get`, `post`, `put`, `patch`, `delete`) are al
 
 ### @api
 
-@api decorator only supports `get`, `post` http methods. `get` is used for information fetch with changing anything, `post` is used for any business action may potantially change something.
+@api decorator only supports `get`, `post` http methods. `get` is used for information fetch without changing anything, `post` is used for any business action may potantially change something.
 
 the usage is very similiar except the http post request is force to have a field called `action`, which is the business action.
 Actions can be any string and you should write corresponding method to handle that action. (Actions are case sensitive.)
