@@ -44,7 +44,7 @@
     "errorable": "^0.6.0",
     "mime-types": "^2.1.31",
     "node-form-validator": "^1.5.2",
-    "path-to-regexp": "^6.2.0",
+    "path-to-regexp": "^8.0.0",
     "uuid": "^8.3.2",
     "ws": "^7.4.2"
   },
